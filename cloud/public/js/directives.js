@@ -1,20 +1,20 @@
 'use strict';
 /* Directives */
 
-YundaApp.directive("YundaNavbar", function() {
+YundaApp.directive("yundaNavbar", function() {
     return {
         restrict: "E",
         replace: true,
         transclude: true,
-        templateUrl: 'partial/navbar'
+        templateUrl: 'partials/navbar'
     }
 });
 
-YundaApp.directive("YundaFooter", function() {
+YundaApp.directive("yundaFooter", function() {
     return {
         restrict: "E",
         replace: true,
         transclude: true,
-        templateUrl: 'partial/footer'
+        templateUrl: 'partials/footer'
     }
 });
