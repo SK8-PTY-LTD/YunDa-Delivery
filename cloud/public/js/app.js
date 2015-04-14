@@ -25,7 +25,7 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
         controller: 'MyCtrl2'
       }).
       otherwise({
-        redirectTo: '/view1'
+        redirectTo: '/'
       });
 
   $locationProvider.html5Mode(true);
