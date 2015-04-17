@@ -1,0 +1,54 @@
+<!-- Page Content -->
+<div class="row" ng-controller="ContactController">
+	<div id="contactMapSection" class="col-md-offset-1 col-md-7">
+		<address>
+			<b>办公室电话:</b><br>
+			(02) 9268 0883<br>
+			<br>
+			<b>传真:</b><br>
+			02 92680580
+			<br>
+			<br>
+			<b>办公室地址:</b><br>
+			Suite 605, Pacific Trade Centre ,368 Sussex Street,Sydney NSW 2000<br>
+			<br>
+			<div class="angular-google-map-container">
+			<ui-gmap-google-map center='map.center' zoom='map.zoom'>
+				<ui-gmap-marker idKey="marker.id" coords="marker.coords"></ui-gmap-marker>
+			</ui-gmap-google-map>
+			</div>
+
+		</address>
+		<div id="map-canvas"></div>
+	</div>
+	<div  id="contactFormSection" class="col-md-3">
+		<div>
+			<p><b>微信关注我们!</b></p>
+			<img src="../../img/wechatQR.jpg" width="100%">
+			<p><b>或者填写表格联系我们</b></p>
+		</div>
+		
+		<form name="contactForm">
+			<div class="form-group">
+				<label for="InputFullName">姓名</label>
+				<input class="form-control" id="inputFullName" placeholder="请输入全名 *" required>
+			</div>
+			<div class="form-group">
+				<label for="InputPhoneNumber">联系电话</label>
+				<input class="form-control" id="inputPhoneNumber" placeholder="请输入联系电话 *" required>
+			</div>
+			<div class="form-group">
+				<label for="InputEmail1">电子邮箱地址</label>
+				<input type="email" class="form-control" id="inputEmail" placeholder="请输入电子邮箱地址 *" required>
+			</div>
+			
+			<div class="form-group">
+				<label for="InputContent">联系我们</label>
+				<textarea class="form-control" rows="5" id="inputContent" placeholder="请输入您的问题和需求 *" required></textarea>
+			</div>
+			<div id="success">
+				<button type="submit" class="btn btn-default">提交</button>
+			</div>
+		</form>
+	</div>
+</div>

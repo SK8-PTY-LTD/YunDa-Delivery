@@ -5,24 +5,25 @@
 var AV_APP_ID = "";
 var AV_APP_KEY = "";
 
-var YundaApp = angular.module('YundaApp', ['ngRoute']);
+var YundaApp = angular.module('YundaApp', ['ngRoute',
+    'uiGmapgoogle-maps']);
 
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider.
       when('/', {
         templateUrl: 'partials/about'
       }).
-      when('/view1', {
-        templateUrl: 'partials/partial1',
-        controller: 'MyCtrl1'
+      when('/help', {
+        templateUrl: 'partials/help'
       }).
       when('/about', {
-        templateUrl: 'partials/about',
-        controller: 'MyCtrl1'
+        templateUrl: 'partials/about'
       }).
-      when('/view2', {
-        templateUrl: 'partials/partial2',
-        controller: 'MyCtrl2'
+      when('/contact', {
+        templateUrl: 'partials/contact'
+      }).
+      when('/service', {
+          templateUrl: 'partials/service'
       }).
       otherwise({
         redirectTo: '/'

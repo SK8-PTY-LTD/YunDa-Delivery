@@ -23,34 +23,13 @@
                     <!-- Start Social Links -->
                     <ul class="social-list">
                         <li>
-                            <a class="facebook itl-tooltip" data-placement="bottom" title="Facebook" href="#"><i class="fa fa-facebook"></i></a>
+                            <a class="weibo" href="#"><i class="fa fa-weibo fa-lg"></i></a>
                         </li>
                         <li>
-                            <a class="twitter itl-tooltip" data-placement="bottom" title="Twitter" href="#"><i class="fa fa-twitter"></i></a>
+                            <a class="qq" href="#"><i class="fa fa-qq fa-lg"></i></a>
                         </li>
                         <li>
-                            <a class="google itl-tooltip" data-placement="bottom" title="Google Plus" href="#"><i class="fa fa-google-plus"></i></a>
-                        </li>
-                        <li>
-                            <a class="dribbble itl-tooltip" data-placement="bottom" title="Dribble" href="#"><i class="fa fa-dribbble"></i></a>
-                        </li>
-                        <li>
-                            <a class="linkdin itl-tooltip" data-placement="bottom" title="Linkedin" href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
-                        <li>
-                            <a class="flickr itl-tooltip" data-placement="bottom" title="Flickr" href="#"><i class="fa fa-flickr"></i></a>
-                        </li>
-                        <li>
-                            <a class="tumblr itl-tooltip" data-placement="bottom" title="Tumblr" href="#"><i class="fa fa-tumblr"></i></a>
-                        </li>
-                        <li>
-                            <a class="instgram itl-tooltip" data-placement="bottom" title="Instagram" href="#"><i class="fa fa-instagram"></i></a>
-                        </li>
-                        <li>
-                            <a class="vimeo itl-tooltip" data-placement="bottom" title="vimeo" href="#"><i class="fa fa-vimeo-square"></i></a>
-                        </li>
-                        <li>
-                            <a class="skype itl-tooltip" data-placement="bottom" title="Skype" href="#"><i class="fa fa-skype"></i></a>
+                            <a class="weixin" href="#"><i class="fa fa-weixin fa-lg"></i></a>
                         </li>
                     </ul>
                     <!-- End Social Links -->
@@ -66,7 +45,8 @@
     <!-- Start  Logo & Naviagtion  -->
     <div class="navbar navbar-default navbar-top">
         <div class="container">
-            <div class="navbar-header">
+            <div class="row">
+                <div class="col-md2 navbar-header">
                 <!-- Stat Toggle Nav Link For Mobiles -->
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <i class="fa fa-bars"></i>
@@ -76,26 +56,26 @@
                     <img alt="" src="http://placehold.it/140x45">
                 </a>
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="col-md10 navbar-collapse collapse">
                 <!-- Start Navigation List -->
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="active" href="#">首页</a>
+                        <a ng-href="/about">首页</a>
                     </li>
                     <li>
-                        <a href="#">Pages</a>
+                        <a ng-href="/help">help</a>
                     </li>
                     <li>
-                        <a href="#">Shortcodes</a>
+                        <a ng-href="/service">Service</a>
                     </li>
                     <li>
-                        <a href="#">Portfolio</a>
+                        <a ng-href="#">Portfolio</a>
                     </li>
                     <li>
-                        <a href="#">Blog</a>
+                        <a ng-href="#">Blog</a>
                     </li>
                     <li>
-                        <a href="#">Contact</a>
+                        <a ng-href="/contact">Contact</a>
                     </li>
                     <li ng-show="currentUser.id && currentUser.isAdminUser">
                         <a ng-href="/dashboard">控制台</a>
@@ -111,6 +91,7 @@
                     </li>
                 </ul>
                 <!-- End Navigation List -->
+            </div>
             </div>
         </div>
     </div>
