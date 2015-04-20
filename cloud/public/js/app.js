@@ -2,10 +2,11 @@
 
 /* App Module */
 
-var AV_APP_ID = "";
-var AV_APP_KEY = "";
+var AV_APP_ID = "umouw51mkumgpt72hhir61xemo3b7q2n5js0zce3b96by895";
+var AV_APP_KEY = "svsw3nybfcax9ssw7czti2fk86ak9gp6ekrb00essagscyrg";
 
 var YundaApp = angular.module('YundaApp', ['ngRoute',
+    'ui.bootstrap',
     'uiGmapgoogle-maps']);
 
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
@@ -24,6 +25,12 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       }).
       when('/service', {
           templateUrl: 'partials/service'
+      }).
+      when('/modal', {
+          templateUrl: 'partials/modal_login'
+      }).
+      when('/dashboard', {
+          templateUrl: 'partials/dashboard'
       }).
       otherwise({
         redirectTo: '/'

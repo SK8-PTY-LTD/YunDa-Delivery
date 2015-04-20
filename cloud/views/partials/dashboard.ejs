@@ -1,0 +1,90 @@
+<div class="container" ng-controller="DashboardCtrl">
+    <div class="row">
+        <div class="col-sm-3">
+            <accordion close-others="oneAtATime">
+                <accordion-group heading="账户管理">
+                    <ul>
+                        <li ng-click="change_tab('aa')">账户信息</li>
+                        <li ng-click="change_tab('ab')">地址管理</li>
+                        <li ng-click="change_tab('ac')">仓库地址</li>
+                    </ul>
+                </accordion-group>
+
+                <accordion-group heading="物流管理">
+                    <ul>
+                        <li ng-click="change_tab('ba')">自助入库</li>
+                        <li ng-click="change_tab('bb')">包裹管理</li>
+                        <li ng-click="change_tab('bc')">快件查询</li>
+                        <li ng-click="change_tab('bd')">我的运单</li>
+                    </ul>
+                </accordion-group>
+
+                <accordion-group heading="财务管理">
+                    <ul>
+                        <li ng-click="change_tab('ca')">在线充值</li>
+                        <li ng-click="change_tab('cb')">充值记录</li>
+                        <li ng-click="change_tab('cc')">消费记录</li>
+                    </ul>
+                </accordion-group>
+
+                <accordion-group heading="自助管理">
+                    <ul>
+                        <li ng-click="change_tab('da')">退款管理</li>
+                        <li ng-click="change_tab('db')">退货管理</li>
+                    </ul>
+                </accordion-group>
+            </accordion>
+        </div><!-- col-sm-3 -->
+
+        <div class="col-sm-9">
+            <div ng-show="view_tab=='aa'">
+                this is the content for 账户信息
+            </div>
+
+            <div ng-show="view_tab=='ab'">
+                this is the content for 地址管理
+            </div>
+
+            <div ng-show="view_tab=='ac'">
+                this is the content for 仓库地址
+            </div>
+
+            <div ng-show="view_tab=='ba'">
+                this is the content for 自助入库
+            </div>
+
+            <div ng-show="view_tab=='bb'">
+                this is the content for 包裹管理
+            </div>
+
+            <div ng-show="view_tab=='bc'">
+                this is the content for 快件查询
+            </div>
+
+            <div ng-show="view_tab=='bd'">
+                this is the content for 我的运单
+            </div>
+
+            <div ng-show="view_tab=='ca'">
+                this is the content for 在线充值
+            </div>
+
+            <div ng-show="view_tab=='cb'">
+                this is the content for 充值记录
+            </div>
+
+            <div ng-show="view_tab=='cc'">
+                this is the content for 消费记录
+            </div>
+
+            <div ng-show="view_tab=='da'">
+                this is the content for 退款管理
+            </div>
+
+            <div ng-show="view_tab=='db'">
+                this is the content for 退货管理
+            </div>
+        </div> <!-- col-sm-9 -->
+    </div><!-- Row -->
+</div>
+

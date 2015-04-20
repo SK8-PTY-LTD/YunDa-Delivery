@@ -22,6 +22,11 @@ span.help-question {
 .angular-google-map-container {
     height: 400px;
 }
+
+.modal-login {
+    margin-top: 200px;
+    background-color: #31b0d5;
+}
 /*------------------------------------------*/
 /*	     02 - Header & Navigation
 /*------------------------------------------*/

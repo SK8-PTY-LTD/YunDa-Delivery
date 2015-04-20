@@ -1,0 +1,17 @@
+<div class="modal-login" ng-controller="NavbarCtrl">
+    <h1>Hello World</h1>
+    <form name="loginForm">
+         <label>Email:</label>
+        <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <input type="email" name="email" placeholder="john.smith@gmail.com" required>
+        <label class="control-label">Password:</label>
+        <label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>
+        <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+        <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="At least 8 characters long" ng-minlength="8" required>
+            <button type="submit" class="col-md-12 btn-shelf-white" ng-click="logIn()" ng-show="loginForm.$valid">Log in</button>
+            <button type="submit" class="col-md-12 btn-shelf-inverse" ng-click="signUp()" ng-show="loginForm.$valid">Sign Up</button>
+    </form>
+
+    <p ng-model="test"></p>
+</div>
