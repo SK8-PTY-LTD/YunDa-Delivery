@@ -39,14 +39,106 @@
         <div class="col-sm-9">
             <div ng-show="view_tab=='aa'">
                 this is the content for 账户信息
+                <accordion close-others="false">
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                           会员信息
+                        </accordion-heading>
+                      <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-href="partials/about">修改密码</a></p>
+                      <p>登陆邮箱：<span ng-bind="currentUser.addressId"></span></p>
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            财务信息
+                        </accordion-heading>
+                        <p>客户余额：$<span ng-bind="currentUser.balance"></span></p>
+                        <p>兑换汇率：美元/人民币=1/6.4</p>
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            修改个人资料
+                        </accordion-heading>
+
+                        <div>
+                        <form novalidate class="simple-form">
+                            姓名: <input type="text" ng-bind="currentUser.realName" /><br />
+                            手机号: <input type="tel" pattern="[0-9]" name="tel" ng-bind="currentUser.mobilePhoneNumber"/><br />
+                            性别: <input type="radio" ng-bind="currentUser.gender" value="male" />male
+                            <input type="radio" ng-bind="currentUser.gender" value="female" />female<br />
+                            <label for="Autocomplete">Address</label>
+                            <input type="text" id="Autocomplete" class="form-control" ng-autocomplete="address" details="addressDetails" options="null"/>
+                            <div>result: <span ng-bind="currentUser.address"></span></div>
+                            <!--input type="button" ng-click="reset()" value="Reset" /-->
+                            <input type="submit" ng-click="update_user()" value="Save" />
+                        </form>
+                        </div>
+                    </accordion-group>
+                </accordion>
+
             </div>
 
-            <div ng-show="view_tab=='ab'">
-                this is the content for 地址管理
+            <div ng-show="view_tab=='ab'" ng-controller="AddAddressCtrl">
+                <div class="row">
+                    <div class="col-sm-7">
+                        收货人：<input type="text" ng-bind="recipientLookup" />
+                    </div>
+                    <div class="col-sm-2">
+                        <button ng-click="searchRecipient()">搜索</button>
+                    </div>
+                    <div class="col-sm-3">
+                        <button ng-click="addNewAddress()">新增</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>收件人</th>
+                            <th>国家/地区</th>
+                            <th>省份/直辖市</th>
+                            <th>城市</th>
+                            <th>收获地址</th>
+                            <th>邮编</th>
+                            <th>手机</th>
+                        </tr>
+                        <tr ng-repeat="address in urrentUser.recipientAddresses">
+                            <td ng-bind="address.recipient"></td>
+                            <td ng-bind="address.country"></td>
+                            <td ng-bind="address.state"></td>
+                            <td ng-bind="address.city"></td>
+                            <td ng-bind="address.suburb"></td>
+                            <td ng-bind="address.street1"></td>
+                            <td ng-bind="address.street2"></td>
+                            <td ng-bind="address.postalCode"></td>
+                            <td ng-bind="address.contactNumber"></td>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
 
             <div ng-show="view_tab=='ac'">
                 this is the content for 仓库地址
+
+                <accordion close-others="false">
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            主仓库地址
+                        </accordion-heading>
+                        <p> This is address </p>
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            副仓库地址
+                        </accordion-heading>
+                        <p> This is address </p>
+                    </accordion-group>
+                </accordion>
+
             </div>
 
             <div ng-show="view_tab=='ba'">

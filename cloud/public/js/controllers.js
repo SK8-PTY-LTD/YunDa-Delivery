@@ -21,10 +21,10 @@ YundaApp.controller('AppCtrl', function ($scope, $http) {
 /* Navbar Controller*/
 
 YundaApp.controller('NavbarCtrl', function($scope, $rootScope, $modal) {
-    $scope.test = "about";
+    $scope.navTest = "about";
 
     if (YD.User.current() != undefined){
-        $rootScope.currentUser = SH.User.current();
+        $rootScope.currentUser = YD.User.current();
     } else {
         $rootScope.currentUser = new YD.User();
     }
@@ -99,7 +99,86 @@ YundaApp.controller('DashboardCtrl', function($scope) {
     $scope.change_tab = function(tab){
         $scope.view_tab = tab;
     };
+
+    /* getting user's address */
+    var address = new YD.Address();
+    address.objectId = $scope.currentUser.addressId;
+    address.fetch().then(function(address) {
+        $scope.currentUser.address = address;
+    });
+    $scope.updateUser = function() {
+
+    }
+    /* getting recipient */
+    var query = new AV.Query("YD.Address");
+    query.equalTo("user", $scope.currentUser);
+    if (YD.User.current() != undefined) {
+        query.find({
+            success: function (results) {
+                $scope.currentUser.recipientAddresses = results;
+            },
+            error: function (error) {
+                alert("Getting Recipient Addresses Error: " + error.code + " " + error.message);
+            }
+        });
+    }
+    /* search recipients */
+    $scope.searchRecipient = function(){
+    $scope.recipientLookup = "";
+    var lookupList = new Array();
+    for(var i=0; i<$scope.currentUser.recipientAddresses.length; i++) {
+        if($scope.currentUser.recipientAddresses[i].recipient === $scope.recipientLookup){
+            lookupList.push($scope.currentUser.recipientAddresses[i]);
+        }
+    }
+        $scope.lookupList = lookupList;
+    }
+
+    /* add a new recipient */
+    $scope.addNewAddress = function (){
+        console.log("dashboard Ctrl login():");
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_login',
+            controller: 'AddAddressCtrl',
+            scope: $scope,
+            size: 'sm'
+        });
+        modalInstance.result.then(function(address) {
+            console.log("address modal is closed. result: " + address);
+            address.save(null, {
+                success: function(address) {
+                    // The save was successful.
+                    console.log("address is saved. address id: " + address.objectId);
+
+                },
+                error: function(address, error) {
+                    // The save failed.  Error is an instance of AV.Error.
+                    "Saving Addresses Error: " + error.code + " " + error.message
+                }
+            });
+        });
+    };
 });
+
+/* add address contrller */
+
+    YundaApp.controller('AddAddressCtrl', function($scope, $modalInstance){
+
+        $scope.addNewAddressSubmit = function (){
+            var newAddress = new YD.Address();
+            newAddress.country = $scope.country;
+            newAddress.city = $scope.city;
+            newAddress.state = $scope.state;
+            newAddress.suburb = $scope.suburb;
+            newAddress.street1 = $scope.street1;
+            newAddress.street2 = $scope.street2;
+            newAddress.postalCode = $scope.postalCode;
+            newAddress.recipient = $scope.recipient;
+            newAddress.user = $scope.currentUser;
+            modalInstance.close(newAddress);
+        }
+    });
+
 
 
 // AngularJS Google Maps loader
