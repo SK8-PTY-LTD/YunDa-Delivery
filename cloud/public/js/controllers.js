@@ -93,7 +93,7 @@ YundaApp.controller('LoginCtrl', function($scope, $modalInstance) {
 });
 
 /* Dashboard Controller*/
-YundaApp.controller('DashboardCtrl', function($scope) {
+YundaApp.controller('DashboardCtrl', function($scope, $modal) {
    $scope.oneAtATime = true;
     $scope.view_tab = "aa";
     $scope.change_tab = function(tab){
@@ -138,7 +138,7 @@ YundaApp.controller('DashboardCtrl', function($scope) {
     $scope.addNewAddress = function (){
         console.log("dashboard Ctrl login():");
         var modalInstance = $modal.open({
-            templateUrl: 'partials/modal_login',
+            templateUrl: 'partials/modal_address',
             controller: 'AddAddressCtrl',
             scope: $scope,
             size: 'sm'
@@ -153,14 +153,14 @@ YundaApp.controller('DashboardCtrl', function($scope) {
                 },
                 error: function(address, error) {
                     // The save failed.  Error is an instance of AV.Error.
-                    "Saving Addresses Error: " + error.code + " " + error.message
+                    console.log( "Saving Addresses Error: " + error.code + " " + error.message);
                 }
             });
         });
     };
 });
 
-/* add address contrller */
+/* addaddress contrller */
 
     YundaApp.controller('AddAddressCtrl', function($scope, $modalInstance){
 
@@ -175,11 +175,9 @@ YundaApp.controller('DashboardCtrl', function($scope) {
             newAddress.postalCode = $scope.postalCode;
             newAddress.recipient = $scope.recipient;
             newAddress.user = $scope.currentUser;
-            modalInstance.close(newAddress);
+            $modalInstance.close(newAddress);
         }
     });
-
-
 
 // AngularJS Google Maps loader
 

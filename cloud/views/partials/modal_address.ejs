@@ -1,0 +1,45 @@
+<div class="modal-address" >
+    <h1>Add new recipient</h1>
+    <form name="addressForm">
+        <label>收件人</label>
+        <span ></span>
+        <input ng-model="recipient" type="text" name="recipient" placeholder="" required>
+
+        <label>国家</label>
+        <span ></span>
+        <input ng-model="country" type="text" name="country" placeholder="" required>
+
+        <label>省</label>
+        <span ></span>
+        <input ng-model="state" type="text" name="state" placeholder="" required>
+
+        <label>市</label>
+        <span ></span>
+        <input ng-model="city" type="text" name="city" placeholder="" required>
+
+        <label>区</label>
+        <span ></span>
+        <input ng-model="suburb" type="text" name="suburb" placeholder="" required>
+
+        <label>地址</label>
+        <span ></span>
+        <input ng-model="street1" type="text" name="street1" placeholder="" required>
+
+        <label>地址2(optional)</label>
+        <span ></span>
+        <input ng-model="street2" type="text" name="street2" placeholder="" required>
+
+        <label>邮编</label>
+        <span ></span>
+        <input ng-model="postalCode" type="number" name="postalCode" placeholder="" required>
+
+        <label>电话</label>
+        <span ></span>
+        <input ng-model="contactNumber" type="text" name="contactNumber" placeholder="" required>
+
+        <button type="submit" ng-click="addNewAddressSubmit()" >Log in</button>
+    </form>
+
+    <p ng-model="test"></p>
+</div>
+

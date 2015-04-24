@@ -33,6 +33,9 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/dashboard', {
           templateUrl: 'partials/dashboard'
       }).
+      when('/test', {
+          templateUrl: 'partials/test'
+      }).
       otherwise({
         redirectTo: '/'
       });

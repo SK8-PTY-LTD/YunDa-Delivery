@@ -62,14 +62,74 @@
                         </accordion-heading>
 
                         <div>
+
                         <form novalidate class="simple-form">
                             姓名: <input type="text" ng-bind="currentUser.realName" /><br />
                             手机号: <input type="tel" pattern="[0-9]" name="tel" ng-bind="currentUser.mobilePhoneNumber"/><br />
                             性别: <input type="radio" ng-bind="currentUser.gender" value="male" />male
                             <input type="radio" ng-bind="currentUser.gender" value="female" />female<br />
-                            <label for="Autocomplete">Address</label>
-                            <input type="text" id="Autocomplete" class="form-control" ng-autocomplete="address" details="addressDetails" options="null"/>
-                            <div>result: <span ng-bind="currentUser.address"></span></div>
+
+                            <!-- baidu map API -->
+
+                            <div> 请输入:<input type="text" id="suggestId" size="30" value="百度" style="width:300px;" /></div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="baidumap">地址</label></br>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="container"></div>
+                                </div>
+                            </div>
+                            <label for="province">省</label>
+                            <input type="text" id="province"/></br>
+                            <label for="city">市</label>
+                            <input type="text" id="city"/></br>
+                            <label for="district">区</label>
+                            <input type="text" id="district"/></br>
+                            <label for="street">街道</label>
+                            <input type="text" id="street"/></br>
+                            <label for="businesss">公司</label>
+                            <input type="text" id="business"/></br>
+
+
+
+                            <script type="text/javascript">
+                                function G(id) {
+                                    return document.getElementById(id);
+                                }
+
+                                var map = new BMap.Map("container");
+                                var point = new BMap.Point(116.3964,39.9093);
+                                map.centerAndZoom(point,13);
+                                map.enableScrollWheelZoom();
+
+                                var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                                        {"input" : "suggestId"
+                                            ,"location" : map
+                                        });
+                                var myValue;
+                                ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+                                    var _value = e.item.value;
+                                    myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                                    G("province").value = _value.province ;
+                                    console.log(" G(province).value = " +  G("province").value );
+                                    G("city").value = _value.city ;
+                                    G("district").value = _value.district ;
+                                    G("street").value =  _value.street ;
+                                    G("business").value =  _value.business ;
+                                    setPlace();
+                                });
+
+                                function setPlace(){// 创建地址解析器实例
+                                    var myGeo = new BMap.Geocoder();// 将地址解析结果显示在地图上,并调整地图视野
+                                    myGeo.getPoint(myValue, function(point){
+                                        if (point) {
+                                            map.centerAndZoom(point, 16);
+                                            map.addOverlay(new BMap.Marker(point));
+                                        }
+                                    }, "北京");
+                                }
+                            </script>
                             <!--input type="button" ng-click="reset()" value="Reset" /-->
                             <input type="submit" ng-click="update_user()" value="Save" />
                         </form>
@@ -79,7 +139,7 @@
 
             </div>
 
-            <div ng-show="view_tab=='ab'" ng-controller="AddAddressCtrl">
+            <div ng-show="view_tab=='ab'">
                 <div class="row">
                     <div class="col-sm-7">
                         收货人：<input type="text" ng-bind="recipientLookup" />
@@ -104,7 +164,8 @@
                             <th>邮编</th>
                             <th>手机</th>
                         </tr>
-                        <tr ng-repeat="address in urrentUser.recipientAddresses">
+                        </thead>
+                        <tr ng-repeat="address in currentUser.recipientAddresses">
                             <td ng-bind="address.recipient"></td>
                             <td ng-bind="address.country"></td>
                             <td ng-bind="address.state"></td>
@@ -115,7 +176,6 @@
                             <td ng-bind="address.postalCode"></td>
                             <td ng-bind="address.contactNumber"></td>
                         </tr>
-                        </thead>
                     </table>
                 </div>
             </div>
@@ -143,6 +203,10 @@
 
             <div ng-show="view_tab=='ba'">
                 this is the content for 自助入库
+
+
+
+
             </div>
 
             <div ng-show="view_tab=='bb'">

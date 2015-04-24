@@ -161,7 +161,7 @@
       return this.get("suburb");
     },
     set: function(value) {
-      this.set("suburb", suburb);
+      this.set("suburb", value);
     }
   });
   Object.defineProperty(YD.Address.prototype, "contactNumber", {
