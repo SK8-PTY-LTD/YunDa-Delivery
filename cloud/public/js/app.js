@@ -7,8 +7,7 @@ var AV_APP_KEY = "svsw3nybfcax9ssw7czti2fk86ak9gp6ekrb00essagscyrg";
 
 var YundaApp = angular.module('YundaApp', ['ngRoute',
     'ui.bootstrap',
-    'uiGmapgoogle-maps',
-    'ngAutocomplete']);
+    'uiGmapgoogle-maps']);
 
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider.

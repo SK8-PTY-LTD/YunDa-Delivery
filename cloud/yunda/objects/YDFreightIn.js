@@ -151,6 +151,15 @@ Object.defineProperty(YDFreightIn.prototype, "user", {
   }
 });
 
+Object.defineProperty(YDFreightIn.prototype, "weight", {
+  get: function() {
+    return this.get("weight");
+  },
+  set: function(value) {
+    this.set("weight", value);
+  }
+});
+
 YDFreightIn.prototype.getAddress = function() {
   var addressId = this.get("addressId");
   if (addressId != undefined) {

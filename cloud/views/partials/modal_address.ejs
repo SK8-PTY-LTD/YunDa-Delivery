@@ -1,68 +1,30 @@
 <div class="modal-address" >
     <h1>Add new recipient</h1>
 
-    <form name="addressForm">
+    <form name="addressForm" class="form-group">
 
-        <div> 请输入:<input type="text" id="suggestId" size="30" value="百度" style="width:300px;" /></div>
-        <div class="row">
-            <div class="col-sm-6">
-                <label for="baidumap">地址</label></br>
-            </div>
-            <div class="col-sm-6">
-                <div id="container" style="width:300px;height:200px"></div>
-            </div>
-        </div>
-        <label for="province">省</label>
-        <input type="text" id="province"/></br>
-        <label for="city">市</label>
-        <input type="text" id="city"/></br>
-        <label for="district">区</label>
-        <input type="text" id="district"/></br>
-        <label for="street">街道</label>
-        <input type="text" id="street"/></br>
-        <label for="businesss">公司</label>
-        <input type="text" id="business"/></br>
 
-        <script type="text/javascript">
-            function G(id) {
-                return document.getElementById(id);
-            }
+                <label for="Address">地址</label></br>
+                <label for="recipient">收件人</label></br>
+                <input type="text" id="recipient" ng-model="address.recipient"/></br>
+                <label for="province">国家</label>
+                <input type="text" id="country" ng-model="address.country"/></br>
+                <label for="province">省</label>
+                <input type="text" id="province" ng-model="address.state"/></br>
+                <label for="city">市</label>
+                <input type="text" id="city" ng-model="address.city"/></br>
+                <label for="district">区</label>
+                <input type="text" id="district" ng-model="address.suburb"/></br>
+                <label for="street">街道</label>
+                <input type="text" id="street" ng-model="address.street1"/></br>
+                <label for="business">公司</label>
+                <input type="text" id="business" ng-model="address.street2"/></br>
+        <label for="recipient">邮编</label></br>
+        <input type="text" id="postalCode" ng-model="address.postalCode"/></br>
 
-            var map = new BMap.Map("container");
-            var point = new BMap.Point(116.3964,39.9093);
-            map.centerAndZoom(point,13);
-            map.enableScrollWheelZoom();
 
-            var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-                    {"input" : "suggestId"
-                        ,"location" : map
-                    });
-            var myValue;
-            ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
-                var _value = e.item.value;
-                myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-                G("province").value = _value.province ;
-                console.log(" G(province).value = " +  G("province").value );
-                G("city").value = _value.city ;
-                G("district").value = _value.district ;
-                G("street").value =  _value.street ;
-                G("business").value =  _value.business ;
-                setPlace();
-            });
-
-            function setPlace(){// 创建地址解析器实例
-                var myGeo = new BMap.Geocoder();// 将地址解析结果显示在地图上,并调整地图视野
-                myGeo.getPoint(myValue, function(point){
-                    if (point) {
-                        map.centerAndZoom(point, 16);
-                        map.addOverlay(new BMap.Marker(point));
-                    }
-                }, "北京");
-            }
-        </script>
-        <button type="submit" ng-click="addNewAddressSubmit()" >Log in</button>
+            <button type="submit" ng-click="saveAddressSubmit()" >保存</button>
     </form>
 
-    <p ng-model="test"></p>
 </div>
 

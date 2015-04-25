@@ -44,7 +44,7 @@
                         <accordion-heading>
                            会员信息
                         </accordion-heading>
-                      <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-href="partials/about">修改密码</a></p>
+                      <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-click="updatePassword()">修改密码</a></p>
                       <p>登陆邮箱：<span ng-bind="currentUser.addressId"></span></p>
                     </accordion-group>
 
@@ -63,15 +63,13 @@
 
                         <div>
 
-                        <form novalidate class="simple-form">
+                        <form novalidate class="form-group">
                             姓名: <input type="text" ng-bind="currentUser.realName" /><br />
                             手机号: <input type="tel" pattern="[0-9]" name="tel" ng-bind="currentUser.mobilePhoneNumber"/><br />
                             性别: <input type="radio" ng-bind="currentUser.gender" value="male" />male
                             <input type="radio" ng-bind="currentUser.gender" value="female" />female<br />
 
-                            <!-- baidu map API -->
 
-                            <div> 请输入:<input type="text" id="suggestId" size="30" value="百度" style="width:300px;" /></div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label for="baidumap">地址</label></br>
@@ -79,56 +77,15 @@
                                     <input type="text" id="province"/></br>
                                     <label for="city">市</label>
                                     <input type="text" id="city"/></br>
-                                    <label for="district">区</label>
-                                    <input type="text" id="district"/></br>
+                                    <label for="suburb">区</label>
+                                    <input type="text" id="suburb"/></br>
                                     <label for="street">街道</label>
                                     <input type="text" id="street"/></br>
-                                    <label for="businesss">公司</label>
+                                    <label for="business">公司</label>
                                     <input type="text" id="business"/></br>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div id="container" style="width:300px;height:200px"></div>
                                 </div>
                             </div>
 
-
-                            <script type="text/javascript">
-                                function G(id) {
-                                    return document.getElementById(id);
-                                }
-
-                                var map = new BMap.Map("container");
-                                var point = new BMap.Point(116.3964,39.9093);
-                                map.centerAndZoom(point,13);
-                                map.enableScrollWheelZoom();
-
-                                var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-                                        {"input" : "suggestId"
-                                            ,"location" : map
-                                        });
-                                var myValue;
-                                ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
-                                    var _value = e.item.value;
-                                    myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-                                    G("province").value = _value.province ;
-                                    console.log(" G(province).value = " +  G("province").value );
-                                    G("city").value = _value.city ;
-                                    G("district").value = _value.district ;
-                                    G("street").value =  _value.street ;
-                                    G("business").value =  _value.business ;
-                                    setPlace();
-                                });
-
-                                function setPlace(){// 创建地址解析器实例
-                                    var myGeo = new BMap.Geocoder();// 将地址解析结果显示在地图上,并调整地图视野
-                                    myGeo.getPoint(myValue, function(point){
-                                        if (point) {
-                                            map.centerAndZoom(point, 16);
-                                            map.addOverlay(new BMap.Marker(point));
-                                        }
-                                    }, "北京");
-                                }
-                            </script>
                             <!--input type="button" ng-click="reset()" value="Reset" /-->
                             <input type="submit" ng-click="update_user()" value="Save" />
                         </form>
@@ -141,7 +98,7 @@
             <div ng-show="view_tab=='ab'">
                 <div class="row">
                     <div class="col-sm-7">
-                        收货人：<input type="text" ng-bind="recipientLookup" />
+                        收货人：<input type="text" ng-model="recipientLookup" />
                     </div>
                     <div class="col-sm-2">
                         <button ng-click="searchRecipient()">搜索</button>
@@ -152,19 +109,25 @@
                 </div>
 
                 <div class="row">
-                    <table>
+                    <table class="table table-hover">
                         <thead>
                         <tr>
                             <th>收件人</th>
-                            <th>国家/地区</th>
+                            <th>国家</th>
                             <th>省份/直辖市</th>
                             <th>城市</th>
-                            <th>收获地址</th>
-                            <th>邮编</th>
+                            <th>区</th>
+                            <th>收货地址</th>
+                            <th>收货地址2</th>
+                            <th>邮编
                             <th>手机</th>
+                            <th>操作</th>
+
+
+
                         </tr>
                         </thead>
-                        <tr ng-repeat="address in currentUser.recipientAddresses">
+                        <tr ng-repeat="address in recipientAddresses">
                             <td ng-bind="address.recipient"></td>
                             <td ng-bind="address.country"></td>
                             <td ng-bind="address.state"></td>
@@ -174,6 +137,7 @@
                             <td ng-bind="address.street2"></td>
                             <td ng-bind="address.postalCode"></td>
                             <td ng-bind="address.contactNumber"></td>
+                            <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
                         </tr>
                     </table>
                 </div>
@@ -203,13 +167,26 @@
             <div ng-show="view_tab=='ba'">
                 this is the content for 自助入库
 
-
-
-
             </div>
 
             <div ng-show="view_tab=='bb'">
                 this is the content for 包裹管理
+                <tabset>
+                    <tab heading="待确认入库" >
+                        this is the content for 待确认入库
+
+                    </tab>
+                    <tab heading="已确认入库">
+                        this is the content for 已确认入库
+                    </tab>
+                    <tab heading="已生成运单">
+                        this is the content for 已生成运单
+                    </tab>
+                    <tab heading="已发货">
+                        this is the content for 已发货
+
+                    </tab>
+                </tabset>
             </div>
 
             <div ng-show="view_tab=='bc'">

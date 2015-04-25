@@ -106,76 +106,125 @@ YundaApp.controller('DashboardCtrl', function($scope, $modal) {
     address.fetch().then(function(address) {
         $scope.currentUser.address = address;
     });
+
+    $scope.updatePassword = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_password',
+            controller: 'UpdatePasswordCtrl',
+            scope: $scope,
+            size: 'lg'
+
+        });
+        modalInstance.result.then(function() {
+            console.log("updatePassword(): user's password has been updated");
+        });
+    }
+
     $scope.updateUser = function() {
 
     }
+
+
     /* getting recipient */
-    var query = new AV.Query("YD.Address");
-    query.equalTo("user", $scope.currentUser);
-    if (YD.User.current() != undefined) {
-        query.find({
+    $scope.reloadAddress = function() {
+        var query = new AV.Query("Address");
+         query.equalTo("user", $scope.currentUser);
+         if (YD.User.current() != undefined) {
+            query.find({
             success: function (results) {
-                $scope.currentUser.recipientAddresses = results;
+                $scope.recipientAddresses = results;
+                $scope.$apply();
+                console.log("address list has been reloaded");
             },
             error: function (error) {
                 alert("Getting Recipient Addresses Error: " + error.code + " " + error.message);
             }
         });
     }
+    }
+    $scope.reloadAddress();
     /* search recipients */
     $scope.searchRecipient = function(){
-    $scope.recipientLookup = "";
-    var lookupList = new Array();
-    for(var i=0; i<$scope.currentUser.recipientAddresses.length; i++) {
-        if($scope.currentUser.recipientAddresses[i].recipient === $scope.recipientLookup){
-            lookupList.push($scope.currentUser.recipientAddresses[i]);
+
+        var query = new AV.Query("Address");
+        query.equalTo("user", $scope.currentUser);
+        query.equalTo("recipient", $scope.recipientLookup);
+        if (YD.User.current() != undefined) {
+            query.find({
+                success: function (results) {
+                    $scope.recipientAddresses = results;
+                    $scope.$apply();
+                    console.log("address list has been reloaded");
+                },
+                error: function (error) {
+                    alert("Getting Recipient Addresses Error: " + error.code + " " + error.message);
+                }
+            });
         }
-    }
-        $scope.lookupList = lookupList;
     }
 
     /* add a new recipient */
-    $scope.addNewAddress = function (){
-        console.log("dashboard Ctrl login():");
+    $scope.addNewAddress = function() {
+        var address = new YD.Address();
+        if($scope.currentUser != undefined) {
+            address.user = $scope.currentUser;
+            $scope.editAddress(address);
+        }
+        else {
+            console.log("addNewAddress(): currentUser is not defined");
+        }
+    }
+
+    $scope.editAddress = function(address) {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_address',
-            controller: 'AddAddressCtrl',
+            controller: 'EditAddressCtrl',
             scope: $scope,
-            size: 'sm'
+            size: 'sm',
+            resolve: {
+            address: function() {
+                return address;
+            }
+        }
         });
-        modalInstance.result.then(function(address) {
-            console.log("address modal is closed. result: " + address);
-            address.save(null, {
-                success: function(address) {
-                    // The save was successful.
-                    console.log("address is saved. address id: " + address.objectId);
+        modalInstance.result.then(function() {
+            $scope.reloadAddress();
+            console.log("addNewAddress(): new address is added");
+        });
+    }
 
-                },
-                error: function(address, error) {
-                    // The save failed.  Error is an instance of AV.Error.
-                    console.log( "Saving Addresses Error: " + error.code + " " + error.message);
-                }
-            });
+    $scope.deleteAddress = function(address) {
+        alert("deleting!");
+        address.destroy().then(function(address) {
+            $scope.reloadAddress();
+
+        }, function(error) {
+            alert(error.message);
         });
-    };
+    }
 });
 
-/* addaddress contrller */
+/* Edit address contrller */
 
-    YundaApp.controller('AddAddressCtrl', function($scope, $modalInstance){
+    YundaApp.controller('EditAddressCtrl', function($scope, $modalInstance, address){
 
-        $scope.addNewAddressSubmit = function (){
-            var newAddress = new YD.Address();
-            newAddress.country = $scope.country;
-            newAddress.city = $scope.city;
-            newAddress.state = $scope.state;
-            newAddress.suburb = $scope.suburb;
-            newAddress.street1 = $scope.street1;
-            newAddress.street2 = $scope.street2;
-            newAddress.postalCode = $scope.postalCode;
-            newAddress.recipient = $scope.recipient;
-            newAddress.user = $scope.currentUser;
-            $modalInstance.close(newAddress);
+        $scope.address = address;
+        $scope.saveAddressSubmit = function() {
+            $scope.address.save().then(function(address) {
+                $modalInstance.close(address);
+            }, function(error) {
+                alert(error.message);
+            });
+        }
+    });
+
+/* update password*/
+    YundaApp.controller('UpdatePasswordCtrl', function ($scope, $modalInstance) {
+        $scope.savePassword = function() {
+            $scope.currentUser.password = $scope.newPassword;
+            $scope.currentUser.save().then(function(user) {
+                $modalInstance.close(user);
+            })
         }
     });
 
