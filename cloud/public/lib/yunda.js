@@ -75,7 +75,7 @@
   YD.Address = AV.Object.extend("Address", {
     getUserWithCallback: function(callback) {
       var user = this.getUser();
-      if (user != undefined) {;
+      if (user != undefined) {
         user.fetch().then(function(user) {
           callback(user, undefined);
         }, function(error) {
@@ -288,6 +288,7 @@
     STATUS_PENDING_SPLIT_PACKAGE_CHARGED: 210,
     STATUS_PENDING_REDUCE_WEIGHT: 220,
     STATUS_PENDING_EXTRA_PACKAGING: 230,
+    STATUS_PENDING_CHECK_PACKAGE:240,
     //Pending user action
     STATUS_PENDING_FINAL_CONFIRMATION: 300,
     //Pending admin action
@@ -334,6 +335,15 @@
     }
   });
 
+  Object.defineProperty(YD.Freight.prototype, "notes", {
+    get: function() {
+      return this.get("notes");
+    },
+    set: function(value) {
+      this.set("notes", value);
+    }
+  });
+
   Object.defineProperty(YD.Freight.prototype, "insurance", {
     get: function() {
       return this.get("insurance");
@@ -360,6 +370,34 @@
       this.set("status", value);
     }
   });
+
+  Object.defineProperty(YD.Freight.prototype, "statusGroup", {
+    get: function() {
+      return this.get("statusGroup");
+    },
+    set: function(value) {
+      this.set("statusGroup", value);
+    }
+  });
+
+  Object.defineProperty(YD.Freight.prototype, "extraStrength", {
+    get: function() {
+      return this.get("extraStrength");
+    },
+    set: function(value) {
+      this.set("extraStrength", value);
+    }
+  });
+
+  Object.defineProperty(YD.Freight.prototype, "reductWeight", {
+    get: function() {
+      return this.get("reductWeight");
+    },
+    set: function(value) {
+      this.set("reductWeight", value);
+    }
+  });
+
 
   YD.FreightGroup = AV.Object.extend("FreightGroup", {
     getStatus: function() {
@@ -452,7 +490,9 @@
   }, {
     STATUS_INITIALIZED: 0,
     //Pending user action
-    STATUS_ARRIVED: 200
+    STATUS_ARRIVED: 200,
+    STATUS_CONFIRMED: 300
+
   });
 
 //================================================================================
@@ -462,6 +502,7 @@
   YD.FreightIn.STATUS_INITIALIZED = 0
 //Pending user action
   YD.FreightIn.STATUS_ARRIVED = 200
+  YD.FreightIn.STATUS_CONFIRMED = 300
 
   YD.FreightIn.prototype.getAddressWithCallBack = function(callback) {
     var address = this.getAddress();
@@ -738,5 +779,13 @@
       this.set("username", value);
     }
   });
-
+  //var StatusGroup = AV.Object.extend("StatusGroup");
+  //Object.defineProperty(StatusGroup.prototype, "url", {
+  //  get: function(){
+  //    return this.get("url");
+  //  },
+  //  set: function(val){
+  //    this.set("url", val);
+  //  }
+  //});
 }).call(this);

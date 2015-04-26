@@ -108,7 +108,6 @@
                     </div>
                 </div>
 
-                <div class="row">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -122,8 +121,6 @@
                             <th>邮编
                             <th>手机</th>
                             <th>操作</th>
-
-
 
                         </tr>
                         </thead>
@@ -140,7 +137,6 @@
                             <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
                         </tr>
                     </table>
-                </div>
             </div>
 
             <div ng-show="view_tab=='ac'">
@@ -171,16 +167,100 @@
 
             <div ng-show="view_tab=='bb'">
                 this is the content for 包裹管理
-                <tabset>
-                    <tab heading="待确认入库" >
+                <tabset >
+                    <tab heading="待确认入库" ng-controller="freightInArrivedCtrl">
                         this is the content for 待确认入库
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>入库单号</th>
+                                <th>重量</th>
+                                <th>状态</th>
+                                <th>操作</th>
 
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="freightIn in freightIns">
+                                <td ng-bind="freightIn.trackingNumber"></td>
+                                <td ng-bind="freightIn.weight"></td>
+                                <td>pending</td>
+                                <td><a ng-click="freightInConfirm(freightIn)">确认入库</a></td>
+                            </tr>
+                        </table>
                     </tab>
-                    <tab heading="已确认入库">
+                    <tab heading="已确认入库" ng-controller="freightInConfirmedCtrl">
                         this is the content for 已确认入库
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>入库单号</th>
+                                <th>重量</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="freightIn in freightIns">
+                                <td ng-bind="freightIn.trackingNumber"></td>
+                                <td ng-bind="freightIn.weight"></td>
+                                <td>pending</td>
+                                <td>
+                                    <div class="btn-group" dropdown is-open="status.isopen">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                                            动作 <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <label>直接发货:
+                                                <input type="checkbox" ng-model="checkboxModel.delivery">
+                                            </label>
+                                            <label>普通加固:
+                                                <input type="checkbox" ng-model="checkboxModel.addPackage">
+                                            </label>
+                                            <label>普通减重:
+                                                <input type="checkbox" ng-model="checkboxModel.reduceWeight">
+                                            </label>
+                                            <li class="divider"></li>
+                                            <label>开箱验货(收费):
+                                                <input type="checkbox" ng-model="checkboxModel.checkPackage">
+                                            </label>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" dropdown is-open="status.isopen">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                                            分包 <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li ng-click="splitPackage(freightIn)">分包裹</li>
+                                            <li ng-click="splitPackagePremium(freightIn)">精确分包</li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <li><a ng-click="generateFreight(freightIn)">生成运单</a></li>
+                                </td>
+                            </tr>
+                        </table>
                     </tab>
-                    <tab heading="已生成运单">
+                    <tab heading="已生成运单" ng-controller="FreightConfirmedCtrl">
                         this is the content for 已生成运单
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>入库单号</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="freight in freights">
+                                <td ng-bind="freight.trackingNumber"></td>
+                                <td ng-bind="freightIn.weight"></td>
+                                <td>pending</td>
+                                <td>
+
+                                </td>
+                            </tr>
+                        </table>
                     </tab>
                     <tab heading="已发货">
                         this is the content for 已发货
