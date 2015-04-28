@@ -188,6 +188,9 @@
                             </tr>
                         </table>
                     </tab>
+
+
+
                     <tab heading="已确认入库" ng-controller="freightInConfirmedCtrl">
                         this is the content for 已确认入库
                         <table class="table table-hover">
@@ -242,6 +245,9 @@
                             </tr>
                         </table>
                     </tab>
+
+
+
                     <tab heading="已生成运单" ng-controller="FreightConfirmedCtrl">
                         this is the content for 已生成运单
                         <table class="table table-hover">
@@ -253,17 +259,39 @@
                             </tr>
                             </thead>
                             <tr ng-repeat="freight in freights">
+                                <td><input type="checkbox" ng-model="freight.selection"></td>
                                 <td ng-bind="freight.trackingNumber"></td>
+                                <td ng-bind="freight.statusToString"></td>
                                 <td ng-bind="freightIn.weight"></td>
-                                <td>pending</td>
-                                <td>
-
-                                </td>
                             </tr>
+
+                            <td>
+                                <li><a ng-click="payment()">付款</a></li>
+                            </td>
                         </table>
+
                     </tab>
-                    <tab heading="已发货">
+                    <tab heading="已发货" ng-controller="FreightDeliveryCtrl">
                         this is the content for 已发货
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>入库单号</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="freight in freights">
+                                <td ng-bind="freight.trackingNumber"></td>
+                                <td ng-bind="freight.statusToString"></td>
+                                <td ng-bind="freightIn.weight"></td>
+                            </tr>
+
+                            <td>
+                                <li><a ng-click="payment()">付款</a></li>
+                            </td>
+                        </table>
+
 
                     </tab>
                 </tabset>
