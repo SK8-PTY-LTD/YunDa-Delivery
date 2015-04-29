@@ -191,7 +191,7 @@
 
 
 
-                    <tab heading="已确认入库" ng-controller="freightInConfirmedCtrl">
+                    <tab heading="已确认入库" ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
                         this is the content for 已确认入库
                         <table class="table table-hover">
                             <thead>
@@ -207,26 +207,18 @@
                                 <td ng-bind="freightIn.weight"></td>
                                 <td>pending</td>
                                 <td>
-                                    <div class="btn-group" dropdown is-open="status.isopen">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-                                            动作 <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <label>直接发货:
-                                                <input type="checkbox" ng-model="checkboxModel.delivery">
-                                            </label>
-                                            <label>普通加固:
-                                                <input type="checkbox" ng-model="checkboxModel.addPackage">
-                                            </label>
-                                            <label>普通减重:
-                                                <input type="checkbox" ng-model="checkboxModel.reduceWeight">
-                                            </label>
-                                            <li class="divider"></li>
-                                            <label>开箱验货(收费):
-                                                <input type="checkbox" ng-model="checkboxModel.checkPackage">
-                                            </label>
-                                        </ul>
-                                    </div>
+                                            <li>直接发货:
+                                                <input type="checkbox" ng-model="freightIn.checkboxModel.delivery">
+                                            </li>
+                                            <li>普通加固:
+                                                <input type="checkbox" ng-model="freightIn.checkboxModel.addPackage">
+                                            </li>
+                                            <li>普通减重:
+                                                <input type="checkbox" ng-model="freightIn.checkboxModel.reduceWeight">
+                                            </li>
+                                            <li>开箱验货(收费):
+                                                <input type="checkbox" ng-model="freightIn.checkboxModel.checkPackage">
+                                            </li>
                                 </td>
                                 <td>
                                     <div class="btn-group" dropdown is-open="status.isopen">
@@ -248,51 +240,45 @@
 
 
 
-                    <tab heading="已生成运单" ng-controller="FreightConfirmedCtrl">
+                    <tab heading="已生成运单" ng-controller="FreightConfirmedCtrl" ng-click="reloadFreightConfirmed()">
                         this is the content for 已生成运单
                         <table class="table table-hover">
                             <thead>
                             <tr>
+                                <th>选择</th>
                                 <th>入库单号</th>
                                 <th>状态</th>
-                                <th>操作</th>
+                                <th>重量</th>
                             </tr>
                             </thead>
                             <tr ng-repeat="freight in freights">
                                 <td><input type="checkbox" ng-model="freight.selection"></td>
-                                <td ng-bind="freight.trackingNumber"></td>
+                                <td ng-bind="freight.id"></td>
                                 <td ng-bind="freight.statusToString"></td>
-                                <td ng-bind="freightIn.weight"></td>
+                                <td ng-bind="freight.weight"></td>
                             </tr>
-
-                            <td>
-                                <li><a ng-click="payment()">付款</a></li>
-                            </td>
                         </table>
+                        <button type="button" class="btn btn-primary" ng-click="payment()">
+                            付款
+                        </button>
 
                     </tab>
-                    <tab heading="已发货" ng-controller="FreightDeliveryCtrl">
+                    <tab heading="已发货" ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight()">
                         this is the content for 已发货
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th>入库单号</th>
                                 <th>状态</th>
-                                <th>操作</th>
                             </tr>
                             </thead>
                             <tr ng-repeat="freight in freights">
                                 <td ng-bind="freight.trackingNumber"></td>
                                 <td ng-bind="freight.statusToString"></td>
-                                <td ng-bind="freightIn.weight"></td>
                             </tr>
 
-                            <td>
-                                <li><a ng-click="payment()">付款</a></li>
-                            </td>
+
                         </table>
-
-
                     </tab>
                 </tabset>
             </div>

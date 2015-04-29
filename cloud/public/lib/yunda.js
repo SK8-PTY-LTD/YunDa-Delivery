@@ -300,29 +300,13 @@
     STATUS_DELIVERED: 620
   });
 
+
   Object.defineProperty(YD.Freight.prototype, "address", {
     get: function() {
-      var addressId = this.get("addressId");
-      if (addressId != undefined) {
-        var address = new SH.Address({
-          "id": id
-        });
-        return address;
-      } else {
-        return undefined;
-      }
+      return this.get("address");
     },
     set: function(value) {
-      this.set("addressId", value.id);
-    }
-  });
-
-  Object.defineProperty(YD.Freight.prototype, "addressId", {
-    get: function() {
-      return this.get("addressId");
-    },
-    set: function(value) {
-      this.set("addressId", value);
+      this.set("address", value);
     }
   });
 
@@ -334,7 +318,14 @@
       this.set("user", value);
     }
   });
-
+  Object.defineProperty(YD.Freight.prototype, "freightIn", {
+    get: function() {
+      return this.get("freightIn");
+    },
+    set: function(value) {
+      this.set("freightIn", value);
+    }
+  });
   Object.defineProperty(YD.Freight.prototype, "notes", {
     get: function() {
       return this.get("notes");
@@ -368,6 +359,25 @@
     },
     set: function(value) {
       this.set("status", value);
+    }
+  });
+
+  Object.defineProperty(YD.Freight.prototype, "trackingNumber", {
+    get: function() {
+      return this.get("trackingNumber");
+    },
+    set: function(value) {
+      this.set("trackingNumber", value);
+    }
+  });
+
+
+  Object.defineProperty(YD.Freight.prototype, "weight", {
+    get: function() {
+      return this.get("weight");
+    },
+    set: function(value) {
+      this.set("weight", value);
     }
   });
 
@@ -437,7 +447,7 @@
     }
   });
 
-  YD.FreightIn = AV.Object.extend("Freight", {
+  YD.FreightIn = AV.Object.extend("FreightIn", {
     getAddressWithCallBack: function(callback) {
       var address = this.getAddress();
       if (address != undefined) {
@@ -568,12 +578,12 @@
     }
   });
 
-  Object.defineProperty(YD.FreightIn.prototype, "trackingId", {
+  Object.defineProperty(YD.FreightIn.prototype, "trackingNumber", {
     get: function() {
-      return this.get("trackingId");
+      return this.get("trackingNumber");
     },
     set: function(value) {
-      this.set("trackingId", value);
+      this.set("trackingNumber", value);
     }
   });
 
@@ -583,6 +593,15 @@
     },
     set: function(value) {
       this.set("user", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightIn.prototype, "weight", {
+    get: function() {
+      return this.get("weight");
+    },
+    set: function(value) {
+      this.set("weight", value);
     }
   });
   // YD.Transactoin = require('cloud/shelf/objects/YDTransactoin.js')
