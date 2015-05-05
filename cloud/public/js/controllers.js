@@ -38,7 +38,7 @@ YundaApp.controller('NavbarCtrl', function($scope, $rootScope, $modal) {
             windowClass: 'center-modal'
         });
         modalInstance.result.then(function(user) {
-            console.log("modal is closed. result: " + callback);
+            console.log("modal is closed. ");
             if(user != undefined) {
                 $rootScope.currentUser = user;
             } else {
@@ -103,7 +103,7 @@ YundaApp.controller('DashboardCtrl', function($scope, $modal) {
 
     /* getting user's address */
     var address = new YD.Address();
-    address.objectId = $scope.currentUser.addressId;
+    address.id = $scope.currentUser.addressId;
     address.fetch().then(function(address) {
         $scope.currentUser.address = address;
     });
@@ -122,9 +122,6 @@ YundaApp.controller('DashboardCtrl', function($scope, $modal) {
         });
     }
 
-    $scope.updateUser = function() {
-
-    }
 
 
     /* getting recipient */
@@ -197,14 +194,96 @@ YundaApp.controller('DashboardCtrl', function($scope, $modal) {
     };
 
     $scope.deleteAddress = function(address) {
-        alert("deleting!");
-        address.destroy().then(function(address) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_deleteAddress',
+            controller: 'DeleteAddressCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                address: function() {
+                    return address;
+                }
+            },
+            windowClass: 'center-modal'
+        });
+        modalInstance.result.then(function() {
             $scope.reloadAddress();
+            console.log("Delete address: success");
+        })
 
-        }, function(error) {
+    }
+});
+
+YundaApp.controller('DeleteAddressCtrl', function($scope, $modalInstance, address) {
+    alert("deleting!");
+    $scope.confirmDelete = function() {
+        address.destroy().then(function(address) {
+            $modalInstance.close(address);
+        }, function(address, error) {
             alert(error.message);
         });
+    };
+    $scope.cancelDelete = function() {
+        $modalInstance.dismiss();
     }
+
+});
+
+YundaApp.controller('UpdateUserCtrl', function($scope) {
+    var address = new YD.Address();
+
+    if($scope.currentUser.addressId != undefined) {
+        address.id = $scope.currentUser.addressId;
+        address.fetch().then(function(address) {
+            $scope.address = address;
+        });
+    } else {
+        $scope.address = new YD.Address();
+    }
+
+    $scope.update_user = function() {
+        //var address = new YD.Address();
+        //address.user = $scope.currentUser;
+        //address.country = $scope.country;
+        //address.city = $scope.city;
+        //address.state = $scope.state;
+        //address.suburb = $scope.suburb;
+        //address.street1 = $scope.street1;
+        //address.street2 = $scope.street2;
+        //address.postalCode = $scope.postalCode;
+        //$scope.currentUser.address = address;
+        //$scope.currentUser.address = $scope.address;
+        if($scope.address.id != undefined) {
+            $scope.currentUser.addressId = $scope.address.id;
+        }
+        else {
+            var address = new YD.Address();
+            address = $scope.address;
+            address.recipient = $scope.currentUser.realName;
+            address.user = $scope.currentUser;
+
+            address.save(null, {
+                success: function(address) {
+                    console.log("update_user() save address success");
+                    $scope.currentUser.addressId = address.id;
+                },
+                error: function(address, error) {
+                    console.log("update_user() save address fail : " + error.id + error.message);
+                }
+            });
+        }
+        //$scope.currentUser.mobilePhoneNumber = '23232323';
+        $scope.currentUser.save(null, {
+            success: function(user) {
+                console.log("update_user() success");
+                console.log("update_user() success mobile: " + user.mobilePhoneNumber);
+
+            },
+            error: function(user, error) {
+                console.log("update_user() fail: " + error.id + error.message);
+            }
+        });
+    };
 });
 
 YundaApp.controller('freightInArrivedCtrl', function($scope) {
@@ -257,20 +336,24 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                         splitPackage : false,
                         splitPackagePremium : false
                     };
-                }
-                $scope.$apply();
-                console.log("FreightIn confirmed is shown");
-                for(var i = 0; i < $scope.freightIns.length; i++){
-                    console.log("delivery: " + $scope.freightIns[i].checkboxModel.delivery);
-                    console.log("addPackage: " + $scope.freightIns[i].checkboxModel.addPackage);
-                    console.log("reduceWeight: " + $scope.freightIns[i].checkboxModel.reduceWeight);
-                    console.log("checkPackage: " + $scope.freightIns[i].checkboxModel.checkPackage);
-                    console.log("splitPackage: " + $scope.freightIns[i].checkboxModel.splitPackage);
-                    console.log("splitPackagePremium: " + $scope.freightIns[i].checkboxModel.splitPackagePremium);
+                    $scope.freightIns[i].selection = false;
+                    $scope.freightIns[i].address = '';
 
                 }
+                $scope.getRecipient();
+                $scope.$apply();
+                console.log("FreightIn confirmed is shown");
+                //for(var i = 0; i < $scope.freightIns.length; i++){
+                //    console.log("delivery: " + $scope.freightIns[i].checkboxModel.delivery);
+                //    console.log("addPackage: " + $scope.freightIns[i].checkboxModel.addPackage);
+                //    console.log("reduceWeight: " + $scope.freightIns[i].checkboxModel.reduceWeight);
+                //    console.log("checkPackage: " + $scope.freightIns[i].checkboxModel.checkPackage);
+                //    console.log("splitPackage: " + $scope.freightIns[i].checkboxModel.splitPackage);
+                //    console.log("splitPackagePremium: " + $scope.freightIns[i].checkboxModel.splitPackagePremium);
+                //
+                //}
             },
-            error: function (error) {
+            error: function (freightin, error) {
                 alert("Getting Freight In Error: " + error.code + " " + error.message);
             }
         });
@@ -294,7 +377,7 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
     //
     //    if(freightIn.checkboxModel.splitPackage == true)
     //        statusList.push(YD.Freight.STATUS_PENDING_SPLIT_PACKAGE);
-    //
+    //n
     //    if(freightIn.checkboxModel.splitPackagePremium == true)
     //        statusList.push(YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED);
     //
@@ -352,11 +435,30 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         });
     };
 
+    $scope.getRecipient = function() {
+        var query = new AV.Query("Address");
+        query.equalTo("user", $scope.currentUser);
+        query.find({
+            success: function(results) {
+                $scope.addressList = results;
+                console.log("GetRecipient ADDRESS got : " + results.length);
+            },
+            error: function (res, error) {
+                alert("Getting Recipient: " + error.code + " " + error.message);
+            }
+        });
+    };
+
+    $scope.chooseRecipient = function (freightIn) {
+        console.log("address is chosen: " + freightIn.address);
+    };
+
     $scope.generateFreight = function(freightIn){
         var freight = new YD.Freight();
         //freight.address = null;
         freight.freightIn = freightIn;
         //freight.statusGroup = $scope.getStatusList(freightIn);
+        if(freightIn.checkboxModel != undefined) {
         if(freightIn.checkboxModel.delivery == true)
             freight.add("statusGroup", YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION);
 
@@ -374,14 +476,14 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
 
         if(freightIn.checkboxModel.splitPackagePremium == true)
             freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED);
-
+        }
         freight.user = $scope.currentUser;
         freight.weight = freightIn.weight;
         freight.trackingNumber = freightIn.trackingNumber;
         freight.status = 0;
         freight.save(null, {
             success: function(freight) {
-                console.log("freight has been saved: " + freight.objectId);
+                console.log("freight has been saved: " + freight.id);
             },
             error: function(freight, error){
                 console.log("ERROR: freight not save: " + error.code + " - " + error.message);
@@ -390,7 +492,7 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         freightIn.status = 999;
         freightIn.save(null, {
             success: function(freightIn) {
-                console.log("freightIn has been saved: " + freightIn.objectId);
+                console.log("freightIn has been saved: " + freightIn.id);
             },
             error: function(freightIn, error){
                 console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
@@ -398,17 +500,58 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         });
     };
 
+    $scope.generateDeliveryFreight = function(freightIn){
+        var freight = new YD.Freight();
+        //freight.address = null;
+        freight.freightIn = freightIn;
+        //freight.statusGroup = $scope.getStatusList(freightIn);
+        freight.add("statusGroup", YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION);
+
+        freight.user = $scope.currentUser;
+        freight.weight = freightIn.weight;
+        freight.trackingNumber = freightIn.trackingNumber;
+        freight.status = 0;
+        freight.save(null, {
+            success: function(freight) {
+                console.log("freight has been saved: " + freight.id);
+            },
+            error: function(freight, error){
+                console.log("ERROR: freight not save: " + error.code + " - " + error.message);
+            }
+        });
+        freightIn.status = 999;
+        freightIn.save(null, {
+            success: function(freightIn) {
+                console.log("freightIn has been saved: " + freightIn.id);
+            },
+            error: function(freightIn, error){
+                console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
+            }
+        });
+    };
+
+    $scope.generateAllFreight = function() {
+        for (var i = 0; i <$scope.freightIns.length; i++){
+            if($scope.freightIns[i].selection == true) {
+                $scope.generateFreight($scope.freightIns[i]);
+                $scope.reloadFreightInConfirmed();
+            }
+        }
+    };
 });
 
     YundaApp.controller('FreightConfirmedCtrl', function($scope) {
 
         //status to string
         $scope.getStatus = function() {
+
             for (var i = 0; i < $scope.freights.length; i++) {
-                //$scope.freights[i].statusToString = "";
+                //$scope.freights[i].statusToString = " ";
                 var statusList = $scope.freights[i].statusGroup;
-                var statusString = "";
-                for(var j = 0; j < statusList.length; j++) {
+                var statusString = ' ';
+
+                if($scope.freights[i].statusGroup != undefined){
+                               for(var j = 0; j < statusList.length; j++) {
                     if(statusList[j] == YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION){
                         statusString += "Pending Final Confirmation; ";
                         console.log("FREIGHT_STATUS_TO_STRING: " +  statusString);}
@@ -433,6 +576,8 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                         statusString += "Pending Split Packaging; ";
                         console.log("FREIGHT_STATUS_TO_STRING: " +  statusString);}
                 }
+                }
+
                 //statusString.substr(0, statusString.length - 22);   //remove trailing comma
                 $scope.freights[i].statusToString = statusString;
                 console.log("HERE IS STRING LENGTH: " + $scope.freights[i].statusToString.length);

@@ -140,14 +140,7 @@
   }, {
 
   });
-  Object.defineProperty(YD.Address.prototype, "objectId", {
-    get: function() {
-      return this.get("objectId");
-    },
-    set: function(value) {
-      this.set("objectId", value);
-    }
-  });
+
   Object.defineProperty(YD.Address.prototype, "city", {
     get: function() {
       return this.get("city");
@@ -798,6 +791,15 @@
       this.set("username", value);
     }
   });
+  Object.defineProperty(YD.User.prototype, "mobilePhoneNumber", {
+    get: function() {
+      return this.get("mobilePhoneNumber");
+    },
+    set: function(value) {
+      this.set("mobilePhoneNumber", value);
+    }
+  });
+
   //var StatusGroup = AV.Object.extend("StatusGroup");
   //Object.defineProperty(StatusGroup.prototype, "url", {
   //  get: function(){
