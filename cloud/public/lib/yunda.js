@@ -157,14 +157,7 @@
       this.set("suburb", value);
     }
   });
-  Object.defineProperty(YD.Address.prototype, "contactNumber", {
-    get: function() {
-      return this.get("contactNumber");
-    },
-    set: function(value) {
-      this.set("contactNumber", value);
-    }
-  });
+
   Object.defineProperty(YD.Address.prototype, "country", {
     get: function() {
       return this.get("country");
@@ -197,6 +190,16 @@
       this.set("state", value);
     }
   });
+
+  Object.defineProperty(YD.Address.prototype, "contactNumber", {
+    get: function() {
+      return this.get("contactNumber");
+    },
+    set: function(value) {
+      this.set("contactNumber", value);
+    }
+  });
+
   Object.defineProperty(YD.Address.prototype, "street1", {
     get: function() {
       return this.get("street1");
@@ -383,6 +386,15 @@
     }
   });
 
+  Object.defineProperty(YD.Freight.prototype, "freightInGroup", {
+    get: function() {
+      return this.get("freightInGroup");
+    },
+    set: function(value) {
+      this.set("freightInGroup", value);
+    }
+  });
+
   Object.defineProperty(YD.Freight.prototype, "extraStrength", {
     get: function() {
       return this.get("extraStrength");
@@ -506,6 +518,7 @@
 //Pending user action
   YD.FreightIn.STATUS_ARRIVED = 200
   YD.FreightIn.STATUS_CONFIRMED = 300
+  YD.FreightIn.STATUS_FINISHED = 900
 
   YD.FreightIn.prototype.getAddressWithCallBack = function(callback) {
     var address = this.getAddress();
@@ -536,23 +549,30 @@
 // Property setters and getters
 //================================================================================
 
-  Object.defineProperty(YD.FreightIn.prototype, "address", {
-    get: function() {
-      var addressId = this.get("addressId");
-      if (addressId != undefined) {
-        var address = new SH.Address({
-          "id": id
-        });
-        return address;
-      } else {
-        return undefined;
-      }
-    },
-    set: function(value) {
-      this.set("addressId", value.id);
-    }
-  });
-
+  //Object.defineProperty(YD.FreightIn.prototype, "address", {
+  //  get: function() {
+  //    var addressId = this.get("addressId");
+  //    if (addressId != undefined) {
+  //      var address = new YD.Address({
+  //        "id": id
+  //      });
+  //      return address;
+  //    } else {
+  //      return undefined;
+  //    }
+  //  },
+  //  set: function(value) {
+  //    this.set("addressId", value.id);
+  //  }
+  //});
+  //Object.defineProperty(YD.FreightIn.prototype, "address", {
+  //  get: function() {
+  //    return this.get("address");
+  //  },
+  //  set: function(value) {
+  //    this.set("address", value);
+  //  }
+  //});
   Object.defineProperty(YD.FreightIn.prototype, "addressId", {
     get: function() {
       return this.get("addressId");
@@ -699,7 +719,7 @@
     get: function() {
       var addressId = this.get("addressId");
       if (addressId != undefined) {
-        var address = new SH.Address({
+        var address = new YD.Address({
           "id": id
         });
         return address;
@@ -797,6 +817,22 @@
     },
     set: function(value) {
       this.set("mobilePhoneNumber", value);
+    }
+  });
+  Object.defineProperty(YD.User.prototype, "identityFront", {
+    get: function() {
+      return this.get("identityFront");
+    },
+    set: function(value) {
+      this.set("identityFront", value);
+    }
+  });
+  Object.defineProperty(YD.User.prototype, "identityBack", {
+    get: function() {
+      return this.get("identityBack");
+    },
+    set: function(value) {
+      this.set("identityBack", value);
     }
   });
 

@@ -45,7 +45,19 @@
                            会员信息
                         </accordion-heading>
                       <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-click="updatePassword()">修改密码</a></p>
-                      <p>登陆邮箱：<span ng-bind="currentUser.addressId"></span></p>
+                      <p>姓名：<span ng-bind="currentUser.realName"></span></p>
+                      <form ng-controller="fileUploadCtrl">
+                          <div class="form-group">
+                              <label for="id-front">身份证正面</label>
+                              <input type="file" onchange="angular.element(this).scope().filesChangedFront(this)" />
+                              <label for="id-front">身份证反面面</label>
+                              <input type="file" onchange="angular.element(this).scope().filesChangedBack(this)"  />
+                              <li ng-repeat="file in identityFrontList"> {{file.name}}</li>
+                              <li ng-repeat="file in identityBackList"> {{file.name}}</li>
+
+                              <button class="btn btn-primary" ng-click="uploadIdentity()"> 上传 </button>
+                          </div>
+                      </form>
                     </accordion-group>
 
                     <accordion-group is-open="true">
@@ -187,13 +199,22 @@
                                 <td ng-bind="freightIn.weight"></td>
                                 <td>pending</td>
                                 <td ng-bind="freightIn.notes"></td>
-                                <td><a ng-click="freightInConfirm(freightIn)">确认入库</a></td>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="freightInConfirm(freightIn)">确认入库</button>
+                                </td>
                             </tr>
                         </table>
                     </tab>
 
                     <tab heading="已确认入库" ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
-                        this is the content for 已确认入库
+                        <button type="button" class="btn btn-primary" ng-click="generateAllFreight()">
+                            批量生成运单</span>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" ng-click="mergePackage()">
+                            合包</span>
+                        </button>
+
                         <table class="table table-hover">
                             <thead>
                             <tr>
@@ -202,6 +223,7 @@
                                 <th>入库时间</th>
                                 <th>重量</th>
                                 <th>状态</th>
+                                <th>预估款</th>
                                 <th>操作</th>
                                 <th>收件人</th>
                                 <th>备注</th>
@@ -213,7 +235,7 @@
                                 <td ng-bind="freightIn.createdAt"></td>
                                 <td ng-bind="freightIn.weight"></td>
                                 <td>pending</td>
-
+                                <td>$<span ng-bind="freightIn.estimatePrice"></span></td>
                                 <td>
                                 <!--<li>直接发货:-->
                                 <!--<input type="checkbox" ng-model="freightIn.checkboxModel.delivery">-->
@@ -230,7 +252,6 @@
                                             </li>
                                 </td>
                                 <td>
-
                                         <button type="button" class="btn btn-primary" ng-click="generateDeliveryFreight(freightIn)">
                                             直接发货
                                         </button>
@@ -267,10 +288,12 @@
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-repeat="address in addressList">
-                                            <li ng-click="chooseRecipient(freightIn)" ng-model="freightIn.address">{{address.recipient}} - {{address.country}}{{ address.state}}{{address.city}}{{address.street1}}</li>
-                                            <li>sssdd</li>
+                                            <li ng-click="chooseRecipient(freightIn, address)"><span ng-bind="address.recipient"> - </span><span ng-bind="address.country"></span><span ng-bind="address.state"></span><span ng-bind="address.city"></span><span ng-bind="address.suburb"></span></span><span ng-bind="address.street1"></span><span ng-bind="address.street2"></span></li>
                                         </ul>
                                     </div>
+                                    <!--<select ng-model="freight.address" >-->
+                                        <!--<option ng-repeat="address in addressList"></option>-->
+                                    <!--</select>-->
                                 </td>
                                 <td>
                                     <input type="text" ng-model="freightIn.comments">
@@ -279,15 +302,10 @@
                                     <li><a ng-click="generateFreight(freightIn)">生成运单</a></li>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-
-                                    <button type="button" class="btn btn-primary" ng-click="generateAllFreight()">
-                                        批量生成运单</span>
-                                    </button>
-                                </td>
-                            </tr>
                         </table>
+                        <button type="button" class="btn btn-primary" ng-click="generateAllFreight()">
+                            批量生成运单</span>
+                        </button>
                     </tab>
 
 
@@ -348,8 +366,27 @@
                 this is the content for 我的运单
             </div>
 
-            <div ng-show="view_tab=='ca'">
-                this is the content for 在线充值
+            <div ng-show="view_tab=='ca'" ng-controller="rechargeCtrl">
+                账户余额($): <span ng-bind="currentUser.balance"></span> </br></br>
+                *充值额度(￥): CNY<input type="text" ng-model="CNY" /> <-> $<span ng-bind="USD"></span></br>
+                充值免手续费(美元/人民币=1/6.4)
+                </br></br>
+                <paragraph>
+                为方便广大客户充值操作，现在系统充值链接已经做好，大家在充值的时候需要选择的交易方式是第二个即时到账交易，谢谢！
+
+                支付宝即时到帐服务已开通， 只支持“即时到帐交易”充值，不支持“担保交易”充值
+
+                请不要使用“担保交易”充值，“担保交易”充值为无效充值！
+
+                支付宝自动充值一定要使用即时到账交易，担保交易的无法入账
+
+                若您不小心使用了担保交易，请24小时后，支付宝页面申请退款
+
+                提示，即时到账2次输入的都是支付密码，如果在进入支付宝前，页面没有一次过进入，状态会重新恢复到默认的担保交易，要重新再选择下即时到账交易
+
+                另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。所以现在提醒大家在充值的时候尽量用IE浏览器，谢谢支持
+                </paragraph></br></br>
+                <button class="btn btn-primary"> 确认充值</button>
             </div>
 
             <div ng-show="view_tab=='cb'">

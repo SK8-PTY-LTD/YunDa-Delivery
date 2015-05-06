@@ -211,7 +211,21 @@ YundaApp.controller('DashboardCtrl', function($scope, $modal) {
             console.log("Delete address: success");
         })
 
-    }
+    };
+
+    $scope.getRecipient = function() {
+        var query = new AV.Query("Address");
+        query.equalTo("user", $scope.currentUser);
+        query.find({
+            success: function(results) {
+                $scope.addressList = results;
+                //console.log("GetRecipient ADDRESS got : " + results.length);
+            },
+            error: function (res, error) {
+                alert("Getting Recipient: " + error.code + " " + error.message);
+            }
+        });
+    };
 });
 
 YundaApp.controller('DeleteAddressCtrl', function($scope, $modalInstance, address) {
@@ -320,6 +334,7 @@ YundaApp.controller('freightInArrivedCtrl', function($scope) {
 });
 
 YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
+    $scope.PRICE = 10;
     $scope.reloadFreightInConfirmed = function(){
         var query = new AV.Query("FreightIn");
         query.equalTo("user", $scope.currentUser);
@@ -337,8 +352,8 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                         splitPackagePremium : false
                     };
                     $scope.freightIns[i].selection = false;
-                    $scope.freightIns[i].address = '';
-
+                    $scope.freightIns[i].estimatePrice = $scope.freightIns[i].weight * $scope.PRICE;
+                    //$scope.freightIns[i].address = ' ';
                 }
                 $scope.getRecipient();
                 $scope.$apply();
@@ -360,29 +375,6 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
     };
     $scope.reloadFreightInConfirmed();
 
-    //
-    //$scope.getStatusList = function(freightIn) {
-    //    var statusList = [];
-    //    if(freightIn.checkboxModel.delivery == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION);
-    //
-    //    if(freightIn.checkboxModel.addPackage == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_EXTRA_PACKAGING);
-    //
-    //    if(freightIn.checkboxModel.reduceWeight == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_REDUCE_WEIGHT);
-    //
-    //    if(freightIn.checkboxModel.checkPackage == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_CHECK_PACKAGE);
-    //
-    //    if(freightIn.checkboxModel.splitPackage == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_SPLIT_PACKAGE);
-    //n
-    //    if(freightIn.checkboxModel.splitPackagePremium == true)
-    //        statusList.push(YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED);
-    //
-    //    return statusList;
-    //};
 
     $scope.splitPackage = function(freightIn) {
         var modalInstance = $modal.open({
@@ -402,7 +394,7 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
             //$scope.checkboxModel.splitPackage = true;
             //$scope.checkboxModel.splitPackagePremium = false;
             //freightIn.notes = notes;
-            freightIn.status = 999;
+            freightIn.status = YD.FreightIn.STATUS_FINISHED ;
             freightIn.save().then(function(){
                 //freightIn notes have been saved
             });
@@ -435,72 +427,72 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         });
     };
 
-    $scope.getRecipient = function() {
-        var query = new AV.Query("Address");
-        query.equalTo("user", $scope.currentUser);
-        query.find({
-            success: function(results) {
-                $scope.addressList = results;
-                console.log("GetRecipient ADDRESS got : " + results.length);
-            },
-            error: function (res, error) {
-                alert("Getting Recipient: " + error.code + " " + error.message);
-            }
-        });
-    };
 
-    $scope.chooseRecipient = function (freightIn) {
-        console.log("address is chosen: " + freightIn.address);
+    $scope.chooseRecipient = function(freightIn, address) {
+        console.log("address is chosen, address: " + address.id);
+        console.log("address is chosen, freightIn: " + freightIn.id);
+        //console.log("address is chosen: " + $scope.freightIns[index].address);
+        freightIn.address = address;
     };
 
     $scope.generateFreight = function(freightIn){
-        var freight = new YD.Freight();
-        //freight.address = null;
-        freight.freightIn = freightIn;
-        //freight.statusGroup = $scope.getStatusList(freightIn);
-        if(freightIn.checkboxModel != undefined) {
-        if(freightIn.checkboxModel.delivery == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION);
+        if(freightIn.address == undefined) {
+            alert("Choose address first");
+        } else {
+            var freight = new YD.Freight();
+            //freight.address = null;
+            freight.freightIn = freightIn;
+            freight.address = freightIn.address;
+            //freight.statusGroup = $scope.getStatusList(freightIn);
+            if (freightIn.checkboxModel != undefined) {
+                if (freightIn.checkboxModel.delivery == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION);
 
-        if(freightIn.checkboxModel.addPackage == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_EXTRA_PACKAGING);
+                if (freightIn.checkboxModel.addPackage == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_EXTRA_PACKAGING);
 
-        if(freightIn.checkboxModel.reduceWeight == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_REDUCE_WEIGHT);
+                if (freightIn.checkboxModel.reduceWeight == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_REDUCE_WEIGHT);
 
-        if(freightIn.checkboxModel.checkPackage == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_CHECK_PACKAGE);
+                if (freightIn.checkboxModel.checkPackage == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_CHECK_PACKAGE);
 
-        if(freightIn.checkboxModel.splitPackage == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE);
+                if (freightIn.checkboxModel.splitPackage == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE);
 
-        if(freightIn.checkboxModel.splitPackagePremium == true)
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED);
+                if (freightIn.checkboxModel.splitPackagePremium == true)
+                    freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED);
+            }
+            freight.user = $scope.currentUser;
+            freight.weight = freightIn.weight;
+            freight.trackingNumber = freightIn.trackingNumber;
+            freight.status = 0;
+            freight.save(null, {
+                success: function (freight) {
+                    console.log("freight has been saved: " + freight.id);
+                },
+                error: function (freight, error) {
+                    console.log("ERROR: freight not save: " + error.code + " - " + error.message);
+                }
+            });
+            freightIn.status = YD.FreightIn.STATUS_FINISHED;
+            freightIn.save(null, {
+                success: function (freightIn) {
+                    console.log("freightIn has been saved: " + freightIn.id);
+                },
+                error: function (freightIn, error) {
+                    console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
+                }
+            });
+            $scope.reloadFreightInConfirmed();
+
         }
-        freight.user = $scope.currentUser;
-        freight.weight = freightIn.weight;
-        freight.trackingNumber = freightIn.trackingNumber;
-        freight.status = 0;
-        freight.save(null, {
-            success: function(freight) {
-                console.log("freight has been saved: " + freight.id);
-            },
-            error: function(freight, error){
-                console.log("ERROR: freight not save: " + error.code + " - " + error.message);
-            }
-        });
-        freightIn.status = 999;
-        freightIn.save(null, {
-            success: function(freightIn) {
-                console.log("freightIn has been saved: " + freightIn.id);
-            },
-            error: function(freightIn, error){
-                console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
-            }
-        });
     };
 
     $scope.generateDeliveryFreight = function(freightIn){
+        if(freightIn.address == undefined) {
+            alert("Choose address first");
+        } else {
         var freight = new YD.Freight();
         //freight.address = null;
         freight.freightIn = freightIn;
@@ -519,7 +511,7 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                 console.log("ERROR: freight not save: " + error.code + " - " + error.message);
             }
         });
-        freightIn.status = 999;
+        freightIn.status = YD.FreightIn.STATUS_FINISHED ;
         freightIn.save(null, {
             success: function(freightIn) {
                 console.log("freightIn has been saved: " + freightIn.id);
@@ -528,17 +520,135 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                 console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
             }
         });
+        }
+        $scope.reloadFreightInConfirmed();
     };
 
     $scope.generateAllFreight = function() {
         for (var i = 0; i <$scope.freightIns.length; i++){
             if($scope.freightIns[i].selection == true) {
+                if($scope.freightIns[i].address == undefined)
+                alert("choose address first");
+                else {
                 $scope.generateFreight($scope.freightIns[i]);
                 $scope.reloadFreightInConfirmed();
+                }
             }
         }
     };
+
+    $scope.mergePackage = function() {
+        var freightInList = [];
+        for (var i = 0; i <$scope.freightIns.length; i++){
+            if($scope.freightIns[i].selection == true)
+                freightInList.push($scope.freightIns[i]);
+        }
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_chooseAddress',
+            controller: 'mergePackageCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freightInList: function() {
+                    return freightInList;
+                }
+            },
+            windowClass: 'center-modal'
+        });
+
+        modalInstance.result.then(function() {
+            $scope.reloadFreightInConfirmed();
+            console.log("mergePackage: merge successfully");
+        });
+    };
+
 });
+    YundaApp.controller('mergePackageCtrl', function($scope, $modalInstance, freightInList) {
+        $scope.getRecipient();
+
+        $scope.mergeChooseRecipient = function(address){
+            $scope.chosenAddress = address;
+            console.log("Chosen Address: " + $scope.chosenAddress.country);
+
+        };
+
+        $scope.confirmMergePackage = function() {
+            var freight = new YD.Freight();
+            freight.freightInGroup = freightInList;
+            freight.address = $scope.chosenAddress;
+            freight.user = $scope.currentUser;
+            freight.weight = 0;
+            freight.status = 0;
+            freight.save(null, {
+                success: function(freight) {
+                    console.log("freight has been saved: " + freight.id);
+                },
+                error: function(freight, error){
+                    console.log("ERROR: freight not save: " + error.code + " - " + error.message);
+                }
+            });
+
+            for(var i = 0; i < freightInList.length; i++){
+                freightInList[i].status = YD.FreightIn.STATUS_FINISHED ;
+            }
+            AV.Object.saveAll(freightInList, {
+                success: function(list) {
+                    console.log("mergePackage: freightList has been saved");
+                },
+                error: function(error){
+                    console.log("ERROR: mergePackage: freightList has not been saved" + error.id + " - " + error.message);
+                }
+            });
+
+            $modalInstance.close();
+       };
+
+        $scope.cancelMergePackage = function() {
+            $modalInstance.dismiss();
+        };
+    });
+
+    YundaApp.controller('fileUploadCtrl', function($scope) {
+        //$scope.identityFrontList;
+        //$scope.identityBackList;
+        $scope.filesChangedFront = function(elm){
+            $scope.identityFront = elm.files;
+            $scope.$apply();
+        };
+
+        $scope.filesChangedBack = function(elm){
+            $scope.identityBack = elm.files;
+            $scope.$apply();
+        };
+        $scope.uploadIdentity = function() {
+            //console.log("In fileUpload back: " + $scope.identityBack);
+            //console.log("In fileUpload front: " + $scope.identityFront);
+
+            if($scope.identityFront != undefined && $scope.identityBack != undefined){
+                //console.log("In fileUpload back: " + $scope.identityFront[0].name);
+                //console.log("In fileUpload front: " + $scope.identityBack[0].name);
+            var frontName = $scope.currentUser.realName + 'front.jpg';
+            var backName = $scope.currentUser.realName + 'back.jpg';
+            var avFileFront = new AV.File(frontName, $scope.identityFront[0]);
+            var avFileBack = new AV.File(backName, $scope.identityBack[0]);
+
+            $scope.currentUser.identityFront = avFileFront;
+            $scope.currentUser.identityBack = avFileBack;
+            $scope.currentUser.save(null, {
+                success: function(img) {
+                    console.log("In FileUploadCtrl: ID image has been saved");
+                },
+                error: function(img, error) {
+                    console.log("ERROR: In FileUploadCtrl: ID image not been saved: " + error.id + error.message);
+
+                }
+            });
+            } else {
+                alert("Please upload file first");
+            }
+        };
+
+    });
 
     YundaApp.controller('FreightConfirmedCtrl', function($scope) {
 
@@ -699,6 +809,8 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
     YundaApp.controller('SplitPackageCtrl', function($scope, $modalInstance, freightIn) {
         $scope.notes;
         $scope.amount = 0;
+        $scope.getRecipient();
+
         $scope.freightList = [];
         $scope.generateFreightList = function() {
             console.log("changed to: " + $scope.amount);
@@ -713,6 +825,10 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
 
                 $scope.freightList[i].user = freightIn.user;
             }
+        };
+        $scope.splitChooseRecipient = function(address, freight){
+           freight.address = address;
+
         };
 
         $scope.confirmSplit = function() {
@@ -731,6 +847,7 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
     YundaApp.controller('SplitPackagePremiumCtrl', function($scope, $modalInstance) {
         $scope.notes;
         $scope.amount = 0;
+        $scope.getRecipient();
         $scope.freightList = [];
         $scope.generateFreightList = function() {
             console.log("changed to: " + $scope.amount);
@@ -744,6 +861,12 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
                 $scope.freightList[i].user = freigntIn.user;
             }
         };
+
+        $scope.splitChooseRecipient = function(address, freight){
+            freight.address = address;
+
+        };
+
         $scope.confirmSplit = function() {
             AV.Object.saveAll($scope.freightList, {
                 success: function(list) {
@@ -767,6 +890,15 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         }
     });
 
+YundaApp.controller('rechargeCtrl', function($scope) {
+    $scope.fixedRate = 6.4;
+    $scope.$watch('CNY', function(newVal, oldVal) {
+        console.log("CNY new value : " + newVal);
+        $scope.USD = newVal / $scope.fixedRate;
+        console.log("USD : " + $scope.USD);
+
+    }, true);
+});
 // AngularJS Google Maps loader
 
 YundaApp.config(function(uiGmapGoogleMapApiProvider) {

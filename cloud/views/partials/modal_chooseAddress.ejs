@@ -1,0 +1,20 @@
+
+
+    <form name="mergeForm" class="form-group">
+
+        <div class="dropdown">
+            <button id="dLabel" type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                　选择收件地址
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-repeat="address in addressList">
+                <li ng-click="mergeChooseRecipient(address)"><span ng-bind="address.recipient"> - </span><span ng-bind="address.country"></span><span ng-bind="address.state"></span><span ng-bind="address.city"></span><span ng-bind="address.suburb"></span></span><span ng-bind="address.street1"></span><span ng-bind="address.street2"></span></li>
+            </ul>
+        </div>
+        <button type="submit" ng-click="confirmMergePackage()">保存</button>
+        <button type="submit" ng-click="cancelMergePackage()">取消</button>
+
+    </form>
+
+
+

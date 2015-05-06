@@ -10,6 +10,10 @@
         <div ng-repeat="freight in freightList">
             <label for="split">分包{{$index+1}}备注: </label></br>
             <input type="text" class="split" ng-model="freight.notes"/></br>
+            <label for="split">分包{{$index+1}}发送地址: </label></br>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-repeat="address in addressList">
+                <li ng-click="splitChooseRecipient(address, freight)"><span ng-bind="address.recipient"> - </span><span ng-bind="address.country"></span><span ng-bind="address.state"></span><span ng-bind="address.city"></span><span ng-bind="address.suburb"></span></span><span ng-bind="address.street1"></span><span ng-bind="address.street2"></span></li>
+            </ul
         </div>
         <button type="submit" ng-click="confirmSplit()" >保存</button>
     </form>
