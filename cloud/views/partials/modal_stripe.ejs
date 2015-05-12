@@ -1,0 +1,28 @@
+<form class="form-group" stripe:form="stripeCallback">
+        <label for="amount" ng-bind="USD"></label></br>
+    <label for="number" ></label>
+    <input type="text" ng-model="number" placeholder="Card Number" data-stripe="number"/></br>
+
+    <label for="amount" ></label>
+    <input type="text" ng-model="cvc" placeholder="CVC" data-stripe="cvc"/></br>
+
+    <label for="amount" ></label>
+    <input type="text" ng-model="expiryMonth" placeholder="Expiration Month" data-stripe="exp-month"/></br>
+
+    <label for="amount" ></label>
+    <input type="text" ng-model="expiryYear" placeholder="Expiration Year" data-stripe="exp-year"/></br>
+
+    <button type="submit">Save</button>
+</form>
+
+
+<div ng-if="form.card.$invalid">
+    Error: invalid card number!
+</div>
+<div ng-if="form.expiry.$invalid">
+    Error: invalid expiration date!
+</div>
+<div ng-if="form.cvc.$invalid">
+    Error: invalid CVC!
+</div>
+

@@ -366,10 +366,12 @@
                 this is the content for 我的运单
             </div>
 
-            <div ng-show="view_tab=='ca'" ng-controller="rechargeCtrl">
+            <div ng-show="view_tab=='ca'" >
+
+                <tabset >
+                 <tab heading="信用卡充值" ng-controller="RechargeCtrl">
                 账户余额($): <span ng-bind="currentUser.balance"></span> </br></br>
-                *充值额度(￥): CNY<input type="text" ng-model="CNY" /> <-> $<span ng-bind="USD"></span></br>
-                充值免手续费(美元/人民币=1/6.4)
+
                 </br></br>
                 <paragraph>
                 为方便广大客户充值操作，现在系统充值链接已经做好，大家在充值的时候需要选择的交易方式是第二个即时到账交易，谢谢！
@@ -386,19 +388,131 @@
 
                 另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。所以现在提醒大家在充值的时候尽量用IE浏览器，谢谢支持
                 </paragraph></br></br>
-                <button class="btn btn-primary"> 确认充值</button>
+
+                     *充值额度(￥): CNY<input type="text" ng-model="CNY" /> <-> $<span ng-bind="USD"></span></br>
+                     <em>充值免手续费(美元/人民币=1/6.4)</em></br></br>
+
+                <button class="btn btn-primary" ng-click="stripePayment()"> 确认充值</button>
+                </tab>
+
+                    <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
+                    <paragraph>
+                    请充值至什么账号
+
+                    </paragraph>
+
+                        <button class="btn btn-primary" ng-click="zhifubaoPayment()">确认支付</button>
+
+                    </tab>
+                </tabset>
             </div>
 
-            <div ng-show="view_tab=='cb'">
+            <div ng-show="view_tab=='cb'" ng-controller="RechargeRecordCtrl">
                 this is the content for 充值记录
+                起始日期:
+                <h4>Popup</h4>
+                <div class="row">
+                    <div class="col-md-5">
+                        <p class="input-group">
+                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"   date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </p>
+                    </div>
+
+                    <div class="col-md-5">
+                        <p class="input-group">
+                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"   date-disabled="disabled(date, mode)" ng-required="true" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open2($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </p>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" ng-click="reloadTransaction()">search</button>
+                    </div>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>单号</th>
+                        <th>充值金额(美元)</th>
+                        <th>消费类型</th>
+                        <th>消费时间</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="t in transactionList">
+                    <td ng-bind="t.record"></td>
+                    <td ng-bind="'$ ' + t.amount"></td>
+                    <td ng-bind="t.status"></td>
+                    <td ng-bind="t.createdAt"></td>
+                    <!--<td>pending</td>-->
+                    <!--<td ng-bind="freightIn.notes"></td>-->
+                    <!--<td>-->
+                    <!--<button class="btn btn-primary" ng-click="freightInConfirm(freightIn)">确认入库</button>-->
+
+                    <!--</td>-->
+                    </tr>
+                </table>
             </div>
 
-            <div ng-show="view_tab=='cc'">
+            <div ng-show="view_tab=='cc'" ng-controller="ConsumeRecordCtrl">
                 this is the content for 消费记录
+                起始日期:
+                <h4>Popup</h4>
+                <div class="row">
+                    <div class="col-md-5">
+                        <p class="input-group">
+                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"  date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </p>
+                    </div>
+
+                    <div class="col-md-5">
+                        <p class="input-group">
+                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"  date-disabled="disabled(date, mode)" ng-required="true" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open2($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" ng-click="reloadTransaction()">search</button>
+                    </div>
+                </div>
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>单号</th>
+                            <th>消费金额</th>
+                            <th>消费类型</th>
+                            <th>消费时间</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tr ng-repeat="t in transactionList">
+                            <td ng-bind="t.record"></td>
+                            <td ng-bind="'-$ ' + t.amount"></td>
+                            <td ng-bind="t.status"></td>
+                            <td ng-bind="t.createdAt"></td>
+                        </tr>
+                    </table>
             </div>
 
             <div ng-show="view_tab=='da'">
                 this is the content for 退款管理
+
+                <paragraph>
+                    想退货
+                </paragraph>
+                <button class="btn btn-primary">联系客服</button>
             </div>
 
             <div ng-show="view_tab=='db'">

@@ -34,7 +34,7 @@ YDFreightGroup.STATUS_PASSED_CUSTOM = 610;
 // Property setters and getters
 //================================================================================
 
-Object.defineProperty(YDFreight.prototype, "status", {
+Object.defineProperty(YDFreightGroup.prototype, "status", {
   get: function() {
     return this.get("status");
   },

@@ -72,11 +72,20 @@
   }
   //Module code
   // YD.Error = require('cloud/shelf/objects/YDError.js')
-  YD.Address = require('cloud/shelf/objects/YDAddress.js')
-  YD.Freight = require('cloud/shelf/objects/YDFreight.js')
-  YD.FreightGroup = require('cloud/shelf/objects/YDFreightGroup.js')
-  YD.FreightIn = require('cloud/shelf/objects/YDFreightIn.js')
-  // YD.Transactoin = require('cloud/shelf/objects/YDTransactoin.js')
-  YD.User = require('cloud/shelf/objects/YDUser.js')
+  YD.Address = require('cloud/yunda/objects/YDAddress.js')
+  YD.Freight = require('cloud/yunda/objects/YDFreight.js')
+  YD.FreightGroup = require('cloud/yunda/objects/YDFreightGroup.js')
+  YD.FreightIn = require('cloud/yunda/objects/YDFreightIn.js')
+  // YD.Transactoin = require('cloud/yunda/objects/YDTransactoin.js')
+  YD.User = require('cloud/yunda/objects/YDUser.js')
+  //YD.Transaction = AV.Object.extend("Transaction", {},{});
+  //Object.defineProperty(YD.Transaction.prototype, "record", {
+  //  get: function() {
+  //    return this.get("record");
+  //  },
+  //  set: function(value) {
+  //    this.set("record", value);
+  //  }
+  //});
 
 }).call(this);

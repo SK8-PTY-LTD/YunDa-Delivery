@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-YundaApp.controller('AppCtrl', function ($scope, $http) {
+YundaApp.controller('AppCtrl', function ($scope, $rootScope, $http) {
 
     $http({
         method: 'GET',
@@ -14,9 +14,9 @@ YundaApp.controller('AppCtrl', function ($scope, $http) {
         error(function (data, status, headers, config) {
             $scope.name = 'Error!';
         });
+//Stripe
 
 });
-
 
 /* Navbar Controller*/
 
@@ -890,14 +890,211 @@ YundaApp.controller('freightInConfirmedCtrl', function($scope, $modal) {
         }
     });
 
-YundaApp.controller('rechargeCtrl', function($scope) {
-    $scope.fixedRate = 6.4;
+YundaApp.controller('RechargeCtrl', function($scope, $modal) {
+    $scope.FIXED_RATE = 6.4;
     $scope.$watch('CNY', function(newVal, oldVal) {
         console.log("CNY new value : " + newVal);
-        $scope.USD = newVal / $scope.fixedRate;
+        $scope.USD = (newVal / $scope.FIXED_RATE).toFixed(2);
         console.log("USD : " + $scope.USD);
-
     }, true);
+
+
+
+    $scope.stripePayment = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_stripe',
+            controller: 'StripeCtrl',
+            scope: $scope,
+            size: 'sm',
+            //resolve: {
+            //    address: function() {
+            //        return address;
+            //    }
+            //},
+            windowClass: 'center-modal'
+        });
+
+        modalInstance.result.then(function() {
+            //$scope.reloadAddress();
+            //console.log("addNewAddress(): new address is added");
+        });
+    };
+});
+
+
+YundaApp.controller('StripeCtrl', function($scope, $rootScope, $modalInstance) {
+
+    $scope.stripeCallback = function(status, response) {
+        //$http.post('https://api.stripe.com/v1/charges', { token: response.id });
+        console.log("STRIPECTRL Token: " + response.id);
+        AV.Cloud.run('createCharge', {
+            //source: response.id,
+            source: response.id,
+            amount: $scope.USD*100,
+            currency: 'usd',
+            description: $scope.currentUser.realName
+        },
+            {
+            success: function(data) {
+                var transaction = new YD.Transaction();
+                transaction.record = data;
+                transaction.status = YD.Transaction.STATUS_STRIPE;
+                transaction.amount = $scope.USD;
+                transaction.save(null, {
+                    success: function(t) {
+                        console.log("transaction saved");
+                        $modalInstance.close();
+                    },
+                    error: function(t, error) {
+                        console.log("transaction not saved " + error.id + ' - '+ error.message );
+                    }
+                });
+            },
+            error: function(error) {
+
+            }
+        });
+    };
+});
+
+YundaApp.controller('ZhifubaoCtrl', function($scope) {
+    $scope.zhifubaoPayment = function() {
+        var transaction = new YD.Transaction();
+        transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
+        transaction.save(null, {
+            success: function(t) {
+                console.log("transaction saved");
+            },
+            error: function(t, error) {
+                console.log("transaction not saved " + error.id + ' - '+ error.message );
+            }
+        });
+
+    }
+})
+
+YundaApp.controller('ConsumeRecordCtrl', function($scope) {
+
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    //$scope.showCMD = function() {
+    //    console.log('Show dt1: ' + $scope.dt1);
+    //}
+    $scope.reloadTransaction = function() {
+        if($scope.dt1 != undefined && $scope.dt2 != undefined)
+        {   var date = new Date();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            $scope.dt1 = new Date($scope.dt1);
+            $scope.dt2 = new Date($scope.dt2);
+            $scope.dt1.setHours(hour);
+            $scope.dt1.setMinutes(minute);
+            $scope.dt2.setHours(hour);
+            $scope.dt2.setMinutes(minute);
+            //console.log("date 1: " + $scope.dt1);
+            //console.log("date 2: " + $scope.dt2);
+
+            var query = new AV.Query("Transaction");
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1);
+            query.lessThanOrEqualTo("createdAt", $scope.dt2);
+            query.containedIn("status", [YD.Transaction.STATUS_CONSUME]);
+
+            query.find({
+                success: function(tList) {
+                    $scope.transactionList = tList;
+                    for(var i = 0; i<tList.length; i++) {
+                        if($scope.transactionList[i].status == YD.Transaction.STATUS_CONSUME){
+                            $scope.transactionList[i].status = '消费';
+                        }
+                    }
+                    $scope.$apply();
+
+                    console.log("DatePicker: get all transaction successful: " + tList.length);
+                },
+                error: function(tList, err) {
+                    console.log("DatePicker: get all transaction not successful: " + err.id + err.message);
+
+                }
+            });
+        }
+        else {
+            alert("choose date first");
+        }
+    }
+});
+
+YundaApp.controller('RechargeRecordCtrl', function($scope) {
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+        console.log("opened1: " + $scope.opened1 );
+
+    };
+
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+        console.log("opened2: " + $scope.opened2 );
+
+
+    };
+    $scope.reloadTransaction = function() {
+        if($scope.dt1 != undefined && $scope.dt2 != undefined)
+        {   var date = new Date();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            $scope.dt1 = new Date($scope.dt1);
+            $scope.dt2 = new Date($scope.dt2);
+            $scope.dt1.setHours(hour);
+            $scope.dt1.setMinutes(minute);
+            $scope.dt2.setHours(hour);
+            $scope.dt2.setMinutes(minute);
+            //console.log("date 1: " + $scope.dt1);
+            //console.log("date 2: " + $scope.dt2);
+
+            var query = new AV.Query("Transaction");
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1);
+            query.lessThanOrEqualTo("createdAt", $scope.dt2);
+            query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_STRIPE]);
+            query.find({
+                success: function(tList) {
+                    $scope.transactionList = tList;
+                    for(var i = 0; i<tList.length; i++) {
+                        if($scope.transactionList[i].status == YD.Transaction.STATUS_CONSUME){
+                            $scope.transactionList[i].status = '消费';
+                        }
+                        else if($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO) {
+                            $scope.transactionList[i].status = '支付宝充值';
+                        } else if($scope.transactionList[i].status == YD.Transaction.STATUS_STRIPE) {
+                            $scope.transactionList[i].status = '信用卡充值';
+
+                        } else {}
+
+                    }
+                    $scope.$apply();
+                    console.log("DatePicker: get all transaction successful: " + tList.length);
+                },
+                error: function(tList, err) {
+                    console.log("DatePicker: get all transaction not successful: " + err.id + err.message);
+
+                }
+            });
+    }
+    else {
+        alert("choose date first");
+    }
+    }
 });
 // AngularJS Google Maps loader
 
@@ -908,6 +1105,7 @@ YundaApp.config(function(uiGmapGoogleMapApiProvider) {
         libraries: 'weather,geometry,visualization'
     });
 });
+
 
 YundaApp.controller('ContactController', function($scope, uiGmapGoogleMapApi) {
     $scope.map = { center: { latitude: -33.8764458, longitude: 151.2047273}, zoom: 17};
@@ -923,3 +1121,4 @@ YundaApp.controller('ContactController', function($scope, uiGmapGoogleMapApi) {
 
     });
 });
+

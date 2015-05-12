@@ -845,4 +845,37 @@
   //    this.set("url", val);
   //  }
   //});
+  YD.Transaction = AV.Object.extend("Transaction", {},{
+
+  });
+
+  YD.Transaction.STATUS_ZHIFUBAO = 100;
+  YD.Transaction.STATUS_STRIPE = 200;
+  YD.Transaction.STATUS_CONSUME = 300;
+  Object.defineProperty(YD.Transaction.prototype, "record", {
+    get: function() {
+      return this.get("record");
+    },
+    set: function(value) {
+      this.set("record", value);
+    }
+  });
+
+  Object.defineProperty(YD.Transaction.prototype, "status", {
+    get: function() {
+      return this.get("status");
+    },
+    set: function(value) {
+      this.set("status", value);
+    }
+  });
+
+  Object.defineProperty(YD.Transaction.prototype, "amount", {
+    get: function() {
+      return this.get("amount");
+    },
+    set: function(value) {
+      this.set("amount", value);
+    }
+  });
 }).call(this);

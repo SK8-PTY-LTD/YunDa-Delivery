@@ -7,7 +7,9 @@ var AV_APP_KEY = "svsw3nybfcax9ssw7czti2fk86ak9gp6ekrb00essagscyrg";
 
 var YundaApp = angular.module('YundaApp', ['ngRoute',
     'ui.bootstrap',
-    'uiGmapgoogle-maps']);
+    'uiGmapgoogle-maps',
+    'stripe']);
+
 
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider.
@@ -46,6 +48,15 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $httpProvider.defaults.headers.common = {
     'Content-Type': 'application/json',
     'X-AVOSCloud-Application-Id': AV_APP_ID,
-    'X-AVOSCloud-Application-Key': AV_APP_KEY
-  }
+    'X-AVOSCloud-Application-Key': AV_APP_KEY,
+    //'Authorization': 'Bearer ' + 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+}
+//Stripe
+    var STRIPE_KEY = "pk_test_6pRNASCoBOKtIshFeQd4XMUh";
+    Stripe.setPublishableKey(STRIPE_KEY);
+
 });
+
+//YundaApp.config(function($window) {
+//    $window.Stripe.setPublishableKey(STRIPE_KEY);
+//});
