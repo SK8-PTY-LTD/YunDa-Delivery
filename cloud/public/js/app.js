@@ -14,7 +14,10 @@ var YundaApp = angular.module('YundaApp', ['ngRoute',
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider.
       when('/', {
-        templateUrl: 'partials/about'
+        templateUrl: 'partials/main'
+      }).
+      when('/home', {
+          templateUrl: 'partials/main'
       }).
       when('/help', {
         templateUrl: 'partials/help'

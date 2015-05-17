@@ -1,17 +1,24 @@
 <div class="modal-login">
     <h1>Hello World</h1>
-    <form name="loginForm" class="form-group">
-         <label>Email:</label>
-        <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-        <input type="email" name="email" ng-model="currentUser.username" placeholder="john.smith@gmail.com" required>
-        <label class="control-label">Password:</label>
-        <label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>
-        <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
-        <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-        <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="At least 8 characters long" ng-minlength="8" required>
-            <button type="submit" class="col-md-12 btn-shelf-white" ng-click="login()" ng-show="loginForm.$valid">Log in</button>
-            <button type="submit" class="col-md-12 btn-shelf-inverse" ng-click="signup()" ng-show="loginForm.$valid">Sign Up</button>
+    <form name="loginForm">
+        <div class="form-group has-feedback">
+            <label class="control-label">Email:</label>
+            <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="john.smith@gmail.com" required>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label">Password:</label>
+            <label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>
+            <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+            <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="At least 8 characters long" ng-minlength="8" required>
+        </div>
+            <div class="form-group">
+                <button type="submit" class="col-md-12 btn btn-success" ng-click="login()" ng-show="loginForm.$valid">Log in</button>
+                <button type="submit" class="col-md-12 btn btn-info" ng-click="signup()" ng-show="loginForm.$valid">Sign Up</button>
+            </div>
+            <div class="form-group">
+                <label class="control-label"><a href="http://www.sk8.asia">Powered by SK8科技</a></label>
+            </div>
     </form>
-
-    <p ng-model="test"></p>
 </div>

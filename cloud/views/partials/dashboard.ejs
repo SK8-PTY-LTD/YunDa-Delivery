@@ -49,13 +49,16 @@
                       <form ng-controller="fileUploadCtrl">
                           <div class="form-group">
                               <label for="id-front">身份证正面</label>
-                              <input type="file" onchange="angular.element(this).scope().filesChangedFront(this)" />
+                              <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFront(this)" />
+                          </div>
+                          <div class="form-group">
                               <label for="id-front">身份证反面面</label>
-                              <input type="file" onchange="angular.element(this).scope().filesChangedBack(this)"  />
+                              <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedBack(this)"  />
+                          </div>
                               <li ng-repeat="file in identityFrontList"> {{file.name}}</li>
                               <li ng-repeat="file in identityBackList"> {{file.name}}</li>
-
-                              <button class="btn btn-primary" ng-click="uploadIdentity()"> 上传 </button>
+                          <div class="form-group">
+                              <button class="btn btn-primary form-control" ng-click="uploadIdentity()"> 上传 </button>
                           </div>
                       </form>
                     </accordion-group>
@@ -373,7 +376,7 @@
                 账户余额($): <span ng-bind="currentUser.balance"></span> </br></br>
 
                 </br></br>
-                <paragraph>
+                <p>
                 为方便广大客户充值操作，现在系统充值链接已经做好，大家在充值的时候需要选择的交易方式是第二个即时到账交易，谢谢！
 
                 支付宝即时到帐服务已开通， 只支持“即时到帐交易”充值，不支持“担保交易”充值
@@ -387,7 +390,7 @@
                 提示，即时到账2次输入的都是支付密码，如果在进入支付宝前，页面没有一次过进入，状态会重新恢复到默认的担保交易，要重新再选择下即时到账交易
 
                 另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。所以现在提醒大家在充值的时候尽量用IE浏览器，谢谢支持
-                </paragraph></br></br>
+                </p></br></br>
 
                      *充值额度(￥): CNY<input type="text" ng-model="CNY" /> <-> $<span ng-bind="USD"></span></br>
                      <em>充值免手续费(美元/人民币=1/6.4)</em></br></br>
@@ -396,10 +399,10 @@
                 </tab>
 
                     <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
-                    <paragraph>
+                    <p>
                     请充值至什么账号
 
-                    </paragraph>
+                    </p>
 
                         <button class="btn btn-primary" ng-click="zhifubaoPayment()">确认支付</button>
 
@@ -509,14 +512,20 @@
             <div ng-show="view_tab=='da'">
                 this is the content for 退款管理
 
-                <paragraph>
-                    想退货
-                </paragraph>
+                <p>
+                    想退款
+                </p>
+                </br>
                 <button class="btn btn-primary">联系客服</button>
             </div>
 
             <div ng-show="view_tab=='db'">
                 this is the content for 退货管理
+                <p>
+                    想退货
+                </p>
+                </br>
+                <button class="btn btn-primary">联系客服</button>
             </div>
         </div> <!-- col-sm-9 -->
     </div><!-- Row -->

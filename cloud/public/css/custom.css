@@ -39,6 +39,25 @@ span.help-question {
 .ng-invalid {
     color: red;
 }
+
+fieldset {
+    display: block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 0.35em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 4px ridge lightgray;
+}
+
+.bottom-buffer{
+    margin-bottom: 100px;
+}
+
+.top-buffer {
+    margin-top: 10px;
+}
 /*------------------------------------------*/
 /*	     02 - Header & Navigation
 /*------------------------------------------*/
