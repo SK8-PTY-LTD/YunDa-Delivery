@@ -60,33 +60,32 @@
                 <!-- Start Navigation List -->
                 <ul class="nav navbar-nav navbar-right">
 
-                    <li>
-                        <a ng-href="/main">首页</a>
+                    <li class="divider-vertical">
+                        <a ng-href="/home">首页</a>
                     </li>
-                    <li>
+                    <li class="divider-vertical">
                         <a ng-href="/about">关于</a>
                     </li>
-                    <li>
-                        <a ng-href="/help">帮助</a>
+                    <li class="divider-vertical">
+                        <a ng-href="/faq">常见问题</a>
                     </li>
-                    <li>
+                    <li class="divider-vertical">
                         <a ng-href="/service">服务</a>
                     </li>
-
-                    <li>
-                        <a ng-href="#">Blog</a>
+                    <li class="divider-vertical">
+                        <a ng-href="/help">帮助</a>
                     </li>
-                    <li>
+                    <li class="divider-vertical">
                         <a ng-href="/contact">Contact</a>
                     </li>
-                    <li ng-if="currentUser.id">
+                    <li class="divider-vertical" ng-if="currentUser.id">
                         <a ng-href="/dashboard">Dashboard</a>
                     </li>
-                    <li ng-show="currentUser.id" class="btn-group" dropdown >
+                    <li class="divider-vertical" ng-show="currentUser.id" class="btn-group" dropdown >
                         <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
                             <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
                             <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
-                            <span class="caret"></span>
+                            Log out <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <!--<li>-->
@@ -95,7 +94,7 @@
                             <li><a ng-click="logOut()">Log out</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li class="divider-vertical">
                         <a ng-show="!currentUser.id" ng-click="open()">成员登入</a>
                     </li>
                 </ul>

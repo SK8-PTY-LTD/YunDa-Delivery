@@ -225,6 +225,72 @@
     }
   });
 
+  YD.FreightReturn = AV.Object.extend("FreightReturn", {
+
+  },{});
+  // user
+  YD.FreightReturn.STATUS_PENDING = 100;
+  // after admin confirmation
+  YD.FreightReturn.STATUS_AWAITING = 200;
+
+
+
+  Object.defineProperty(YD.FreightReturn.prototype, "address", {
+    get: function() {
+      return this.get("address");
+    },
+    set: function(value) {
+      this.set("address", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "amount", {
+    get: function() {
+      return this.get("amount");
+    },
+    set: function(value) {
+      this.set("amount", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "trackingNumber", {
+    get: function() {
+      return this.get("trackingNumber");
+    },
+    set: function(value) {
+      this.set("trackingNumber", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "reason", {
+    get: function() {
+      return this.get("reason");
+    },
+    set: function(value) {
+      this.set("reason", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "user", {
+    get: function() {
+      return this.get("user");
+    },
+    set: function(value) {
+      this.set("user", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "status", {
+    get: function() {
+      return this.get("status");
+    },
+    set: function(value) {
+      this.set("status", value);
+    }
+  });
+
+
+
   YD.Freight = AV.Object.extend("Freight", {
     getAddressWithCallBack: function(callback) {
       var address = this.getAddress();
@@ -288,6 +354,7 @@
     //Pending user action
     STATUS_PENDING_FINAL_CONFIRMATION: 300,
     //Pending admin action
+    STATUS_PENDING_FINISHED: 400,
     STATUS_PENDING_DELIVERY: 500,
     STATUS_DELIVERING: 510,
     //Pending chinese admin action
@@ -330,6 +397,21 @@
       this.set("notes", value);
     }
   });
+  Object.defineProperty(YD.Freight.prototype, "chineseCourier", {
+    get: function() {
+      return this.get("chineseCourier");
+    },
+    set: function(value) {
+      this.set("chineseCourier", value);
+    }
+  });  Object.defineProperty(YD.Freight.prototype, "chineseTrackingNumber", {
+    get: function() {
+      return this.get("chineseTrackingNumber");
+    },
+    set: function(value) {
+      this.set("chineseTrackingNumber", value);
+    }
+  });
 
   Object.defineProperty(YD.Freight.prototype, "insurance", {
     get: function() {
@@ -367,6 +449,14 @@
     }
   });
 
+  Object.defineProperty(YD.Freight.prototype, "comments", {
+    get: function() {
+      return this.get("comments");
+    },
+    set: function(value) {
+      this.set("comments", value);
+    }
+  });
 
   Object.defineProperty(YD.Freight.prototype, "weight", {
     get: function() {
@@ -516,6 +606,7 @@
 
   YD.FreightIn.STATUS_INITIALIZED = 0
 //Pending user action
+  YD.FreightIn.STATUS_MANUAL = 100
   YD.FreightIn.STATUS_ARRIVED = 200
   YD.FreightIn.STATUS_CONFIRMED = 300
   YD.FreightIn.STATUS_FINISHED = 900
@@ -591,6 +682,36 @@
     }
   });
 
+  //
+  //Object.defineProperty(YD.FreightIn.prototype, "realName", {
+  //  get: function() {
+  //    return this.get("realName");
+  //  },
+  //  set: function(value) {
+  //    this.set("realName", value);
+  //  }
+  //});
+  //
+  //
+  //Object.defineProperty(YD.FreightIn.prototype, "mobilePhoneNumber", {
+  //  get: function() {
+  //    return this.get("mobilePhoneNumber");
+  //  },
+  //  set: function(value) {
+  //    this.set("mobilePhoneNumber", value);
+  //  }
+  //});
+  //
+  //
+  //Object.defineProperty(YD.FreightIn.prototype, "email", {
+  //  get: function() {
+  //    return this.get("email");
+  //  },
+  //  set: function(value) {
+  //    this.set("email", value);
+  //  }
+  //});
+
   Object.defineProperty(YD.FreightIn.prototype, "trackingNumber", {
     get: function() {
       return this.get("trackingNumber");
@@ -609,6 +730,14 @@
     }
   });
 
+  Object.defineProperty(YD.FreightIn.prototype, "comments", {
+    get: function() {
+      return this.get("comments");
+    },
+    set: function(value) {
+      this.set("comments", value);
+    }
+  });
   Object.defineProperty(YD.FreightIn.prototype, "weight", {
     get: function() {
       return this.get("weight");

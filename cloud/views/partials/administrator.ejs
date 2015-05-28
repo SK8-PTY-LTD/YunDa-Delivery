@@ -1,0 +1,272 @@
+<div class="container" ng-controller="AdminCtrl">
+    <div class="row">
+        <div class="col-sm-3">
+            <accordion close-others="oneAtATime">
+                <accordion-group heading="账户管理">
+                    <ul>
+                        <li ng-click="change_tab('aa')">账户信息</li>
+                        <li ng-click="change_tab('ac')">仓库地址</li>
+                    </ul>
+                </accordion-group>
+
+                <accordion-group heading="物流管理">
+                    <ul>
+                        <li ng-click="change_tab('ba')">运单情况</li>
+                        <li ng-click="change_tab('bb')">运单处理</li>
+                        <li ng-click="change_tab('bc')">等待付款</li>
+                        <li ng-click="change_tab('bd')">等待发货</li>
+                        <li ng-click="change_tab('be')">确认清关</li>
+                        <li ng-click="change_tab('bf')">国内接收</li>
+                        <li ng-click="change_tab('bg')">发往目的地</li>
+
+
+
+
+                    </ul>
+                </accordion-group>
+
+            </accordion>
+        </div>
+        <!-- col-sm-3 -->
+
+        <div class="col-sm-9">
+            <div ng-show="view_tab=='ba'">
+                <tabset>
+                    <tab heading="待确认入库" ng-controller="AdminFreightInArriveCtrl">
+                        <!--this is the content for 待确认入库-->
+                        <table class="table table-hover" style="font-size: 0.9em">
+                            <thead>
+                            <th>收件人</th>
+                            <th>入单号</th>
+                            <th>手机</th>
+                            <th>邮件</th>
+                            <th>入库时间</th>
+                            <th>重量</th>
+                            <th>用户备注</th>
+                            <th>通知</th>
+                            </thead>
+                            <tr ng-repeat="f in freightIn | orderBy:'createdAt'">
+                                <td ng-bind="f.user.realName"></td>
+                                <td ng-bind="f.trackingNumber"></td>
+                                <td ng-bind="f.user.mobilePhoneNumber"></td>
+                                <td ng-bind="f.user.email"></td>
+                                <td ng-bind="f.createdAt"></td>
+                                <td ng-bind="f.weight"></td>
+                                <td ng-bind="f.notes"></td>
+                                <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                            </tr>
+                        </table>
+                        <button class="btn btn-info" ng-click="saveComment()">确认添加</button>
+                    </tab>
+                    <tab heading="已确认入库" ng-controller="AdminFreightInConfirmCtrl">
+                        <table class="table table-hover" style="font-size: 0.9em">
+                            <thead>
+                            <th>收件人</th>
+                            <th>入单号</th>
+                            <th>手机</th>
+                            <th>邮件</th>
+                            <th>入库时间</th>
+                            <th>重量</th>
+                            <th>用户备注</th>
+                            <th>通知</th>
+                            </thead>
+                            <tr ng-repeat="f in freightIn | orderBy:'createdAt'">
+                                <td ng-bind="f.user.realName"></td>
+                                <td ng-bind="f.trackingNumber"></td>
+                                <td ng-bind="f.user.mobilePhoneNumber"></td>
+                                <td ng-bind="f.user.email"></td>
+                                <td ng-bind="f.createdAt"></td>
+                                <td ng-bind="f.weight"></td>
+                                <td ng-bind="f.notes"></td>
+                                <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                            </tr>
+                        </table>
+                        <button class="btn btn-info" ng-click="saveComment()">确认添加</button>
+                    </tab>
+                </tabset>
+
+            </div>
+            <div ng-show="view_tab=='bb'" ng-controller="AdminFreightConfirmCtrl">
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>选择</th>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>入库时间</th>
+                    <th>重量</th>
+                    <th>处理</th>
+                    <th>用户备注</th>
+                    <th>通知</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'createdAt'">
+                        <td><input type="checkbox" ng-model="f.selection"></td>
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.createdAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <td ng-bind="f.statusToString"></td>
+                        <td ng-bind="f.notes"></td>
+                        <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    </tr>
+                </table>
+                <button class="btn btn-info" ng-click="printAll()" ng-href="/print">批量打印文件</button>
+            </div>
+            <div ng-show="view_tab=='bc'"  ng-controller="AdminFreightFinishCtrl" >
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>打包时间</th>
+                    <th>重量</th>
+                    <th>状态</th>
+                    <th>用户备注</th>
+                    <th>通知</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'updatedAt'">
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.updatedAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <td>等待付款</td>
+                        <td ng-bind="f.notes"></td>
+                        <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div ng-show="view_tab=='bd'"  ng-controller="AdminFreightPaidCtrl" >
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>选择</th>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>打包时间</th>
+                    <th>重量</th>
+                    <!--<th>状态</th>-->
+                    <th>用户备注</th>
+                    <th>通知</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'updatedAt'">
+                        <td><input type="checkbox" ng-model="f.selection"></td>
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.updatedAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <!--<td>等待付款</td>-->
+                        <td ng-bind="f.notes"></td>
+                        <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    </tr>
+                </table>
+                <button class="btn btn-info" ng-click="printAll()" ng-href="/print">批量打印文件</button>
+            </div>
+
+            <div ng-show="view_tab=='be'"  ng-controller="AdminFreightClearCtrl" >
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>选择</th>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>打包时间</th>
+                    <th>重量</th>
+                    <!--<th>状态</th>-->
+                    <th>用户备注</th>
+                    <th>通知</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'updatedAt'">
+                        <td><input type="checkbox" ng-model="f.selection"></td>
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.updatedAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <!--<td>等待付款</td>-->
+                        <td ng-bind="f.notes"></td>
+                        <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    </tr>
+                </table>
+                <button class="btn btn-info" ng-click="deliver()">确认清关</button>
+            </div>
+
+            <div ng-show="view_tab=='bf'"  ng-controller="AdminChineseFreightCtrl" >
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>选择</th>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>打包时间</th>
+                    <th>重量</th>
+                    <!--<th>状态</th>-->
+                    <th>用户备注</th>
+                    <th>通知</th>
+                    <th>添加信息</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'updatedAt'">
+                        <td><input type="checkbox" ng-model="f.selection"></td>
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.updatedAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <!--<td>等待付款</td>-->
+                        <td ng-bind="f.notes"></td>
+                        <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                        <td><button class="btn btn-info" ng-click="addInfo(f)">添加</button></td>
+                    </tr>
+                </table>
+                <button class="btn btn-info" ng-click="finalDeliver()">确认清关</button>
+            </div>
+
+            <div ng-show="view_tab=='bg'"  ng-controller="AdminFinalDeliveryCtrl" >
+                <table class="table table-hover" style="font-size: 0.9em">
+                    <thead>
+                    <th>收件人</th>
+                    <th>入单号</th>
+                    <th>手机</th>
+                    <th>邮件</th>
+                    <th>打包时间</th>
+                    <th>重量</th>
+                    <th>状态</th>
+                    <th>中国快递</th>
+                    <th>中国运单号</th>
+                    <!--<th>用户备注</th>-->
+                    <!--<th>通知</th>-->
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'updatedAt'">
+                        <td ng-bind="f.user.realName"></td>
+                        <td ng-bind="f.trackingNumber"></td>
+                        <td ng-bind="f.user.mobilePhoneNumber"></td>
+                        <td ng-bind="f.user.email"></td>
+                        <td ng-bind="f.updatedAt"></td>
+                        <td ng-bind="f.weight"></td>
+                        <td>正在运送</td>
+                        <td ng-bind="f.chineseCourier"></td>
+                        <td ng-bind="f.chineseTrackingNumber"></td>
+                        <!--<td ng-bind="f.notes"></td>-->
+                        <!--<td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>-->
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- col-sm-9 -->
+    </div>
+    <!-- Row -->
+</div>
+

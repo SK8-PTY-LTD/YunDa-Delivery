@@ -17,10 +17,19 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
         templateUrl: 'partials/main'
       }).
       when('/home', {
-          templateUrl: 'partials/main'
+          templateUrl: 'partials/home'
       }).
       when('/help', {
         templateUrl: 'partials/help'
+      }).
+      when('/faq', {
+          templateUrl: 'partials/faq'
+      }).
+      when('/responsibility', {
+          templateUrl: 'partials/responsibility'
+      }).
+      when('/reperation', {
+          templateUrl: 'partials/reperation'
       }).
       when('/about', {
         templateUrl: 'partials/about'
@@ -31,14 +40,21 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/service', {
           templateUrl: 'partials/service'
       }).
-      when('/modal', {
-          templateUrl: 'partials/modal_login'
-      }).
+      //when('/modal', {
+      //    templateUrl: 'partials/modal_login'
+      //}).
       when('/dashboard', {
           templateUrl: 'partials/dashboard'
       }).
+      when('/administrator', {
+          templateUrl: 'partials/administrator'
+      }).
+      when('/print', {
+          templateUrl: 'partials/print'
+      }).
+
       when('/test', {
-          templateUrl: 'partials/test'
+          templateUrl: 'partials/print_form'
       }).
       otherwise({
         redirectTo: '/'

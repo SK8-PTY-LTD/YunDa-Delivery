@@ -1,0 +1,15 @@
+<div class="container">
+    <table class="table table-striped" style="width:90%">
+        <thead>
+            <th>运单号</th>
+        <th>状态</th>
+        <th>创建时间</th>
+        </thead>
+        <tr ng-repeat="f in resultList">
+            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.info"></td>
+            <td ng-bind="f.createdAt"></td>
+        </tr>
+    </table>
+    <button class="btn btn-info" ng-click="close()">关闭</button>
+</div>

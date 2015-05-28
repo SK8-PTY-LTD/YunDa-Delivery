@@ -13,11 +13,11 @@
   </head>
   <body ng-controller="AppCtrl">
     <!-- Navbar and Styling file -->
+    <div ng-if="!printPage">
     <yunda-navbar></yunda-navbar>
-    <!-- Body Components -->
-    <div class="container">
-      <div ng-view="ng-view"></div>
     </div>
+    <!-- Body Components -->
+    <div ng-view="ng-view"></div>
     <div ng-if="false">
       <!-- Scripts -->
       <script src="https://leancloud.cn/scripts/lib/av-0.5.0.min.js"></script>
@@ -53,5 +53,7 @@
 
     </div>
   </body>
-  <yunda-footer></yunda-footer>
+  <div ng-if="!printPage">
+    <yunda-footer></yunda-footer>
+  </div>
 </html>
