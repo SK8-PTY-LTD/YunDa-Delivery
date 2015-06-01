@@ -1,30 +1,7 @@
-<style>
-    *{ margin:0; padding:0; list-style:none;}
-    img{ border:0;}
-
-    .rides-cs {  font-size: 12px; background:#29a7e2; position: fixed; top: 250px; right: 0px; _position: absolute; z-index: 1500; border-radius:6px 0px 0 6px;}
-    .rides-cs a { color: #00A0E9;}
-    .rides-cs a:hover { color: #ff8100; text-decoration: none;}
-    .rides-cs .floatL { width: 36px; float:left; position: relative; z-index:1;margin-top: 21px;height: 181px;}
-    .rides-cs .floatL a { font-size:0; text-indent: -999em; display: block;}
-    .rides-cs .floatR { width: 130px; float: left; padding: 5px; overflow:hidden;}
-    .rides-cs .floatR .cn {background:#F7F7F7; border-radius:6px;margin-top:4px;}
-    .rides-cs .cn .titZx{ font-size: 14px; color: #333;font-weight:600; line-height:24px;padding:5px;text-align:center;}
-    .rides-cs .cn ul {padding:0px;}
-    .rides-cs .cn ul li { line-height: 38px; height:38px;border-bottom: solid 1px #E6E4E4;overflow: hidden;text-align:center;}
-    .rides-cs .cn ul li span { color: #777;}
-    .rides-cs .cn ul li a{color: #777;}
-    .rides-cs .cn ul li img { vertical-align: middle;}
-    .rides-cs .btnOpen, .rides-cs .btnCtn {  position: relative; z-index:9; top:25px; left: 0;  background-image: url(http://demo.lanrenzhijia.com/2014/service1031/images/lanrenzhijia.png); background-repeat: no-repeat; display:block;  height: 146px; padding: 8px;}
-    .rides-cs .btnOpen { background-position: 0 0;}
-    .rides-cs .btnCtn { background-position: -37px 0;}
-    .rides-cs ul li.top { border-bottom: solid #ACE5F9 1px;}
-    .rides-cs ul li.bot { border-bottom: none;}
-</style>
-
 <div class="container" ng-controller="HomeCtrl">
 <!--代码部分begin-->
-<div id="floatTools" class="rides-cs" style="height:246px;">
+<div class="weibo-sidebar">
+<iframe style="position:fixed; z-index:1500; left:0; top:150px;" width="14%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1570047451&verifier=8fdd137b&dpc=1"></iframe><div id="floatTools" class="rides-cs" style="height:246px;">
     <div class="floatL">
         <a id="aFloatTools_Show" class="btnOpen" title="查看在线客服" style="top:20px;display:block" href="javascript:void(0);">展开</a>
         <a id="aFloatTools_Hide" class="btnCtn" title="关闭在线客服" style="top:20px;display:none" href="javascript:void(0);">收缩</a>
@@ -61,60 +38,70 @@
     });
 </script>
 <!--代码部分end-->
-    <div class="row  bottom-buffer">
-        <div class="col-lg-4">
-            <div ng-if="!currentUser.id">
-                <form name="loginForm">
-                    <fieldset>
-                        <h4 class="text-center"><img src="/img/login.png" alt="Login" class="home-icon" style="width:30px;height:40px">用户登陆</h4>
-                        <div class="form-group">
-                            <form name="loginForm">
-                                <div class="form-group has-feedback">
-                                    <label class="control-label">Email:</label>
+<div class="row  bottom-buffer">
+    <div class="col-lg-3" style="height: 305px">
+        <div ng-if="!currentUser.id">
+            <form name="loginForm" >
+                <fieldset style="height: 100%">
+                    <h4 class="text-center"><img src="/img/login.png" alt="Login" class="home-icon"
+                                                 style="width:22px;height:30px; position: relative; bottom: 5px;">用户登陆
+                    </h4>
+
+                    <div class="form-group has-feedback">
+                        <label class="control-label">Email:</label>
                                     <span ng-show="loginForm.email.$valid"
                                           class="glyphicon glyphicon-ok form-control-feedback"></span>
-                                    <input type="email" name="email" class="form-control" id="username"
-                                           ng-model="currentUser.username" placeholder="john.smith@gmail.com" required>
-                                </div>
-                                <div class="form-group has-feedback">
-                                    <label class="control-label">Password:</label>
-                                    <!--<label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>-->
+                        <input type="email" name="email" class="form-control" id="username"
+                               ng-model="currentUser.username" placeholder="john.smith@gmail.com"
+                               required>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label">Password:</label>
+                        <!--<label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>-->
                                     <span ng-show="!loginForm.password.$valid"
                                           class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
                                     <span ng-show="loginForm.password.$valid"
                                           class="glyphicon glyphicon-ok form-control-feedback"></span>
-                                    <input type="password" name="password" class="form-control" id="password"
-                                           ng-model="currentUser.password" placeholder="At least 8 characters long"
-                                           ng-minlength="8" required>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="col-md-12 btn btn-success" ng-click="login()"
-                                            ng-show="loginForm.$valid">Log in
-                                    </button>
-                                    <button type="submit" class="col-md-12 btn btn-info" ng-click="signup()"
-                                            ng-show="loginForm.$valid">Sign Up
-                                    </button>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label"><a href="http://www.sk8.asia">Powered by
-                                            SK8科技</a></label>
-                                </div>
-                            </form>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div ng-if="currentUser.id">
-                <fieldset>
+                        <input type="password" name="password" class="form-control" id="password"
+                               ng-model="currentUser.password" placeholder="At least 8 characters long"
+                               ng-minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="col-md-5 btn btn-success" ng-click="login()"
+                                ng-show="loginForm.$valid">Log in
+                        </button>
+                        <button type="submit" class="col-md-5 col-md-offset-2 btn btn-info"
+                                ng-click="signup()"
+                                ng-show="loginForm.$valid">Sign Up
+                        </button>
+                    </div>
+                    <p class="control-label text-right" style="font-size: 0.8em; margin-top: 5px;"><a
+                                href="http://www.sk8.asia"><em>Powered by
+                                SK8科技</em></a></p>
+                </fieldset>
+            </form>
+
+
+        </div>
+        <div ng-if="currentUser.id">
+                <fieldset style="height: 100%">
                 <h4 class="text-center"><img src="/img/profile.png" alt="Login" class="home-icon" style="width:30px;height:40px">用户信息</h4>
-                <label for="username">用户名： </label>
+                    <label for="username">用户名： </label>
+                    <span ng-bind="currentUser.username"></span></br>
+                <label for="username">姓名： </label>
                 <span ng-bind="currentUser.realName"></span>
                 </br>
                 <label for="username">账户余额： </label>
-                <span ng-bind="currentUser.balance"></span>
+                $<span ng-bind="currentUser.balance"></span></br>
                 <!--<label for="username">账户余额： </label>-->
                 <!--<span ng-bind="currentUser.realName"></span>-->
-                    </fieldset>
+                    <div style="margin-bottom: 40px;"></div>
+                    <button class="btn btn-info" ng-href="/dashboard">进入会员中心</button></br>
+                    <a style="color:gray; font-weight: bold" ng-click="updatePassword()">修改密码</a></br>
+                    <a style="font-weight: bold" ng-click="logOut()">登出账号</a>
+
+
+                </fieldset>
             </div>
         </div>
         <div class="col-lg-8">
@@ -162,14 +149,13 @@
             <p>办公室电话:</p>
 
             <p>(02) 9268 0883</p>
-            </br>
-            <p>传真:</p>
 
-            <p>02 92680580</p>
+            <p>在线客服</p>
+            <li><span></span> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> </li>
             </br>
-            <p>办公室地址:</p>
+            <p>邮件联系</p>
+            <a href="mailto:name@email.com">发邮件</a>
 
-            <p>Suite 605, Pacific Trade Centre ,368 Sussex Street,Sydney NSW 2000</p>
         </div>
     </div>
 
@@ -230,16 +216,19 @@
 
     <div class="row" style="border-top: 2px dotted gray; border-bottom: 2px dotted gray; font-size: 0.9em">
         <div class="col-lg-3">
-            <h5 class="text-center"><img src="/img/heart.png" alt="Login" class="home-icon" style="width:40px;height:40px">友情链接</h5>
+            <h5 class="text-center"><img src="/img/heart.png" alt="Login" class="home-icon" style="width:35px;height:35px">友情链接</h5>
         </div>
-        <div class="col-lg-3 top-buffer" >
-            <a href="http://www.sk8.asia">SK8 Tech</a>
+        <div class="col-lg-2 ad-top-buffer" >
+            <a href="http://www.amazon.com">亚马逊</a>
         </div>
-        <div class="col-lg-3 top-buffer">
-            <a href="http://www.shelf.is">Shelf</a>
+        <div class="col-lg-2 ad-top-buffer">
+            <a href="http://tmall.com">天猫商城</a>
         </div>
-        <div class="col-lg-3 top-buffer">
-            <a href="http://www.sk8.asia">SK8 Tech</a>
+        <div class="col-lg-2 ad-top-buffer">
+            <a href="http://www.sk8.asia">SK8科技</a>
+        </div>
+        <div class="col-lg-2 ad-top-buffer">
+            <a href="http://www.shelf.is/cn/">尚架</a>
         </div>
     </div>
 

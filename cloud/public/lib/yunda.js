@@ -389,6 +389,15 @@
       this.set("freightIn", value);
     }
   });
+  Object.defineProperty(YD.Freight.prototype, "estimatedPrice", {
+    get: function() {
+      return this.get("estimatedPrice");
+    },
+    set: function(value) {
+      this.set("estimatedPrice", value);
+    }
+  });
+
   Object.defineProperty(YD.Freight.prototype, "notes", {
     get: function() {
       return this.get("notes");
@@ -681,6 +690,14 @@
       this.set("status", value);
     }
   });
+  Object.defineProperty(YD.FreightIn.prototype, "estimatedPrice", {
+    get: function() {
+      return this.get("estimatedPrice");
+    },
+    set: function(value) {
+      this.set("estimatedPrice", value);
+    }
+  });
 
   //
   //Object.defineProperty(YD.FreightIn.prototype, "realName", {
@@ -868,6 +885,7 @@
       this.set("addressId", value);
     }
   });
+
   Object.defineProperty(YD.User.prototype, "emailVerified", {
     get: function() {
       return this.get("emailVerified");

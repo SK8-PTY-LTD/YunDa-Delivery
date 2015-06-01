@@ -3,23 +3,24 @@
     <div class="top-bar">
         <div class="container">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <!-- Start Contact Info -->
-                    <ul class="contact-details">
+                    <ul class="contact-details list-inline">
                         <li>
-                            <a href="#"><i class="fa fa-map-marker"></i> Your Address </a>
+                            <!--<a href="#"><i class="fa fa-map-marker"></i> 15429 SE Bollam Dr Clackamas, OR 97015 </a>-->
+                            <a href="#"><i class="fa fa-map-marker"></i> 昀達仓储物流有限公司 </a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-envelope-o"></i> info@yourcompany.com</a>
+                            <a href="#"><i class="fa fa-envelope-o"></i> YUNDA LOGISTICS INC</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-phone"></i> +12 345 678 000</a>
+                            <a href="#"><i class="fa fa-phone"></i>9268 0883</a>
                         </li>
                     </ul>
                     <!-- End of Contact-->
                 </div>
                 <!-- .col-md-7 -->
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <!-- Start Social Links -->
                     <ul class="social-list">
                         <li>
@@ -64,7 +65,7 @@
                         <a ng-href="/home">首页</a>
                     </li>
                     <li class="divider-vertical">
-                        <a ng-href="/about">关于</a>
+                        <a ng-href="/about">关于我们</a>
                     </li>
                     <li class="divider-vertical">
                         <a ng-href="/faq">常见问题</a>
@@ -76,22 +77,25 @@
                         <a ng-href="/help">帮助</a>
                     </li>
                     <li class="divider-vertical">
-                        <a ng-href="/contact">Contact</a>
+                        <a ng-href="/contact">联系我们</a>
                     </li>
-                    <li class="divider-vertical" ng-if="currentUser.id">
-                        <a ng-href="/dashboard">Dashboard</a>
-                    </li>
+                    <!--<li class="divider-vertical" ng-if="currentUser.id">-->
+                        <!--<a ng-href="/dashboard">会员中心</a>-->
+                    <!--</li>-->
                     <li class="divider-vertical" ng-show="currentUser.id" class="btn-group" dropdown >
                         <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
                             <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
                             <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
-                            Log out <span class="caret"></span>
+                            用户<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <!--<li>-->
                                 <!--<a ng-href="/profile/">Profile</a>-->
                             <!--</li>-->
-                            <li><a ng-click="logOut()">Log out</a></li>
+                            <li><a ng-click="change_tab('aa')" ng-href="/dashboard">会员中心</a></li>
+                            <li><a ng-click="change_tab('ba')" ng-href="/dashboard#myfreight">物流管理</a></li>
+                            <li><a ng-click="change_tab('ca')" ng-href="/dashboard#recharge">充值管理</a></li>
+                            <li><a ng-click="logOut()">登出</a></li>
                         </ul>
                     </li>
                     <li class="divider-vertical">
