@@ -45,15 +45,16 @@
       <script src="js/directives.js"></script>
 
 
+
       <!-- AngularJS Google Maps-->
 
       <script src="lib/angular-google-maps/angular-google-maps.js"></script>
       <script src="lib/angular-google-maps/lodash.min.js"></script>
 
-
+    </div>
+    <div ng-if="!printPage">
+      <yunda-footer></yunda-footer>
     </div>
   </body>
-  <div ng-if="!printPage">
-    <yunda-footer></yunda-footer>
-  </div>
+
 </html>

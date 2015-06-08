@@ -74,15 +74,26 @@ padding-left: 25px
 
 }
 
-/*weibo sidebar*/
+.info-area {
+    background: #afd9ee;
+    border: 5px solid #6eb6f9;
+    border-radius: 2;
+    -webkit-border-radius: 2;
+    -moz-border-radius: 2;
+    -o-border-radius: 2;
+}
 
-/*.share_self {*/
-    /*position: fixed;*/
-    /*top: 50px;*/
-    /*right:0px;*/
-    /*z-index: auto;*/
-/*}*/
+/*-----------*/
+/*weibo sidebar*/
+/*-----------*/
+
+.share_self {
+
+    display: none;
+}
+/*-----------*/
 /*QQ sidebar*/
+/*-----------*/
 
 *{ margin:0; padding:0; list-style:none;}
 img{ border:0;}
@@ -251,30 +262,6 @@ ul.social-list li a.dribbble:hover {
     background-color: #E46387;
 }
 
-ul.social-list li a.linkdin:hover {
-    background-color: #90CADD;
-}
-
-ul.social-list li a.tumblr:hover {
-    background-color: #4D7EA3;
-}
-
-ul.social-list li a.flickr:hover {
-    background-color: #E474AF;
-}
-
-ul.social-list li a.instgram:hover {
-    background-color: #4D4F54;
-}
-
-ul.social-list li a.vimeo:hover {
-    background-color: #87D3E0;
-}
-
-ul.social-list li a.skype:hover {
-    background-color: #36C4F3
-}
-
 ul.social-list li a i {
     font-size: 1em;
     display: block;
@@ -291,12 +278,12 @@ ul.social-list li:last-child a i {
 
 .navbar {
     margin-bottom: 0;
-    background: #6eb6f9;
-    border-bottom: 1px inset gray;
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    -o-border-radius: 0;
+    background: #ffffff;
+    border-top: 5px solid #6eb6f9;
+    border-radius: 2;
+    -webkit-border-radius: 2;
+    -moz-border-radius: 2;
+    -o-border-radius: 2;
 }
 
 .navbar-brand {
@@ -328,7 +315,7 @@ ul.social-list li:last-child a i {
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: #f6f6f6;
+    color: #6eb6f9;
     display: block;
     font-size: 16px;
     font-weight: 400;
@@ -342,7 +329,7 @@ ul.social-list li:last-child a i {
 }
 
 .navbar-default .navbar-nav > li > a.active, .navbar-default .navbar-nav > li:hover > a {
-    border-bottom: 2px solid;
+    border-bottom: 2px solid #6eb6f9;
 }
 
 .navbar-default .navbar-nav > li > a i {

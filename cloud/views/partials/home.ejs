@@ -1,37 +1,50 @@
 <div class="container" ng-controller="HomeCtrl">
 <!--代码部分begin-->
-<div class="weibo-sidebar">
-<iframe style="position:fixed; z-index:1500; left:0; top:150px;" width="14%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1570047451&verifier=8fdd137b&dpc=1"></iframe><div id="floatTools" class="rides-cs" style="height:246px;">
+<iframe style="position:fixed; z-index:1500; left:0; top:150px;" width="14%" height="550" class="share_self"
+        frameborder="0" scrolling="no"
+        src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1570047451&verifier=8fdd137b&dpc=1"></iframe>
+<div id="floatTools" class="rides-cs" style="height:246px;">
     <div class="floatL">
-        <a id="aFloatTools_Show" class="btnOpen" title="查看在线客服" style="top:20px;display:block" href="javascript:void(0);">展开</a>
+        <a id="aFloatTools_Show" class="btnOpen" title="查看在线客服" style="top:20px;display:block"
+           href="javascript:void(0);">展开</a>
         <a id="aFloatTools_Hide" class="btnCtn" title="关闭在线客服" style="top:20px;display:none" href="javascript:void(0);">收缩</a>
     </div>
     <div id="divFloatToolsView" class="floatR" style="display: none;height:237px;width: 140px;">
         <div class="cn">
             <h3 class="titZx">Yunda在线客服</h3>
             <ul>
-                <li><span>客服1</span> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> </li>
-                <li><span>客服2</span> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2300145467&site=qq&menu=yes"><img border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> </li>
+                <li><span>客服1</span> <a target="_blank"
+                                        href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img
+                                border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png"
+                                alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
+                <li><span>客服2</span> <a target="_blank"
+                                        href="http://wpa.qq.com/msgrd?v=3&uin=2300145467&site=qq&menu=yes"><img
+                                border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png"
+                                alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
                 <!--<li>-->
-                    <!--<a href="http://www.lanrenzhijia.com/" target="_blank">懒人之家</a>-->
-                    <!--<a href="http://www.lanrenzhijia.com/js" target="_blank">懒人之家js</a>-->
-                    <!--<div class="div_clear"></div>-->
+                <!--<a href="http://www.lanrenzhijia.com/" target="_blank">懒人之家</a>-->
+                <!--<a href="http://www.lanrenzhijia.com/js" target="_blank">懒人之家js</a>-->
+                <!--<div class="div_clear"></div>-->
                 <!--</li>-->
-                <li style="border:none;"><span>电话：400-000-0000</span> </li>
+                <li style="border:none;"><span>电话：400-000-0000</span></li>
             </ul>
         </div>
     </div>
 </div>
 <script src="http://www.lanrenzhijia.com/ajaxjs/jquery.min.js"></script>
 <script>
-    $(function(){
-        $("#aFloatTools_Show").click(function(){
-            $('#divFloatToolsView').animate({width:'show',opacity:'show'},100,function(){$('#divFloatToolsView').show();});
+    $(function () {
+        $("#aFloatTools_Show").click(function () {
+            $('#divFloatToolsView').animate({width: 'show', opacity: 'show'}, 100, function () {
+                $('#divFloatToolsView').show();
+            });
             $('#aFloatTools_Show').hide();
             $('#aFloatTools_Hide').show();
         });
-        $("#aFloatTools_Hide").click(function(){
-            $('#divFloatToolsView').animate({width:'hide', opacity:'hide'},100,function(){$('#divFloatToolsView').hide();});
+        $("#aFloatTools_Hide").click(function () {
+            $('#divFloatToolsView').animate({width: 'hide', opacity: 'hide'}, 100, function () {
+                $('#divFloatToolsView').hide();
+            });
             $('#aFloatTools_Show').show();
             $('#aFloatTools_Hide').hide();
         });
@@ -39,13 +52,34 @@
 </script>
 <!--代码部分end-->
 <div class="row  bottom-buffer">
+
+    <div class="col-lg-8">
+        <!-- slider container -->
+        <div ng-controller="CarouseCtrl">
+            <div style="height: 305px">
+                <carousel interval="myInterval">
+                    <slide ng-repeat="slide in slides" active="slide.active">
+                        <img ng-src="{{slide.image}}" style="margin:auto;">
+
+                        <div class="carousel-caption">
+                            <h4>Slide {{$index}}</h4>
+
+                            <p>{{slide.text}}</p>
+                        </div>
+                    </slide>
+                </carousel>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-3" style="height: 305px">
         <div ng-if="!currentUser.id">
-            <form name="loginForm" >
+            <form name="loginForm">
                 <fieldset style="height: 100%">
                     <h4 class="text-center"><img src="/img/login.png" alt="Login" class="home-icon"
                                                  style="width:22px;height:30px; position: relative; bottom: 5px;">用户登陆
                     </h4>
+                    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
 
                     <div class="form-group has-feedback">
                         <label class="control-label">Email:</label>
@@ -56,7 +90,7 @@
                                required>
                     </div>
                     <div class="form-group has-feedback">
-                        <label class="control-label">Password:</label>
+                        <label class="control-label">密码:</label>
                         <!--<label class="control-label pull-right"><a ng-click="resetPassword()">Forgot?</a></label>-->
                                     <span ng-show="!loginForm.password.$valid"
                                           class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
@@ -68,11 +102,11 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="col-md-5 btn btn-success" ng-click="login()"
-                                ng-show="loginForm.$valid">Log in
+                                ng-show="loginForm.$valid">登陆
                         </button>
                         <button type="submit" class="col-md-5 col-md-offset-2 btn btn-info"
                                 ng-click="signup()"
-                                ng-show="loginForm.$valid">Sign Up
+                                ng-show="loginForm.$valid">注册
                         </button>
                     </div>
                     <p class="control-label text-right" style="font-size: 0.8em; margin-top: 5px;"><a
@@ -84,153 +118,145 @@
 
         </div>
         <div ng-if="currentUser.id">
-                <fieldset style="height: 100%">
-                <h4 class="text-center"><img src="/img/profile.png" alt="Login" class="home-icon" style="width:30px;height:40px">用户信息</h4>
-                    <label for="username">用户名： </label>
-                    <span ng-bind="currentUser.username"></span></br>
+            <fieldset style="height: 100%">
+                <h4 class="text-center"><img src="/img/profile.png" alt="Login" class="home-icon"
+                                             style="width:30px;height:40px">用户信息</h4>
+                <label for="username">用户名： </label>
+                <span ng-bind="currentUser.username"></span></br>
                 <label for="username">姓名： </label>
                 <span ng-bind="currentUser.realName"></span>
                 </br>
                 <label for="username">账户余额： </label>
-                $<span ng-bind="currentUser.balance"></span></br>
-                <!--<label for="username">账户余额： </label>-->
-                <!--<span ng-bind="currentUser.realName"></span>-->
-                    <div style="margin-bottom: 40px;"></div>
-                    <button class="btn btn-info" ng-href="/dashboard">进入会员中心</button></br>
-                    <a style="color:gray; font-weight: bold" ng-click="updatePassword()">修改密码</a></br>
-                    <a style="font-weight: bold" ng-click="logOut()">登出账号</a>
+                $<span ng-bind="currentUser.balanceInDollar"></span></br>
+                <label for="username">积分余额： </label>
+                <span ng-bind="currentUser.reward"></span></br>
+                <div style="margin-bottom: 40px;"></div>
+               <a ng-href="/dashboard"> <button class="btn btn-info">进入会员中心</button></a>
+                </br>
+                <a style="color:gray; font-weight: bold" ng-click="updatePassword()">修改密码</a></br>
+                <a style="font-weight: bold" ng-click="logOut()">登出账号</a>
 
 
-                </fieldset>
-            </div>
-        </div>
-        <div class="col-lg-8">
-            <!-- slider container -->
-            <div ng-controller="CarouseCtrl">
-                <div style="height: 305px">
-                    <carousel interval="myInterval">
-                        <slide ng-repeat="slide in slides" active="slide.active">
-                            <img ng-src="{{slide.image}}" style="margin:auto;">
-
-                            <div class="carousel-caption">
-                                <h4>Slide {{$index}}</h4>
-
-                                <p>{{slide.text}}</p>
-                            </div>
-                        </slide>
-                    </carousel>
-                </div>
-            </div>
+            </fieldset>
         </div>
     </div>
-    <div class="row bottom-buffer">
-        <div class="col-lg-3 col-lg-offset-1">
-            <form>
-                <div class="form-group" >
-                    <h4 class="text-left"><img src="/img/search.png" alt="Login" class="home-icon" style="width:30px;height:45px">运单追踪</h4>
-                    <!--<input type="text" name="trackingNumber"  id="trackingNumber" >-->
-                    <textarea id="trackNumber" class="form-control" cols="40" rows="5" ng-model="trackingNumber"
-                              placeholder="每行一个运单"></textarea>
-                </div>
-                <div class="form-group">
-                    <button class="form-control btn btn-info" ng-click="trackingInfo()">查询运单</button>
-                </div>
-            </form>
+</div>
+<div class="row bottom-buffer">
+    <div class="col-lg-3 col-lg-offset-1">
+        <form>
+            <div class="form-group">
+                <h4 class="text-left"><img src="/img/search.png" alt="Login" class="home-icon"
+                                           style="width:30px;height:45px">运单追踪</h4>
+                <!--<input type="text" name="trackingNumber"  id="trackingNumber" >-->
+                <textarea id="trackNumber" class="form-control" cols="40" rows="5" ng-model="trackingNumber"
+                          placeholder="每行一个运单"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="form-control btn btn-info" ng-click="trackingInfo()">查询运单</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-4 text-center">
+        <h4 class="text-center"><img src="/img/news.png" alt="Login" class="home-icon" style="width:40px;height:40px">最新公告
+        </h4>
+        <iframe width="90%" height="200" class="share_self"
+                frameborder="0" scrolling="no"
+                src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1570047451&verifier=8fdd137b&dpc=1"></iframe>
+
+    </div>
+    <div class="col-lg-2 text-center">
+        <h4 class="text-center"><img src="/img/help.png" alt="Login" class="home-icon" style="width:40px;height:40px">客服中心
+        </h4>
+
+        <p>办公室电话:</p>
+
+        <p>(02) 9268 0883</p>
+
+        <p>在线客服</p>
+        <li><span></span> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img
+                        border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png" alt="点击这里给我发消息"
+                        title="点击这里给我发消息"/></a></li>
+        </br>
+        <p>邮件联系</p>
+        <a href="mailto:2973508779@qq.com"><button class="btn btn-sm">发邮件</button></a>
+
+    </div>
+</div>
+
+
+<div class="row bottom-buffer" style="border: 4px solid gray; padding: 20px">
+    <div>
+        <div class="col-lg-2">
+            <h4 class="text-center"><img src="/img/link.png" alt="Login" class="home-icon"
+                                         style="width:40px;height:40px">合作伙伴</h4>
         </div>
-        <div class="col-lg-3 text-center">
-            <h4 class="text-center"><img src="/img/news.png" alt="Login" class="home-icon" style="width:40px;height:40px">最新公告</h4>
-            <ul ng-repeat="news in newsList">
-                <li ng-bind="news.title"></li>
-            </ul>
+        <div class="col-lg-2">
+           <a href="http://www.ups.com/cn"><img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_ups.png" alt="合作链接"></a>
         </div>
-        <div class="col-lg-5 text-center">
-            <h4 class="text-center"><img src="/img/help.png" alt="Login" class="home-icon" style="width:40px;height:40px">客服中心</h4>
+        <div class="col-lg-2">
+            <a href="http://www.fedex.com/"><img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_fedex.png" alt="合作链接"></a>
 
-            <p>办公室电话:</p>
+        </div>
+        <div class="col-lg-2">
+            <a href="http://www.ems.com.cn/"><img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_ems.png" alt="合作链接"></a>
 
-            <p>(02) 9268 0883</p>
+        </div>
+        <div class="col-lg-2">
+            <a href="http://www.cn.dhl.com/zh.html"> <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_dhl.png" alt="合作链接"></a>
 
-            <p>在线客服</p>
-            <li><span></span> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> </li>
-            </br>
-            <p>邮件联系</p>
-            <a href="mailto:name@email.com">发邮件</a>
+        </div>
+        <div class="col-lg-2">
+            <a href="http://www.sf-express.com/cn/sc/"> <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_sf.png" alt="合作链接"></a>
 
         </div>
     </div>
+</div>
 
+<div class="row bottom-buffer">
 
-    <div class="row bottom-buffer" style="border: 4px solid gray; padding: 20px">
-        <div >
-            <div class="col-lg-2">
-                <h4 class="text-center"><img src="/img/link.png" alt="Login" class="home-icon" style="width:40px;height:40px">合作伙伴</h4>
-            </div>
-            <div class="col-lg-2">
-                <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_ups.png" alt="合作链接">
-            </div>
-            <div class="col-lg-2">
-                <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_fedex.png" alt="合作链接">
-
-            </div>
-            <div class="col-lg-2">
-                <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_ems.png" alt="合作链接">
-
-            </div>
-            <div class="col-lg-2">
-                <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_dhl.png" alt="合作链接">
-
-            </div>
-            <div class="col-lg-2">
-                <img src="http://a-397737-80-2296677578.www-haixingqiao-com.anquanbao.cn/Images/link_sf.png" alt="合作链接">
-
-            </div>
-        </div>
+    <div class="col-lg-3 col-lg-offset-2">
+        <a class="" href="#">
+            <img alt="" src="http://placehold.it/140x45">
+        </a>
     </div>
-
-    <div class="row bottom-buffer">
-
-        <div class="col-lg-3 col-lg-offset-2">
-            <a class="" href="#">
-                <img alt="" src="http://placehold.it/140x45">
-            </a>
-        </div>
-        <div class="col-lg-5 ">
-            <div class="row">
-                <div class="col-md-3">
-                    <a ng-href="/responsibility">免责声明</a>
-                </div>
-                <div class="col-md-3">
-                    <a ng-href="/reperation">赔款条例</a>
-                </div>
-                <div class="col-md-3">
-                    免责声明
-                </div>
-                <div class="col-md-3">
-                    免责声明
-                </div>
+    <div class="col-lg-5 ">
+        <div class="row">
+            <div class="col-md-3">
+                <a ng-href="/responsibility">免责声明</a>
             </div>
-            <div class="row"></div>
-               <em style="font-size: 0.9em"> YD 版权所有 Copyright © 2015 yunda.com. All rights reserved</em>
+            <div class="col-md-3">
+                <a ng-href="/reperation">赔款条例</a>
+            </div>
+            <div class="col-md-3">
+                免责声明
+            </div>
+            <div class="col-md-3">
+                免责声明
+            </div>
         </div>
+        <div class="row"></div>
+        <em style="font-size: 0.9em"> YD 版权所有 Copyright © 2015 yunda.com. All rights reserved</em>
     </div>
+</div>
 
-    <div class="row" style="border-top: 2px dotted gray; border-bottom: 2px dotted gray; font-size: 0.9em">
-        <div class="col-lg-3">
-            <h5 class="text-center"><img src="/img/heart.png" alt="Login" class="home-icon" style="width:35px;height:35px">友情链接</h5>
-        </div>
-        <div class="col-lg-2 ad-top-buffer" >
-            <a href="http://www.amazon.com">亚马逊</a>
-        </div>
-        <div class="col-lg-2 ad-top-buffer">
-            <a href="http://tmall.com">天猫商城</a>
-        </div>
-        <div class="col-lg-2 ad-top-buffer">
-            <a href="http://www.sk8.asia">SK8科技</a>
-        </div>
-        <div class="col-lg-2 ad-top-buffer">
-            <a href="http://www.shelf.is/cn/">尚架</a>
-        </div>
+<div class="row" style="border-top: 2px dotted gray; border-bottom: 2px dotted gray; font-size: 0.9em">
+    <div class="col-lg-3">
+        <h5 class="text-center"><img src="/img/heart.png" alt="Login" class="home-icon" style="width:35px;height:35px">友情链接
+        </h5>
     </div>
+    <div class="col-lg-2 ad-top-buffer">
+        <a href="http://www.amazon.com">亚马逊</a>
+    </div>
+    <div class="col-lg-2 ad-top-buffer">
+        <a href="http://tmall.com">天猫商城</a>
+    </div>
+    <div class="col-lg-2 ad-top-buffer">
+        <a href="http://www.sk8.asia">SK8科技</a>
+    </div>
+    <div class="col-lg-2 ad-top-buffer">
+        <a href="http://www.shelf.is/cn/">尚架</a>
+    </div>
+</div>
 
 
 </div>

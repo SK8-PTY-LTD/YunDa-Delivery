@@ -171,6 +171,24 @@ Object.defineProperty(YDUser.prototype, "addressId", {
     this.set("addressId", value);
   }
 });
+
+Object.defineProperty(YDUser.prototype, "numberId", {
+  get: function() {
+    return this.get("numberId");
+  },
+  set: function(value) {
+    this.set("numberId", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "stringId", {
+  get: function() {
+    return this.get("stringId");
+  },
+  set: function(value) {
+    this.set("stringId", value);
+  }
+});
 Object.defineProperty(YDUser.prototype, "emailVerified", {
   get: function() {
     return this.get("emailVerified");

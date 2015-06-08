@@ -1,0 +1,43 @@
+<div class="modal-body">
+    <button type="button" class="close" aria-label="Close" ng-click="dismissViewController()"><span aria-hidden="true">&times;</span></button>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+    <form name="loginForm" >
+        <div class="form-group has-feedback">
+            <label class="control-label">Email:</label>
+            <span ng-show="!loginForm.email.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="john.smith@gmail.com" required>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label">密码:</label>
+            <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+            <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="At least 8 characters long" ng-minlength="8" required>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label">确认密码:</label>
+            <span ng-show="!loginForm.password1.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+            <span ng-show="loginForm.password1.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="password" name="password1" class="form-control" id="password1" ng-model="passwordRepeat" placeholder="At least 8 characters long" ng-minlength="8" required>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label">真实姓名:</label>
+            <span ng-show="!loginForm.realname.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="loginForm.realname.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="text" name="realname" class="form-control" id="realName" ng-model="currentUser.realName"  required>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="control-label">手机号:</label>
+            <span ng-show="!loginForm.mobile.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="loginForm.mobile.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="text" pattern="(\+|\d)(\d)+" name="mobile" class="form-control" id="mobile" ng-model="currentUser.mobilePhoneNumber" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="col-xs-12 btn btn-info" ng-click="signup()" ng-disabled="!loginForm.$valid">注册</button>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><a href="http://www.sk8.asia">Powered by SK8 Tech</a></label>
+        </div>
+    </form>
+</div>
