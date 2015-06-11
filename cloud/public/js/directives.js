@@ -23,15 +23,17 @@ YundaApp.directive("barcodeApi", function () {
 
     return {
         scope: {
-            'trackingNumber': '='
+            'id': '='
         },
 
         link: function (scope, element, attrs) {
             attrs.$observe('barcodeApi', function (value) {
-                var url = "http://api-bwipjs.rhcloud.com/?bcid=code128&text=" + scope.trackingNumber + "&includetext"
+                //console.log("in directive -- value: " + value)
+                console.log("in directive -- scope.id " + scope.id)
+                var url = "http://api-bwipjs.rhcloud.com/?bcid=code128&text=" + scope.id + "&includetext"
                 var img = angular.element("<img alt='Barcoded value 1234567890' src=\"" + url + "\">")
                 console.log("in directive, url: " + url)
-                console.log("in directive, img: " + img)
+                //console.log("in directive, img: " + img)
 
                 angular.element(element).append(img)
             });

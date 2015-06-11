@@ -5,10 +5,10 @@
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
     <form name="loginForm" >
         <div class="form-group has-feedback">
-            <label class="control-label">Email:</label>
+            <label class="control-label">用户名:</label>
             <span ng-show="!loginForm.email.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="john.smith@gmail.com" required>
+            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="email" required>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">密码:</label>

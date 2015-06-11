@@ -1,799 +1,981 @@
 <div class="container" ng-controller="DashboardCtrl">
+<div class="row">
+<div class="col-lg-3">
+    <accordion close-others="oneAtATime">
+        <accordion-group heading="账户管理" is-open="openTab.setA">
+            <ul>
+                <li ng-click="change_tab('aa')">账户信息</li>
+                <li ng-click="change_tab('ab')">地址管理</li>
+                <li ng-click="change_tab('ac')">仓库地址</li>
+            </ul>
+        </accordion-group>
+
+        <accordion-group heading="物流管理" is-open="openTab.setB">
+            <ul>
+                <li ng-click="change_tab('ba')">自助入库</li>
+                <li ng-click="change_tab('bb')">包裹管理<span class="badge pull-right">{{badgeTotalCount}}</span></li>
+                <li ng-click="change_tab('bc')">快件查询</li>
+                <li ng-click="change_tab('bd')">我的运单</li>
+            </ul>
+        </accordion-group>
+
+        <accordion-group heading="财务管理" is-open="openTab.setC">
+            <ul>
+                <li ng-click="change_tab('ca')">在线充值</li>
+                <li ng-click="change_tab('cb')">充值记录</li>
+                <li ng-click="change_tab('cc')">消费记录</li>
+            </ul>
+        </accordion-group>
+
+        <accordion-group heading="自助管理" is-open="openTab.setD">
+            <ul>
+                <li ng-click="change_tab('da')">退款管理</li>
+                <li ng-click="change_tab('db')">退货管理</li>
+                <li ng-click="change_tab('dc')">更改发货地址</li>
+
+            </ul>
+        </accordion-group>
+    </accordion>
+</div>
+<!-- col-sm-3 -->
+
+<div class="col-lg-9">
+<div ng-show="view_tab=='aa'">
+    <!--this is the content for 账户信息-->
+    <accordion close-others="false">
+        <accordion-group is-open="true">
+            <accordion-heading id="info">
+                会员信息
+            </accordion-heading>
+            <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-click="updatePassword()">修改密码</a></p>
+
+            <p>姓名：<span ng-bind="currentUser.realName"></span></p>
+
+            <!--<p>数字ID：<span ng-bind="currentUser.numberId"></span></p>-->
+
+            <!--<p>字母ID：<span ng-bind="currentUser.stringId"></span></p>-->
+
+            <form ng-controller="fileUploadCtrl">
+                <div class="form-group">
+                    <label for="id-front">身份证正面</label>
+                    <input type="file" class="form-control"
+                           onchange="angular.element(this).scope().filesChangedFront(this)"/>
+                </div>
+                .
+                <div class="form-group">
+                    <label for="id-front">身份证反面面</label>
+                    <input type="file" class="form-control"
+                           onchange="angular.element(this).scope().filesChangedBack(this)"/>
+                </div>
+                <li ng-repeat="file in identityFrontList"> {{file.name}}</li>
+                <li ng-repeat="file in identityBackList"> {{file.name}}</li>
+                <div class="form-group">
+                    <button class="btn btn-info form-control" ng-click="uploadIdentity()"> 上传</button>
+                </div>
+            </form>
+
+        </accordion-group>
+
+        <accordion-group is-open="true">
+            <accordion-heading id="info3">
+                财务信息
+            </accordion-heading>
+            <p>客户余额：$<span ng-bind="currentUser.balanceInDollar"></span></p>
+
+            <p>客户积分：<span ng-bind="currentUser.reward"></span></p>
+
+            <p>兑换汇率：美元/人民币=1/6.4</p>
+        </accordion-group>
+
+        <accordion-group is-open="true">
+            <accordion-heading>
+                修改个人资料
+            </accordion-heading>
+            <form ng-controller="UpdateUserCtrl">
+                <div class="form-group">
+                    姓名: <input type="text" class="form-control" ng-model="currentUser.realName"/></div>
+                <div class="form-group">
+
+                    手机号: <input type="tel" class="form-control" name="tel"
+                                ng-model="currentUser.mobilePhoneNumber"/></div>
+
+                <div class="form-group">
+                    <label for="baidumap">地址</label></div>
+                <div class="form-group">
+                    <label for="province">国家</label>
+                    <input type="text" class="form-control" id="country" ng-model="address.country"/></div>
+                <div class="form-group">
+                    <label for="province">省</label>
+                    <input type="text" id="state" class="form-control" ng-model="address.state"/></div>
+                <div class="form-group">
+                    <label for="city">市</label>
+                    <input type="text" id="city" class="form-control" ng-model="address.city"/></div>
+                <div class="form-group">
+                    <label for="suburb">区</label>
+                    <input type="text" id="suburb" class="form-control" ng-model="address.suburb"/></div>
+                <div class="form-group">
+                    <label for="street">街道</label>
+                    <input type="text" id="street1" class="form-control" ng-model="address.street1"/></div>
+                <div class="form-group">
+                    <label for="business">公司</label>
+                    <input type="text" id="street2" class="form-control" ng-model="address.street2"/></div>
+                <div class="form-group">
+                    <label for="postalCode">邮编</label>
+                    <input type="text" id="postalCode" class="form-control" ng-model="address.postalCode"/>
+                </div>
+                <!--input type="button" ng-click="reset()" value="Reset" /-->
+                <div class="form-group">
+                    <input type="submit" ng-click="update_user()" class="form-control btn btn-success" value="Save"/>
+                </div>
+            </form>
+        </accordion-group>
+    </accordion>
+
+</div>
+
+<div ng-show="view_tab=='ab'">
     <div class="row">
-        <div class="col-lg-3">
-            <accordion close-others="oneAtATime">
-                <accordion-group heading="账户管理" isOpen="true">
-                    <ul>
-                        <li ng-click="change_tab('aa')">账户信息</li>
-                        <li ng-click="change_tab('ab')">地址管理</li>
-                        <li ng-click="change_tab('ac')">仓库地址</li>
-                    </ul>
-                </accordion-group>
+        <div class="col-sm-7">
+            收货人：<input type="text" ng-model="recipientLookup"/>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-sm btn-default" ng-click="searchRecipient()">搜索</button>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-sm btn-default" ng-click="addNewAddress()">新增</button>
+        </div>
+    </div>
 
-                <accordion-group heading="物流管理">
-                    <ul>
-                        <li ng-click="change_tab('ba')">自助入库</li>
-                        <li ng-click="change_tab('bb')">包裹管理<span class="badge">{{badgeTotalCount}}</span></li>
-                        <li ng-click="change_tab('bc')">快件查询</li>
-                        <li ng-click="change_tab('bd')">我的运单</li>
-                    </ul>
-                </accordion-group>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>收件人</th>
+            <th>国家</th>
+            <th>省份/直辖市</th>
+            <th>城市</th>
+            <th>区</th>
+            <th>收货地址</th>
+            <th>收货地址2</th>
+            <th>邮编
+            <th>手机</th>
+            <th>操作</th>
 
-                <accordion-group heading="财务管理">
-                    <ul>
-                        <li ng-click="change_tab('ca')">在线充值</li>
-                        <li ng-click="change_tab('cb')">充值记录</li>
-                        <li ng-click="change_tab('cc')">消费记录</li>
-                    </ul>
-                </accordion-group>
+        </tr>
+        </thead>
+        <tr ng-repeat="address in recipientAddresses">
+            <td ng-bind="address.recipient"></td>
+            <td ng-bind="address.country"></td>
+            <td ng-bind="address.state"></td>
+            <td ng-bind="address.city"></td>
+            <td ng-bind="address.suburb"></td>
+            <td ng-bind="address.street1"></td>
+            <td ng-bind="address.street2"></td>
+            <td ng-bind="address.postalCode"></td>
+            <td ng-bind="address.contactNumber"></td>
+            <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
+        </tr>
+    </table>
+</div>
 
-                <accordion-group heading="自助管理">
-                    <ul>
-                        <li ng-click="change_tab('da')">退款管理</li>
-                        <li ng-click="change_tab('db')">退货管理</li>
-                        <li ng-click="change_tab('dc')">更改发货地址</li>
+<div ng-show="view_tab=='ac'">
+    <!--this is the content for 仓库地址-->
 
-                    </ul>
-                </accordion-group>
-            </accordion>
-        </div><!-- col-sm-3 -->
-
-        <div class="col-lg-9">
-            <div ng-show="view_tab=='aa'">
-                <!--this is the content for 账户信息-->
-                <accordion close-others="false">
-                    <accordion-group is-open="true">
-                        <accordion-heading id="info">
-                           会员信息
-                        </accordion-heading>
-                      <p>用户名：<span ng-bind="currentUser.username"></span> <a ng-click="updatePassword()">修改密码</a></p>
-                      <p>姓名：<span ng-bind="currentUser.realName"></span></p>
-                        <p>数字ID：<span ng-bind="currentUser.numberId"></span></p>
-                        <p>字母ID：<span ng-bind="currentUser.stringId"></span></p>
-                      <form ng-controller="fileUploadCtrl">
-                          <div class="form-group">
-                              <label for="id-front">身份证正面</label>
-                              <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFront(this)" />
-                          </div>.
-                          <div class="form-group">
-                              <label for="id-front">身份证反面面</label>
-                              <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedBack(this)"  />
-                          </div>
-                              <li ng-repeat="file in identityFrontList"> {{file.name}}</li>
-                              <li ng-repeat="file in identityBackList"> {{file.name}}</li>
-                          <div class="form-group">
-                              <button class="btn btn-info form-control" ng-click="uploadIdentity()"> 上传 </button>
-                          </div>
-                      </form>
-
-                    </accordion-group>
-
-                    <accordion-group is-open="true">
-                        <accordion-heading id="info3">
-                            财务信息
-                        </accordion-heading>
-                        <p>客户余额：$<span ng-bind="currentUser.balanceInDollar"></span></p>
-                        <p>客户积分：<span ng-bind="currentUser.reward"></span></p>
-                        <p>兑换汇率：美元/人民币=1/6.4</p>
-                    </accordion-group>
-
-                    <accordion-group is-open="true">
-                        <accordion-heading>
-                            修改个人资料
-                        </accordion-heading>
-                        <form ng-controller="UpdateUserCtrl">
-                            <div class="form-group">
-                                姓名: <input type="text" class="form-control" ng-model="currentUser.realName"/></div>
-                            <div class="form-group">
-
-                                手机号: <input type="tel" class="form-control" name="tel"
-                                            ng-model="currentUser.mobilePhoneNumber"/></div>
-
-                            <div class="form-group">
-                                <label for="baidumap">地址</label></div>
-                            <div class="form-group">
-                                <label for="province">国家</label>
-                                <input type="text" class="form-control" id="country" ng-model="address.country"/></div>
-                            <div class="form-group">
-                                <label for="province">省</label>
-                                <input type="text" id="state" class="form-control" ng-model="address.state"/></div>
-                            <div class="form-group">
-                                <label for="city">市</label>
-                                <input type="text" id="city" class="form-control" ng-model="address.city"/></div>
-                            <div class="form-group">
-                                <label for="suburb">区</label>
-                                <input type="text" id="suburb" class="form-control" ng-model="address.suburb"/></div>
-                            <div class="form-group">
-                                <label for="street">街道</label>
-                                <input type="text" id="street1" class="form-control" ng-model="address.street1"/></div>
-                            <div class="form-group">
-                                <label for="business">公司</label>
-                                <input type="text" id="street2" class="form-control" ng-model="address.street2"/></div>
-                            <div class="form-group">
-                                <label for="postalCode">邮编</label>
-                                <input type="text" id="postalCode" class="form-control" ng-model="address.postalCode"/>
-                            </div>
-                            <!--input type="button" ng-click="reset()" value="Reset" /-->
-                            <div class="form-group">
-                                <input type="submit" ng-click="update_user()" class="form-control btn btn-success" value="Save"/></div>
-                        </form>
-                    </accordion-group>
-                </accordion>
-
-            </div>
-
-            <div ng-show="view_tab=='ab'">
+    <accordion close-others="false">
+        <accordion-group is-open="true">
+            <accordion-heading>
+                唯一的收货地址
+            </accordion-heading>
+            <div class="jumbotron">
+                <p>{{currentUser.realName}}唯一收货地址 </p>
+                <!--<address> SE Bollam Dr<br> Clackamas<br> OR 97015 USA <br></address>-->
+                <!--<br>{{currentUser.stringId}}-->
                 <div class="row">
-                    <div class="col-sm-7">
-                        收货人：<input type="text" ng-model="recipientLookup" />
+                    <div class="col-lg-5">
+                        <span style="font-weight:bold">名(First Name): </span><span ng-bind="currentUser.stringId"></span>
                     </div>
-                    <div class="col-sm-2">
-                        <button ng-click="searchRecipient()">搜索</button>
+                    <div class="col-lg-4 col-lg-offset-3">
+                        <span style="font-weight:bold">姓(Last Name): </span><span ng-bind="currentUser.realName"></span>
                     </div>
-                    <div class="col-sm-3">
-                        <button ng-click="addNewAddress()">新增</button>
+                    <div class="col-lg-8">
+                       <span style="font-weight:bold"> 地址(Address): </span>15429 SE Bollam Dr, ste. <span style="color:red; font-weight:bold" ng-bind="currentUser.numberId"></span>
                     </div>
-                </div>
+                    <div class="col-lg-4">
+                        <span style="font-weight:bold">城市(City): </span>Clackamas
 
-                    <table class="table table-hover" style="font-size: 0.9em">
-                        <thead>
-                        <tr>
-                            <th>收件人</th>
-                            <th>国家</th>
-                            <th>省份/直辖市</th>
-                            <th>城市</th>
-                            <th>区</th>
-                            <th>收货地址</th>
-                            <th>收货地址2</th>
-                            <th>邮编
-                            <th>手机</th>
-                            <th>操作</th>
-
-                        </tr>
-                        </thead>
-                        <tr ng-repeat="address in recipientAddresses">
-                            <td ng-bind="address.recipient"></td>
-                            <td ng-bind="address.country"></td>
-                            <td ng-bind="address.state"></td>
-                            <td ng-bind="address.city"></td>
-                            <td ng-bind="address.suburb"></td>
-                            <td ng-bind="address.street1"></td>
-                            <td ng-bind="address.street2"></td>
-                            <td ng-bind="address.postalCode"></td>
-                            <td ng-bind="address.contactNumber"></td>
-                            <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
-                        </tr>
-                    </table>
-            </div>
-
-            <div ng-show="view_tab=='ac'">
-                <!--this is the content for 仓库地址-->
-
-                <accordion close-others="false">
-                    <accordion-group is-open="true">
-                        <accordion-heading>
-                           唯一的收货地址
-                        </accordion-heading>
-                        <div class="jumbotron">
-                            <p>{{currentUser.username}}唯一收货地址 </p>
-                            SE Bollam Dr Clackamas OR 97015 USA {{currentUser.stringId}}
-                        </div>
-
-                    </accordion-group>
-
-                </accordion>
-
-            </div>
-
-            <div ng-show="view_tab=='ba'" ng-controller="ManualCtrl" id="myfreight">
-                <!--this is the content for 自助入库-->
-                <form>
-                    <div class="form-group">
-                        <label for="trackingNumber">运单号（必填）</label>
-                        <input type="text" class="form-control" ng-model="freightIn.trackingNumber" placeholder="物流运单号" required>
                     </div>
-                    <!--<div class="form-group">-->
-                        <!--<label for="weight">重量</label>-->
-                        <!--<input type="number" step="any" min="0" class="form-control" ng-model="freightIn.weight" placeholder="货物重量">-->
+                    <div class="col-lg-5">
+                       <span style="font-weight:bold"> 州/省(State): </span>OR
+                    </div>
+                    <div class="col-lg-4 col-lg-offset-3">
+                       <span style="font-weight:bold"> 邮编(Zip code): </span>97015
+
+                    </div>
+                    <!--<div class="col-lg-5">-->
+
                     <!--</div>-->
-                    <div class="form-group">
-                        <button class="btn btn-success" ng-click="submitFreightIn()">确认提交</button>
+                    <!--<div class="col-lg-5 col-lg-offset-2">-->
+
+                    <!--</div>-->
+                </div>
+            </div>
+
+        </accordion-group>
+
+    </accordion>
+
+</div>
+
+<div ng-show="view_tab=='ba'" ng-controller="ManualCtrl" id="myfreight">
+    <!--this is the content for 自助入库-->
+    <form>
+        <div class="form-group">
+            <label for="trackingNumber">运单号（必填）</label>
+            <input type="text" class="form-control" ng-model="freightIn.trackingNumber" placeholder="物流运单号" required>
+        </div>
+        <!--<div class="form-group">-->
+        <!--<label for="weight">重量</label>-->
+        <!--<input type="number" step="any" min="0" class="form-control" ng-model="freightIn.weight" placeholder="货物重量">-->
+        <!--</div>-->
+        <div class="form-group">
+            <button class="btn btn-success" ng-click="submitFreightIn()">确认提交</button>
+        </div>
+    </form>
+
+</div>
+
+<div ng-show="view_tab=='bb'">
+<!--this is the content for 包裹管理-->
+<tabset>
+<tab ng-controller="freightInArrivedCtrl">
+    <!--this is the content for 待确认入库-->
+    <tab-heading>
+        待确认入库<span class="badge" style="margin-left:5px;">{{badgeACount}}</span>
+    </tab-heading>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>入库单号</th>
+            <th>入库时间</th>
+            <th>重量</th>
+            <th>状态</th>
+            <th>回复</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="freightIn in freightIns | orderBy:'-createdAt'">
+            <td ng-bind="freightIn.trackingNumber"></td>
+            <td ng-bind="freightIn.createdAt"></td>
+            <td><span ng-bind="freightIn.weight"></span>Lb</td>
+            <td>等待入库</td>
+            <td ng-bind="freightIn.comments"></td>
+            <td>
+                <button class="btn btn-info" ng-click="freightInConfirm(freightIn)">确认入库</button>
+            </td>
+        </tr>
+    </table>
+</tab>
+
+<tab ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
+    <tab-heading>
+        已确认入库<span class="badge" style="margin-left:5px;">{{badgeBCount}}</span>
+    </tab-heading>
+
+    <table class="table table-striped" style="font-size: 0.9em">
+        <thead>
+        <th width="20%"> 选择</th>
+        <th width="24%">单号信息</th>
+        <th width="16%">重量</th>
+        <th>预估款</th>
+        <th>状态</th>
+
+        </thead>
+        <tr ng-repeat="freightIn in freightIns | orderBy:'-createdAt'" border="2">
+            <td colspan="5">
+                <!--<div class="row"-->
+                <!--style="background-color: #31b0d5; font-size: 0.9em; color: white; margin: 0px auto 4px auto; padding: 2px 0; border:2px solid #269abc; border-radius: 4px">-->
+                <!--<div class="col-lg-2"><input type="checkbox" ng-model="freightIn.selection"></div>-->
+
+                <!--<div class="col-lg-3 col-lg-offset-7"><a ng-click="generateDeliveryFreight(freightIn)"><button class="btn btn-xs btn-default">直接生成运单</button></a></div>-->
+                <!--</div>-->
+                <div class="row"
+                     style="margin: 10px auto; padding: 2px 0; font-size:1.3em; font-weight: normal; color: white; background-color: #31b0d5; border:2px solid #269abc; border-radius: 4px">
+                    <div class="col-lg-2"><input type="checkbox" ng-model="freightIn.selection"></div>
+                    <div class="col-lg-3" style="font-size:0.7em">单号：<span ng-bind="freightIn.trackingNumber"></span>
                     </div>
-                </form>
-
-            </div>
-
-            <div ng-show="view_tab=='bb'">
-                <!--this is the content for 包裹管理-->
-                <tabset >
-                    <tab  ng-controller="freightInArrivedCtrl">
-                        <!--this is the content for 待确认入库-->
-                        <tab-heading>
-                            待确认入库<span class="badge">{{badgeACount}}</span>
-                        </tab-heading>
-                        <table class="table table-hover" style="font-size: 0.9em">
-                            <thead>
-                            <tr>
-                                <th>入库单号</th>
-                                <th>入库时间</th>
-                                <th>重量</th>
-                                <th>状态</th>
-                                <th>回复</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tr ng-repeat="freightIn in freightIns">
-                                <td ng-bind="freightIn.trackingNumber"></td>
-                                <td ng-bind="freightIn.createdAt"></td>
-                                <td ng-bind="freightIn.weight"></td>
-                                <td>等待入库</td>
-                                <td ng-bind="freightIn.comments"></td>
-                                <td>
-                                    <button class="btn btn-info" ng-click="freightInConfirm(freightIn)">确认入库</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </tab>
-
-                    <tab ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
-                        <tab-heading>
-                            已确认入库<span class="badge">{{badgeBCount}}</span>
-                        </tab-heading>
-
-                        <table class="table table-striped" style="font-size: 0.9em">
-                            <thead>
-                            <div class="col-lg-1"><th>选择</th></div>
-                            <div class="col-lg-1"><th>重量</th></div>
-                            <div class="col-lg-1"><th>预估款</th></div>
-                            <div class="col-lg-5"><th>状态</th></div>
-                            <div class="col-lg-4"><th>备注</th></div>
-                            </thead>
-                            <tr ng-repeat="freightIn in freightIns" border="2">
-                                <td colspan="5">
-                                    <div class="row"
-                                         style="background-color: #31b0d5; font-size: 0.9em; color: white; margin: 0px auto 4px auto; padding: 2px 0; border:2px solid #269abc; border-radius: 4px">
-                                        <div class="col-lg-2"><input type="checkbox" ng-model="freightIn.selection"></div>
-                                        <div class="col-lg-3">单号:<span ng-bind="freightIn.trackingNumber"></span></div>
-                                        <div class="col-lg-3" >入库时间:<span ng-bind="freightIn.createdAt"></span></div>
-                                        <div class="col-lg-3 col-lg-offset-1"><a ng-click="generateDeliveryFreight(freightIn)"><button class="btn btn-xs btn-default">直接生成运单</button></a></div>
-                                    </div>
-                                    <div class="row" style="margin: 7px auto; padding: 2px 0; font-size:1.3em; font-weight: bold">
-                                        <div class="col-lg-2 col-lg-offset-2" style="margin-right:4%"><span ng-bind="freightIn.weight"></span>Lb</div>
-                                        <div class="col-lg-3" >$<span ng-bind="freightIn.estimatePrice"></span></div>
-                                        <div class="col-lg-2 "><span ng-bind="freightIn.status"></span>
-                                        </div>
-                                        <div class="col-lg-2"><input style="width:95%; font-size:0.9em; font-weight:normal;" ng-model="freightIn.comments"></div>
-
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="divider"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin: 15px auto; padding: 2px 0;">
-
-                                        <div class="col-lg-3 col-lg-offset-1">
-                                           <span style="font-weight:bold">我想：</span>  <input type="checkbox" ng-model="freightIn.checkboxModel.addPackage"><span>普通加固</span>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" ng-model="freightIn.checkboxModel.reduceWeight"><span>普通减重</span>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input type="checkbox"
-                                                   ng-model="freightIn.checkboxModel.checkPackage"><span>开箱验货（收费）</span>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="dropdown">
-                                                <button id="dLabel" type="button" class="btn btn-sm btn-default"
-                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                    点此进行分包
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                                    <li ng-click="splitPackage(freightIn)">分包裹</li>
-                                                    <li ng-click="splitPackagePremium(freightIn)">精确分包</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin: 2px auto; padding: 2px 0; z-index:1" height="100%">
-                                        <div class="col-lg-8">
-                                            <div class="dropdown">
-                                                <button id="dLabel" type="button" class="btn btn-default"
-                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false" style="width:100%">
-                                                    <div ng-if="!freightIn.address">
-                                                        <span>请选择收件人地址...</span>
-                                                        <span class="caret"></span>
-
-                                                    </div>
-                                                    <div ng-if="freightIn.address">
-                                                        <span style="width: 100%" ng-bind="freightIn.address.recipient"></span> - <span
-                                                                ng-bind="freightIn.address.country"></span><span
-                                                                ng-bind="freightIn.address.state"></span><span
-                                                                ng-bind="freightIn.address.city"></span><span
-                                                                ng-bind="freightIn.address.suburb"></span></span><span
-                                                                ng-bind="freightIn.address.street1"></span><span
-                                                                ng-bind="freightIn.address.street2"></span>
-                                                        <span class="caret"></span>
-
-                                                    </div>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"
-                                                    ng-repeat="address in addressList">
-                                                    <li ng-click="chooseRecipient(freightIn, address)"><span
-                                                                ng-bind="address.recipient"></span> - <span
-                                                                ng-bind="address.country"></span><span
-                                                                ng-bind="address.state"></span><span
-                                                                ng-bind="address.city"></span><span
-                                                                ng-bind="address.suburb"></span></span><span
-                                                                ng-bind="address.street1"></span><span
-                                                                ng-bind="address.street2"></span></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 ">
-
-                                            <button class="btn btn-sm btn-default" ng-click="addNewAddress()">点此新添加收件人</button>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin: 2px auto; padding: 2px 0;">
-
-                                        <div class="col-lg-2  col-lg-offset-10">
-                                            <button class="btn btn-success" ng-click="generateFreight(freightIn)">生成运单</button>
-                                        </div>
-                                    </div>
-
-
-
-                                </td>
-                            </tr>
-                        </table>
-                        <button type="button" class="btn btn-success" ng-click="generateAllFreight()">
-                            批量生成运单</span>
-                        </button>
-
-                        <button type="button" class="btn btn-success" ng-click="mergePackage()">
-                            合包</span>
-                        </button>
-                    </tab>
-
-
-
-                    <tab ng-controller="FreightConfirmedCtrl" ng-click="reloadFreightConfirmed()">
-                        <!--this is the content for 已生成运单-->
-                        <tab-heading>
-                            已生成运单<span class="badge">{{badgeCCount}}</span>
-                        </tab-heading>
-                        <table class="table table-hover" style="font-size: 0.9em">
-                            <thead>
-                            <tr>
-                                <th>选择</th>
-                                <th>入库单号</th>
-                                <th>入库时间</th>
-                                <th>状态</th>
-                                <th>重量</th>
-                                <th>付款金额</th>
-                                <th>反馈</th>
-                                <th>备注</th>
-
-                            </tr>
-                            </thead>
-                            <tr ng-repeat="freight in freights">
-                                <td><input type="checkbox" ng-model="freight.selection" ng-click="selecting(freight)"></td>
-                                <td ng-bind="freight.estimatedPrice"></td>
-                                <td ng-bind="freight.createdAt"></td>
-                                <td ng-bind="freight.statusToString"></td>
-                                <td ng-bind="freight.weight"></td>
-                                <td ng-bind="freight.estimatedPrice"></td>
-                                <td ng-bind="freight.comments"></td>
-                                <td><textarea placeholder="备注" ng-model="f.notes"></textarea></td>
-
-                            </tr>
-                        </table>
-                        <p>总金额：${{confirmInsurance ? confirmTaxInsurance ? total + total*0.02 + total*0.05 : total + total*0.02 : total}}
-                            现有积分: <span ng-bind="currentUser.reward"></span>
-                        </p>
-                        <p>
-                            实付金额：${{confirmInsurance ? confirmTaxInsurance ? confirmReward ? total + total*0.02 + total*0.05 - currentUser.reward/100 : total + total*0.02 + total*0.05 : total + total*0.02 : total}}
-                        </p>
-
-                        <div style="width:20%" class="pull-right">
-                            <div class="row">
-
-                                <input type="checkbox" class="col-lg-1" ng-model="confirmTC">
-                                <label class="col-lg-11">同意条款</label>
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" class="col-lg-1" ng-model="confirmInsurance"
-                                      >
-                                <label class="col-lg-11">添加保金 <span class="badge" tooltip="保金为物品总价值 x 2%"
-                                                                    tooltip-placement="top"
-                                                                    tooltip-trigger="mouseenter"
-                                                                    tooltip-enable="true"><div
-                                                class="fa fa-question-circle"></div>提示</span></label>
-
-
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" class="col-lg-1" ng-model="confirmTaxInsurance">
-                                <label class="col-lg-11">添加保税金 <span class="badge" tooltip="保税金为物品总价值 x 5%"
-                                                                     tooltip-placement="top"
-                                                                     tooltip-trigger="mouseenter"
-                                                                     tooltip-enable="true"><div
-                                                class="fa fa-question-circle"></div>提示</span></label>
-
-
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" class="col-lg-1" ng-model="confirmReward">
-                                <label class="col-lg-11">使用积分<span class="badge" tooltip="（100积分可抵$1）"
-                                                               tooltip-placement="top"
-                                                               tooltip-trigger="mouseenter"
-                                                               tooltip-enable="true"><div
-                                                class="fa fa-question-circle"></div>提示</span></label>
-                            </div>
-                            <button type="button" class="btn btn-info" ng-click="payment()">
-                                确认付款
-                            </button>
-
-                        </div>
-                    </tab>
-                    <tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight()">
-                        <!--this is the content for 已发货-->
-                        <tab-heading>
-                            已发货<span class="badge">{{badgeDCount}}</span>
-                        </tab-heading>
-                        <table class="table table-hover" style="font-size: 0.9em">
-                            <thead>
-                            <tr>
-                                <th>入库单号</th>
-                                <th>状态</th>
-                            </tr>
-                            </thead>
-                            <tr ng-repeat="freight in freights">
-                                <td ng-bind="freight.trackingNumber"></td>
-                                <td ng-bind="freight.statusToString"></td>
-                            </tr>
-
-
-                        </table>
-                    </tab>
-                </tabset>
-            </div>
-
-            <div ng-show="view_tab=='bc'" ng-controller="DashboardSearchCtrl">
-                <!--this is the content for 快件查询-->
-                <form>
-                    <div class="form-group" >
-                        <!--<input type="text" name="trackingNumber"  id="trackingNumber" >-->
-                        <textarea id="trackNumber" class="form-control" cols="40" rows="5" ng-model="trackingNumber"
-                                  placeholder="每行一个运单"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button class="form-control btn btn-info" ng-click="trackingInfo()">查询运单</button>
-                    </div>
-                </form>
-            </div>
-
-            <div ng-show="view_tab=='bd'" ng-controller="MyTrackingCtrl">
-                <!--this is the content for 我的运单-->
-                    <table class="table table-striped" style="font-size: 0.9em">
-                        <thead>
-                        <th>运单号</th>
-                        <th>状态</th>
-                        <th>创建时间</th>
-                        </thead>
-                        <tr ng-repeat="f in resultList">
-                            <td ng-bind="f.trackingNumber"></td>
-                            <td ng-bind="f.info"></td>
-                            <td ng-bind="f.createdAt"></td>
-                        </tr>
-                    </table>
-            </div>
-
-            <div ng-show="view_tab=='ca'" id="recharge">
-
-                <tabset>
-                    <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
-                        <p>
-                             请将需要充值的金额打到”yunda“支付宝账号，工作人员会在X个工作日之内跟您回复。
-                        </p>
-
-                        <button class="btn btn-info" ng-click="zhifubaoPayment()">确认支付</button>
-
-                    </tab>
-                    <tab heading="信用卡充值" ng-controller="RechargeCtrl">
-                        账户余额($): <span ng-bind="currentUser.balanceInDollar"></span> </br></br>
-
-                        </br></br>
-                        <p>
-                            为方便广大客户充值操作，现在系统充值链接已经做好，大家在充值的时候需要选择的交易方式是第二个即时到账交易，谢谢！
-
-                            支付宝即时到帐服务已开通， 只支持“即时到帐交易”充值，不支持“担保交易”充值
-
-                            请不要使用“担保交易”充值，“担保交易”充值为无效充值！
-
-                            支付宝自动充值一定要使用即时到账交易，担保交易的无法入账
-
-                            若您不小心使用了担保交易，请24小时后，支付宝页面申请退款
-
-                            提示，即时到账2次输入的都是支付密码，如果在进入支付宝前，页面没有一次过进入，状态会重新恢复到默认的担保交易，要重新再选择下即时到账交易
-
-                            另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。所以现在提醒大家在充值的时候尽量用IE浏览器，谢谢支持
-                        </p></br></br>
-
-                        请输入充值额度(￥): <input type="text" ng-model="CNY"/>
-                        <div ng-if="!USD">美元为：$</div> <div ng-if="USD">美元为：$<span ng-bind="USD"></span></div></br>
-                        <em>充值免手续费(美元/人民币=1/6.4)</em></br></br>
-
-                        <button class="btn btn-info" ng-click="stripePayment()"> 确认充值</button>
-                    </tab>
-
-                </tabset>
-            </div>
-
-            <div ng-show="view_tab=='cb'" ng-controller="RechargeRecordCtrl">
-                <!--this is the content for 充值记录-->
-
-
-
+                    <div class="col-lg-2" style="margin-right:4%"><span ng-bind="freightIn.weight"></span>Lb</div>
+                    <div class="col-lg-2">$<span ng-bind="freightIn.estimatePrice"></span></div>
+                    <div class="col-lg-2 "><span ng-bind="freightIn.status"></span></div>
+                    <!--<div class="col-lg-2"><input style="width:95%; font-size:0.9em; font-weight:normal;" ng-model="freightIn.comments"></div>-->
+                    <div class="col-lg-3 col-lg-offset-2" style="font-size:0.7em; margin-top:-5px">创建时间：<span
+                                ng-bind="freightIn.createdAt"></span></div>
+                </div>
                 <div class="row">
 
-                    <div class="col-md-6">
-                        <h5>起始日期:</h5>
-
-                        <p class="input-group">
-                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
-                                   date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
-                            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open1($event)"><i
-                            class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-                        </p>
+                    <div class="col-lg-3">
+                        <div class="dropdown">
+                            <button id="dLabel" type="button" class="btn btn-xs btn-default"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                点此进行分包
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li ng-click="splitPackage(freightIn)">分包裹</li>
+                                <li ng-click="splitPackagePremium(freightIn)">精确分包</li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <h5>截止日期:</h5>
-                        <p class="input-group">
-                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
-                                   date-disabled="disabled(date, mode)" ng-required="true"/>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open2($event)"><i
-                            class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-                        </p>
+                    <div class="col-lg-7">
+                        补充说明： <input style="width:80%; font-size:0.9em; font-weight:normal;"
+                                     ng-model="freightIn.comments">
                     </div>
-                </div>
-                <div class="pull-right">
-                    <button class="btn btn-info" ng-click="reloadTransaction()">search</button>
+                    <div class="col-lg-2 "><a ng-click="generateDeliveryFreight(freightIn)">
+                            <button class="btn btn-xs btn-default">直接生成运单</button>
+                        </a></div>
                 </div>
 
-                <table class="table table-hover" style="font-size: 0.9em">
-                    <thead>
-                    <tr>
-                        <th>单号</th>
-                        <th>充值金额(美元)</th>
-                        <th>消费类型</th>
-                        <th>消费时间</th>
-                        <th>备注</th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="t in transactionList">
-                    <td ng-bind="t.record"></td>
-                    <td ng-bind="'$ ' + t.amount"></td>
+                <div class="row" style="margin: 10px auto; padding: 2px 0;">
+
+                    <div class="col-lg-3">
+                        <span style="font-weight:bolder">我想：</span> <input type="checkbox"
+                                                                           ng-model="freightIn.checkboxModel.addPackage"><span>普通加固</span>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="checkbox" ng-model="freightIn.checkboxModel.reduceWeight"><span>普通减重</span>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="checkbox"
+                               ng-model="freightIn.checkboxModel.checkPackage"><span>开箱验货</span>
+                    </div>
+                    <div class="col-lg-2">
+                        <span style="font-weight:bolder">选择收件地址:</span>
+                    </div>
+                    <div class="col-lg-2">
+                        <!--<div class="dropdown">-->
+                        <!--<button id="dLabel" type="button" class="btn btn-xs btn-default"-->
+                        <!--data-toggle="dropdown" aria-haspopup="true"-->
+                        <!--aria-expanded="false" style="width:100%">-->
+                        <!--<div ng-if="!freightIn.address">-->
+                        <!--<span>选择已有</span>-->
+                        <!--<span class="caret"></span>-->
+
+                        <!--</div>-->
+                        <!--<div ng-if="freightIn.address">-->
+                        <!--<span style="width: 100%" ng-bind="freightIn.address.recipient"></span> - <span-->
+                        <!--ng-bind="freightIn.address.country"></span><span-->
+                        <!--ng-bind="freightIn.address.state"></span><span-->
+                        <!--ng-bind="freightIn.address.city"></span><span-->
+                        <!--ng-bind="freightIn.address.suburb"></span></span><span-->
+                        <!--ng-bind="freightIn.address.street1"></span><span-->
+                        <!--ng-bind="freightIn.address.street2"></span>-->
+                        <!--<span class="caret"></span>-->
+
+                        <!--</div>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"-->
+                        <!--ng-repeat="address in addressList">-->
+                        <!--<li ng-click="chooseRecipient(freightIn, address)"><span-->
+                        <!--ng-bind="address.recipient"></span> - <span-->
+                        <!--ng-bind="address.country"></span><span-->
+                        <!--ng-bind="address.state"></span><span-->
+                        <!--ng-bind="address.city"></span><span-->
+                        <!--ng-bind="address.suburb"></span></span><span-->
+                        <!--ng-bind="address.street1"></span><span-->
+                        <!--ng-bind="address.street2"></span></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                        <button class="btn btn-xs btn-default" ng-click="chooseAddress(freightIn)">选择已有</button>
+                    </div>
+                    <div class="col-lg-1">
+                        <button class="btn btn-xs btn-default" ng-click="addNewAddress()">新添</button>
+                    </div>
+                    <!--<div class="col-lg-4">-->
+                    <!--<button class="btn btn-success" ng-click="generateFreight(freightIn)">生成运单</button>-->
+                    <!--</div>-->
+                    <!--<div class="col-lg-3">-->
+                    <!--<div class="dropdown">-->
+                    <!--<button id="dLabel" type="button" class="btn btn-sm btn-default"-->
+                    <!--data-toggle="dropdown" aria-haspopup="true"-->
+                    <!--aria-expanded="false">-->
+                    <!--点此进行分包-->
+                    <!--<span class="caret"></span>-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">-->
+                    <!--<li ng-click="splitPackage(freightIn)">分包裹</li>-->
+                    <!--<li ng-click="splitPackagePremium(freightIn)">精确分包</li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <div class="row" style="margin: 5px auto; padding: 2px 0;">
+
+                    <div class="col-lg-2  col-lg-offset-10" style="margin-right:0; padding-right:0">
+                        <button class="btn btn-success" ng-click="generateFreight(freightIn)">生成运单</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <button type="button" class="btn btn-success" ng-click="generateAllFreight()">
+        批量生成运单</span>
+    </button>
+
+    <button type="button" class="btn btn-success" ng-click="mergePackage()">
+        合包</span>
+    </button>
+</tab>
+
+<tab ng-controller="FreightPendingCtrl" ng-click="reloadFreight()">
+    <tab-heading>
+        等待包裹处理<span class="badge" style="margin-left:5px;">{{badgeECount}}</span>
+    </tab-heading>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <th>单号</th>
+        <th>提交时间</th>
+        <th>状态</th>
+        </thead>
+        <tr ng-repeat="freight in freights  | orderBy:'-updatedAt'">
+            <td><span ng-bind="freight.id"></span></td>
+            <td><span ng-bind="freight.updatedAt"></span></td>
+            <td ng-bind="freight.statusToString"></td>
+        </tr>
+    </table>
+</tab>
+
+
+<tab ng-controller="FreightConfirmedCtrl" ng-click="reloadFreightConfirmed()">
+    <!--this is the content for 已生成运单-->
+    <tab-heading>
+        已生成运单<span class="badge" style="margin-left:5px;">{{badgeCCount}}</span>
+    </tab-heading>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>选择</th>
+            <th>单号</th>
+            <th>入库时间</th>
+            <th>状态</th>
+            <th>重量</th>
+            <th>付款金额</th>
+            <th>反馈</th>
+            <th>备注</th>
+
+        </tr>
+        </thead>
+        <tr ng-repeat="freight in freights  | orderBy:'-createdAt'">
+            <td><input type="checkbox" ng-model="freight.selection" ng-click="selecting(freight)"></td>
+            <td ng-bind="freight.id"></td>
+            <td ng-bind="freight.estimatedPrice"></td>
+            <td ng-bind="freight.createdAt"></td>
+            <td ng-bind="freight.statusToString"></td>
+            <td ng-bind="freight.weight"></td>
+            <td ng-bind="freight.estimatedPrice"></td>
+            <td ng-bind="freight.comments"></td>
+            <td><textarea placeholder="备注" ng-model="f.notes"></textarea></td>
+
+        </tr>
+    </table>
+    </p>
+    <!--<p>-->
+    <!--</p>-->
+
+    <div class="row">
+        <div class="col-lg-2 col-lg-offset-10 text-right">
+        <input type="checkbox" ng-model="confirmTC">
+        <label>同意条款</label>
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="col-lg-2 col-lg-offset-5 text-right">
+                <input type="checkbox" ng-model="confirmReward">
+                <label>使用积分<i tooltip="（100积分可抵$1）"
+                              tooltip-placement="top"
+                              tooltip-trigger="mouseenter"
+                              tooltip-enable="true"
+                              class="fa fa-question-circle"></i></label>
+
+            </div>
+            <div class="col-lg-2 text-right">
+                <input type="checkbox" ng-model="confirmInsurance">
+                <label>加保金<i tooltip="保金为物品总价值 x 2%"
+                             tooltip-placement="top"
+                             tooltip-trigger="mouseenter"
+                             tooltip-enable="true"
+                             class="fa fa-question-circle"></i></label>
+
+            </div>
+            <div class="col-lg-3 text-right">
+                <input type="checkbox" ng-model="confirmTaxInsurance">
+                <label>加保税金 <i tooltip="保税金至少为物品总价值 x 5%,请输入需要的保税金"
+                               tooltip-placement="top"
+                               tooltip-trigger="mouseenter"
+                               tooltip-enable="true"
+                               class="fa fa-question-circle"></i><a ng-href="/service">详情</a></label>
+
+            </div>
+
+    </div>
+    <div class="row">
+        <div ng-if="confirmTaxInsurance">
+            <div class="col-lg-offset-9 col-lg-3">
+                输入保税金：
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" step="any" class="form-control" ng-model="taxInsuranceAmount"
+                                   id="taxInsuranceAmount" >
+
+                            <div class="input-group-addon">%</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div ng-if="confirmReward">
+            <div class="col-lg-3 col-lg-offset-9">
+                使用积分：
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+
+                            <input type="number" step="any" class="form-control" ng-model="rewardAmount"
+                                   id="taxInsuranceAmount" >
+
+                            <div class="input-group-addon">分</div>
+                        </div>
+                    </div>
+                </form><label> 现有积分: <span ng-bind="currentUser.reward"></span></label>
+            </div>
+        </div>
+    </div>
+    <!--<p>-->
+        <!--总金额：${{confirmInsurance ? confirmTaxInsurance ? total + total*0.02 + total*0.05 : total +-->
+        <!--total*0.02 : total}}-->
+    <!--</p>-->
+<br>
+    <div class="row">
+    <div class="col-lg-offset-9 col-lg-3 text-right">
+        <p style="font-size:1.5em; color: red; font-weight:bold;">
+            实付金额: ${{confirmInsurance ? confirmTaxInsurance ? confirmReward ? total + total*0.02 +
+            total*taxInsuranceAmount/100 - rewardAmount/100 : total + total*0.02 + total*taxInsuranceAmount/100: total + total*0.02 :
+            total}}
+        </p>
+    </div>
+    <div class="col-lg-offset-10 col-lg-2 ">
+        <button type="button" class="btn btn-info" ng-click="payment()">
+            确认付款
+        </button>
+    </div>
+</div>
+
+</tab>
+<tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight()">
+    <!--this is the content for 已发货-->
+    <tab-heading>
+        已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>
+    </tab-heading>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>入库单号</th>
+            <th>状态</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="freight in freights">
+            <td ng-bind="freight.trackingNumber"></td>
+            <td ng-bind="freight.statusToString"></td>
+        </tr>
+
+
+    </table>
+</tab>
+</tabset>
+</div>
+
+<div ng-show="view_tab=='bc'" ng-controller="DashboardSearchCtrl">
+    <!--this is the content for 快件查询-->
+    <form>
+        <div class="form-group">
+            <!--<input type="text" name="trackingNumber"  id="trackingNumber" >-->
+            <textarea id="trackNumber" class="form-control" cols="40" rows="5" ng-model="trackingNumber"
+                      placeholder="每行一个运单"></textarea>
+        </div>
+        <div class="form-group">
+            <button class="form-control btn btn-info" ng-click="trackingInfo()">查询运单</button>
+        </div>
+    </form>
+</div>
+
+<div ng-show="view_tab=='bd'" ng-controller="MyTrackingCtrl">
+    <!--this is the content for 我的运单-->
+    <table class="table table-striped" style="font-size: 0.9em">
+        <thead>
+        <th>运单号</th>
+        <th>状态</th>
+        <th>创建时间</th>
+        </thead>
+        <tr ng-repeat="f in resultList  | orderBy:'-createdAt'">
+            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.info"></td>
+            <td ng-bind="f.createdAt"></td>
+        </tr>
+    </table>
+</div>
+
+<div ng-show="view_tab=='ca'" id="recharge">
+
+    <tabset>
+        <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
+            <table class="table table-striped" style="font-size: 0.9em">
+                <thead>
+                <th>单号</th>
+                <th>金额</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                </thead>
+                <tr ng-repeat="t in transactions  | orderBy:'-createdAt'">
+                    <td ng-bind="t.id"></td>
+                    <td ng-bind="'$' + t.amount"></td>
                     <td ng-bind="t.status"></td>
                     <td ng-bind="t.createdAt"></td>
-                    <!--<td>pending</td>-->
-                    <!--<td ng-bind="freightIn.notes"></td>-->
-                    <!--<td>-->
-                    <!--<button class="btn btn-info" ng-click="freightInConfirm(freightIn)">确认入库</button>-->
+                </tr>
+            </table>
+            <p>
+                请将需要充值的金额打到”yunda“支付宝账号，工作人员会在三个工作日之内跟您回复。
+            </p>
 
-                    <!--</td>-->
-                    </tr>
-                </table>
-            </div>
+            <p>支付宝账号：2973508779@qq.com</p>
 
-            <div ng-show="view_tab=='cc'" ng-controller="ConsumeRecordCtrl">
-                <!--this is the content for 消费记录-->
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="number" step="any" class="form-control" ng-model="rechargeAmount"
+                               id="exampleInputAmount" placeholder="Amount">
+
+                        <div class="input-group-addon">.00</div>
+                    </div>
+                    <button class="btn btn-info" ng-click="zhifubaoPayment()">确认支付</button>
+                </div>
+            </form>
+            <!--<button type="submit" class="btn btn-primary">Transfer cash</button>-->
+
+        </tab>
+        <tab heading="信用卡充值" ng-controller="RechargeCtrl">
+            <!--账户余额($): <span ng-bind="currentUser.balanceInDollar"></span> </br></br>-->
+
+            </br>
+            <p>
+                为方便广大客户充值操作，现在系统充值链接已经做好，大家在充值的时候需要选择的交易方式是第二个即时到账交易，谢谢！</br>
+
+                支付宝即时到帐服务已开通， 只支持“即时到帐交易”充值，不支持“担保交易”充值</br>
+
+                请不要使用“担保交易”充值，“担保交易”充值为无效充值！</br>
+
+                支付宝自动充值一定要使用即时到账交易，担保交易的无法入账</br>
+
+                若您不小心使用了担保交易，请24小时后，支付宝页面申请退款</br>
+
+                提示，即时到账2次输入的都是支付密码，如果在进入支付宝前，页面没有一次过进入，状态会重新恢复到默认的担保交易，要重新再选择下即时到账交易</br>
+
+                另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。所以现在提醒大家在充值的时候尽量用IE浏览器，谢谢支持
+            </p></br></br>
+
+            请输入充值额度(￥): <input type="text" ng-model="CNY"/>
+
+            <div ng-if="!USD">美元为：$</div>
+            <div ng-if="USD">美元为：$<span ng-bind="USD"></span></div>
+            </br>
+            <em>充值免手续费(美元/人民币=1/6.4)</em></br></br>
+            <button class="btn btn-info" ng-click="stripePayment()"> 确认充值</button>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="number" step="any" class="form-control" ng-model="rechargeAmount"
+                               id="exampleInputAmount" placeholder="Amount">
+
+                        <div class="input-group-addon">.00</div>
+                    </div>
+                    <button class="btn btn-info" ng-click="zhifubaoPayment()">确认支付</button>
+                </div>
+            </form>
+        </tab>
+
+    </tabset>
+</div>
+
+<div ng-show="view_tab=='cb'" ng-controller="RechargeRecordCtrl">
+    <!--this is the content for 充值记录-->
 
 
-                <div class="row">
+    <div class="row">
 
-                    <div class="col-md-6">
-                        <h5>起始日期:</h5>
+        <div class="col-md-6">
+            <h5>起始日期:</h5>
 
-                        <p class="input-group">
-                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
-                                   date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
                             <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                             class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                        </p>
-                    </div>
+            </p>
+        </div>
 
-                    <div class="col-md-6">
-                        <h5>截止日期:</h5>
+        <div class="col-md-6">
+            <h5>截止日期:</h5>
 
-                        <p class="input-group">
-                            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
-                                   date-disabled="disabled(date, mode)" ng-required="true"/>
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                       date-disabled="disabled(date, mode)" ng-required="true"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                             class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                        </p>
-                    </div>
+            </p>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button class="btn btn-info" ng-click="reloadTransaction()">search</button>
+    </div>
 
-                </div>
-                <div class="pull-right">
-                    <button class="btn btn-info" ng-click="reloadTransaction()">search</button>
-                </div>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>单号</th>
+            <th>充值金额(美元)</th>
+            <th>充值类型</th>
+            <th>充值时间</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="t in transactionList">
+            <td ng-bind="t.record"></td>
+            <td ng-bind="'$ ' + t.amount"></td>
+            <td ng-bind="t.status"></td>
+            <td ng-bind="t.createdAt"></td>
+            <!--<td>pending</td>-->
+            <!--<td ng-bind="freightIn.notes"></td>-->
+            <!--<td>-->
+            <!--<button class="btn btn-info" ng-click="freightInConfirm(freightIn)">确认入库</button>-->
 
-                <table class="table table-hover" style="font-size: 0.9em">
-                    <thead>
-                    <tr>
-                        <th>单号</th>
-                        <th>消费金额</th>
-                        <th>消费类型</th>
-                        <th>消费时间</th>
-                        <th>备注</th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="t in transactionList">
-                        <td ng-bind="t.record"></td>
-                        <td ng-bind="'-$ ' + t.amount"></td>
-                        <td ng-bind="t.status"></td>
-                        <td ng-bind="t.createdAt"></td>
+            <!--</td>-->
+        </tr>
+    </table>
+</div>
 
-                    </tr>
-                </table>
-            </div>
-
-            <div ng-show="view_tab=='da'" ng-controller="ReturnBalanceCtrl">
-                <!--this is the content for 退款管理-->
+<div ng-show="view_tab=='cc'" ng-controller="ConsumeRecordCtrl">
+    <!--this is the content for 消费记录-->
 
 
-                <table class="table table-striped" style="font-size: 0.9em">
-                    <thead>
-                    <th>
-                        退款号
-                    </th>
-                    <th>
-                        申请时间
-                    </th>
-                    <th>
-                        状态
-                    </th>
-                    <th>
-                        退款金额
-                    </th>
-                    <th>管理员退款证据</th>
-                    </thead>
-                    <tr ng-repeat="t in transactionList">
-                        <td ng-bind="t.id"></td>
-                        <td ng-bind="t.createdAt"></td>
-                        <td ng-bind="t.status"></td>
-                        <td ng-bind="t.amount"></td>
-                        <td><a ng-href="{{t.adminEvidence}}">点此下载</a></td>
-                    </tr>
-                </table>
+    <div class="row">
 
-                <h3>申请退款</h3>
+        <div class="col-md-6">
+            <h5>起始日期:</h5>
 
-                <form>
-                    <div class="form-group">
-                        <label for="address">退款金额（必填）</label>
-                        <input type="number" step="any" min="0" class="form-control" ng-model="returnBalance.amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">支付宝账号（必填）</label>
-                        <input type="text" class="form-control" ng-model="returnBalance.zhifubao" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">退款理由</label>
-                        <input type="text" class="form-control" ng-model="returnBalance.reason">
-                    </div>
-                    <button class="btn btn-info" ng-click="applyReturn()">申请退款</button>
-                </form>
-            </div>
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1($event)"><i
+                            class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
 
-            <div ng-show="view_tab=='db'" ng-controller="ReturnGoodsCtrl">
-                <!--this is the content for 退货管理-->
-                <table class="table table-striped" style="font-size: 0.9em">
-                    <thead>
-                    <th>
-                        退货单号
-                    </th>
-                    <th>
-                        申请时间
-                    </th>
-                    <th>
-                        状态
-                    </th>
-                    <th>
-                        支付金额
-                    </th>
-                    <th>
-                        操作
-                    </th>
-                    </thead>
-                    <tr ng-repeat="freight in returnList">
-                        <td ng-bind="freight.trackingNumber"></td>
-                        <td ng-bind="freight.createdAt"></td>
-                        <td ng-bind="freight.status"></td>
-                        <td ng-bind="freight.amount"></td>
-                        <td><button class="btn btn-info" ng-click="confirmReturn(freight)">确认退货</button></td>
-                    </tr>
-                </table>
+        <div class="col-md-6">
+            <h5>截止日期:</h5>
 
-                <h3>申请退货</h3>
-                <form>
-                    <div class="form-group">
-                    <label for="trackingNumber">输入运单号</label>
-                    <input type="text" class="form-control"  ng-model="returnFreight.trackingNumber" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">地址（必填）</label>
-                        <input type="text" class="form-control" ng-model="returnFreight.address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reason">退货理由</label>
-                        <input type="text" class="form-control" ng-model="returnFreight.reason">
-                    </div>
-                    <button class="btn btn-info" ng-click="applyReturn()">申请退货</button>
-                </form>
-            </div>
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                       date-disabled="disabled(date, mode)" ng-required="true"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open2($event)"><i
+                            class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
 
-            <div ng-show="view_tab=='dc'" ng-controller="ChangeAddressCtrl">
-                <!--this is the content for 更改地址-->
-                <table class="table table-striped" style="font-size: 0.9em">
-                    <thead>
-                    <th>
-                        单号
-                    </th>
-                    <th>
-                        申请时间
-                    </th>
-                    <th>
-                        状态
-                    </th>
-                    <th>
-                        管理员证据
-                    </th>
+    </div>
+    <div class="pull-right">
+        <button class="btn btn-info" ng-click="reloadTransaction()">search</button>
+    </div>
 
-                    </thead>
-                    <tr ng-repeat="freight in freights">
-                        <td ng-bind="freight.trackingNumber"></td>
-                        <td ng-bind="freight.createdAt"></td>
-                        <td ng-bind="freight.status"></td>
-                        <td><a ng-href="{{freight.adminEvidence}}">点此下载</a></td>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <tr>
+            <th>单号</th>
+            <th>消费金额</th>
+            <th>消费类型</th>
+            <th>消费时间</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="t in transactionList">
+            <td ng-bind="t.record"></td>
+            <td ng-bind="'-$ ' + t.amount"></td>
+            <td ng-bind="t.status"></td>
+            <td ng-bind="t.createdAt"></td>
 
-                    </tr>
-                </table>
+        </tr>
+    </table>
+</div>
 
-                <h3>申请改地址</h3>
-                <form>
-                    <div class="form-group">
-                        <label for="trackingNumber">输入运单号（必填）</label>
-                        <input type="text" class="form-control"  ng-model="changeAddressFreight.trackingNumber" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">收件人（必填）</label>
-                        <input type="text" class="form-control" ng-model="changeAddressFreight.recipient" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">地址（必填）</label>
-                        <input type="text" class="form-control" ng-model="changeAddressFreight.address" required>
-                    </div>
+<div ng-show="view_tab=='da'" ng-controller="ReturnBalanceCtrl">
+    <!--this is the content for 退款管理-->
 
-                    <button class="btn btn-info" ng-click="applyChangeAddress()">申请改地址</button>
-                </form>
-            </div>
-        </div> <!-- col-sm-9 -->
-    </div><!-- Row -->
+
+    <table class="table table-striped" style="font-size: 0.9em">
+        <thead>
+        <th>
+            退款号
+        </th>
+        <th>
+            申请时间
+        </th>
+        <th>
+            状态
+        </th>
+        <th>
+            退款金额
+        </th>
+        <th>管理员退款证据</th>
+        </thead>
+        <tr ng-repeat="t in transactionList">
+            <td ng-bind="t.id"></td>
+            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.status"></td>
+            <td ng-bind="t.amount"></td>
+            <td><a ng-href="{{t.adminEvidence}}">点此下载</a></td>
+        </tr>
+    </table>
+
+    <h3>申请退款</h3>
+
+    <form>
+        <div class="form-group">
+            <label for="address">退款金额（必填）</label>
+            $<input type="number" step="any" min="0" class="form-control" ng-model="returnAmount" required>
+        </div>
+        <div class="form-group">
+            <label for="address">支付宝账号（必填）</label>
+            <input type="text" class="form-control" ng-model="returnBalance.zhifubao" required>
+        </div>
+        <div class="form-group">
+            <label for="reason">退款理由</label>
+            <input type="text" class="form-control" ng-model="returnBalance.reason">
+        </div>
+        <button class="btn btn-info" ng-click="applyReturn()">申请退款</button>
+    </form>
+</div>
+
+<div ng-show="view_tab=='db'" ng-controller="ReturnGoodsCtrl">
+    <!--this is the content for 退货管理-->
+    <table class="table table-striped" style="font-size: 0.9em">
+        <thead>
+        <th>
+            退货单号
+        </th>
+        <th>
+            申请时间
+        </th>
+        <th>
+            状态
+        </th>
+        <th>
+            支付金额
+        </th>
+        <th>
+            操作
+        </th>
+        </thead>
+        <tr ng-repeat="freight in returnList">
+            <td ng-bind="freight.trackingNumber"></td>
+            <td ng-bind="freight.createdAt"></td>
+            <td ng-bind="freight.status"></td>
+            <td ng-bind="freight.amount"></td>
+            <td>
+                <button class="btn btn-info" ng-click="confirmReturn(freight)">确认退货</button>
+            </td>
+        </tr>
+    </table>
+
+    <h3>申请退货</h3>
+
+    <form>
+        <div class="form-group">
+            <label for="trackingNumber">输入运单号</label>
+            <input type="text" class="form-control" ng-model="returnFreight.trackingNumber" required>
+        </div>
+        <div class="form-group">
+            <label for="address">地址（必填）</label>
+            <input type="text" class="form-control" ng-model="returnFreight.address" required>
+        </div>
+        <div class="form-group">
+            <label for="reason">退货理由</label>
+            <input type="text" class="form-control" ng-model="returnFreight.reason">
+        </div>
+        <button class="btn btn-info" ng-click="applyReturn()">申请退货</button>
+    </form>
+</div>
+
+<div ng-show="view_tab=='dc'" ng-controller="ChangeAddressCtrl">
+    <!--this is the content for 更改地址-->
+    <table class="table table-striped" style="font-size: 0.9em">
+        <thead>
+        <th>
+            单号
+        </th>
+        <th>
+            申请时间
+        </th>
+        <th>
+            状态
+        </th>
+        <th>
+            管理员证据
+        </th>
+
+        </thead>
+        <tr ng-repeat="freight in freights">
+            <td ng-bind="freight.id"></td>
+            <td ng-bind="freight.createdAt"></td>
+            <td ng-bind="freight.status"></td>
+            <td><a ng-href="{{freight.adminEvidence}}">点此下载</a></td>
+
+        </tr>
+    </table>
+
+    <h3>申请改地址</h3>
+
+    <form>
+        <div class="form-group">
+            <label for="id">输入运单号（必填）</label>
+            <input type="text" class="form-control" ng-model="changeAddressFreight.id" required>
+        </div>
+        <div class="form-group">
+            <label for="address">收件人（必填）</label>
+            <input type="text" class="form-control" ng-model="changeAddressFreight.recipient" required>
+        </div>
+        <div class="form-group">
+            <label for="address">地址（必填）</label>
+            <input type="text" class="form-control" ng-model="changeAddressFreight.address" required>
+        </div>
+
+        <button class="btn btn-info" ng-click="applyChangeAddress()">申请改地址</button>
+    </form>
+</div>
+</div>
+<!-- col-sm-9 -->
+</div>
+<!-- Row -->
 </div>
 

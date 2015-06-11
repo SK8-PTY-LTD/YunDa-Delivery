@@ -20,7 +20,39 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
     });
     $rootScope.view_tab = "aa"
     $rootScope.change_tab = function (tab) {
+        if(tab == "aa" || tab == "ab" || tab == "ac"){
+            $rootScope.openTab.setA = true
+            $rootScope.openTab.setB = false
+            $rootScope.openTab.setC = false
+            $rootScope.openTab.setD = false
+
+        } else if(tab == "ba" || tab == "bb" || tab == "bc" || tab == "bd"){
+            $rootScope.openTab.setA = false
+            $rootScope.openTab.setB = true
+            $rootScope.openTab.setC = false
+            $rootScope.openTab.setD = false
+
+        } else if(tab == "ca" || tab == "cb" || tab == "cc"){
+            $rootScope.openTab.setA = false
+            $rootScope.openTab.setB = false
+            $rootScope.openTab.setC = true
+            $rootScope.openTab.setD = false
+
+        } else if(tab == "da" || tab == "db" || tab == "dc"){
+            $rootScope.openTab.setA = false
+            $rootScope.openTab.setB = false
+            $rootScope.openTab.setC = false
+            $rootScope.openTab.setD = true
+
+        }
         $rootScope.view_tab = tab
+    }
+    $rootScope.openTab = {
+        setA : false,
+        setB : false,
+        setC : false,
+        setD : false
+
     }
 
 
@@ -58,8 +90,13 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
         modalInstance.result.then(function (user) {
             //console.log("modal is closed. ")
             if (user != undefined) {
-                $rootScope.currentUser = user
-                $scope.$apply()
+                    $rootScope.currentUser = user
+                var address = new YD.Address()
+                address.id = $rootScope.currentUser.addressId
+                address.fetch().then(function (address) {
+                    $rootScope.currentUser.address = address
+                })
+
             } else {
                 //console.log("modal user undefined")
             }
@@ -101,7 +138,8 @@ YundaApp.controller('LoginCtrl', function ($scope, $modalInstance, $modal) {
         $scope.promote = "Logging in";
         YD.User.logIn($scope.currentUser.username, $scope.currentUser.password, {
             success: function (user) {
-                $scope.dismissViewController();
+
+                $modalInstance.close(user)
             },
             error: function (user, error) {
                 $scope.$apply(function () {
@@ -170,7 +208,7 @@ YundaApp.controller('SignupCtrl', function ($scope, $modalInstance) {
 
     $scope.signup = function () {
         if ($scope.currentUser.password != $scope.passwordRepeat) {
-            alert("密码不一样，请重新输入！")
+            alert("确认密码失败，请重新输入！")
             return
         } else {
             $modalInstance.close()
@@ -187,7 +225,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
     $scope.trackingNumber
     $scope.trackingList
     $scope.resultList = []
-    $scope.currentUser.balanceInDollar = ($scope.currentUser.balance / 100).toFixed(2)
+    console.log("In Home Ctrl -- balanceInDollar: " + $scope.currentUser.balanceInDollar)
 
     $scope.logOut = function () {
         YD.User.logOut()
@@ -273,6 +311,12 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
         YD.User.logIn($scope.currentUser.username, $scope.currentUser.password, {
             success: function (user) {
                 $rootScope.currentUser = user
+                var address = new YD.Address()
+                address.id = $rootScope.currentUser.addressId
+                address.fetch().then(function (address) {
+                    $rootScope.currentUser.address = address
+                })
+
                 //$scope.dismissViewController();
                 $scope.$apply()
                 console.log("successfuly login via main page login")
@@ -532,7 +576,7 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope) {
 YundaApp.controller('ReturnBalanceCtrl', function($scope) {
     $scope.reloadReturnBalance = function() {
         var query = new AV.Query("Transaction")
-        //query.equalTo("user", $scope.currentUser)
+        query.equalTo("user", $scope.currentUser)
         query.containedIn("status",
             [YD.Transaction.STATUS_PENDING_RETURN_BALANCE, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE])
         query.find({
@@ -566,6 +610,7 @@ YundaApp.controller('ReturnBalanceCtrl', function($scope) {
 
         $scope.returnBalance = new YD.Transaction()
         $scope.applyReturn = function () {
+            $scope.returnBalance.amount = parseInt($scope.returnAmount)
             if ($scope.returnBalance.amount > $scope.currentUser.balanceInDollar) {
                 alert("数额超过账号金额，现为：" + $scope.currentUser.balanceInDollar + "，请重新申请")
                 return
@@ -592,6 +637,7 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal) {
     $scope.badgeBCount = 0
     $scope.badgeCCount = 0
     $scope.badgeDCount = 0
+    $scope.badgeECount = 0
     $scope.oneAtATime = true
     //$scope.change_tab = function (tab) {
     //    $scope.view_tab = tab
@@ -599,14 +645,9 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal) {
     $scope.$watch('badgeTotalCount', function (newVal) {
         console.log("In Dashboard $watch BadgeTotal now: " + newVal)
     })
-    $scope.currentUser.balanceInDollar = ($scope.currentUser.balance / 100).toFixed(2)
 
     /* getting user's address */
-    var address = new YD.Address()
-    address.id = $scope.currentUser.addressId
-    address.fetch().then(function (address) {
-        $scope.currentUser.address = address
-    })
+
 
     $scope.updatePassword = function () {
         var modalInstance = $modal.open({
@@ -804,9 +845,9 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $filte
 
             query.find({
                 success: function (results) {
+                    $scope.$apply(function () {
                     //console.log("FreightIn arrived is shown TRACKING: " + results[0].status)
                     $scope.freightIns = results
-                    $scope.badgeCount += $scope.freightIns.length
                     for (var i = 0; i < $scope.freightIns.length; i++) {
                         var tmp = $scope.freightIns[i].createdAt
                         var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
@@ -818,7 +859,7 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $filte
                         $scope.freightIns[i].createdAt = tmp_date
                     }
 
-                    $scope.$apply(function () {
+
                         $rootScope.badgeTotalCount -= $scope.badgeACount
                         $scope.badgeACount = results.length
                         $rootScope.badgeTotalCount += $scope.badgeACount
@@ -842,7 +883,6 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $filte
             freightIn.status = YD.FreightIn.STATUS_CONFIRMED
             freightIn.save().then(function (freightIn) {
                 console.log("freightInConfirm()-- freightIn.status updated: " + freightIn.status)
-                $scope.badgeCount -= 1
                 $scope.reloadFreightInArrived()
 
             }, function (freightIn, error) {
@@ -891,11 +931,6 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         query.find({
             success: function (results) {
                 $scope.addressList = results
-                $scope.$apply()
-                //console.log("GetRecipient ADDRESS got : " + results.length )
-                //console.log("HHERE: " + results[0].country)
-                //console.log("HHERE: " + results[1].country)
-
             },
             error: function (res, error) {
                 alert("Getting Recipient: " + error.code + " " + error.message)
@@ -949,7 +984,24 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         }
     }
     $scope.reloadFreightInConfirmed()
-
+    $scope.chooseAddress = function(freightIn) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_chooseRecipientAddress',
+            controller: 'ChooseAddressCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                addressList: function () {
+                    return $scope.addressList
+                }
+            },
+            windowClass: 'center-modal'
+        })
+        modalInstance.result.then(function (chosenAddress) {
+            freightIn.address = chosenAddress
+            alert("已成功选取收件人")
+        })
+    }
 
     $scope.splitPackage = function (freightIn) {
         var modalInstance = $modal.open({
@@ -1017,7 +1069,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         } else {
             var freight = new YD.Freight()
             //freight.address = null
-            freight.freightIn = freightIn
+            //freight.freightIn = freightIn
             freight.address = freightIn.address
             freight.estimatedPrice = freightIn.weight * $scope.PRICE
 
@@ -1045,28 +1097,25 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             freight.user = $scope.currentUser
             freight.weight = freightIn.weight
             freight.trackingNumber = freightIn.trackingNumber
-            freight.estimatedPrice = freightIn.weight * $scope.PRICE
-            freight.status = 0
-
+            //freight.estimatedPrice = freightIn.weight * $scope.PRICE
+            freight.status = YD.Freight.STATUS_INITIALIZED
             freight.save(null, {
                 success: function (freight) {
                     console.log("freight has been saved: " + freight.id)
                     $scope.badgeCount += 1
-
+                    freightIn.status = YD.FreightIn.STATUS_FINISHED
+                    freightIn.save(null, {
+                        success: function (freightIn) {
+                            console.log("freightIn has been saved: " + freightIn.id)
+                            $scope.badgeCount -= 1
+                        },
+                        error: function (freightIn, error) {
+                            console.log("ERROR: freightIn not save: " + error.code + " - " + error.message)
+                        }
+                    })
                 },
                 error: function (freight, error) {
                     console.log("ERROR: freight not save: " + error.code + " - " + error.message)
-                }
-            })
-            freightIn.status = YD.FreightIn.STATUS_FINISHED
-            freightIn.save(null, {
-                success: function (freightIn) {
-                    console.log("freightIn has been saved: " + freightIn.id)
-                    $scope.badgeCount -= 1
-
-                },
-                error: function (freightIn, error) {
-                    console.log("ERROR: freightIn not save: " + error.code + " - " + error.message)
                 }
             })
             $scope.reloadFreightInConfirmed()
@@ -1078,38 +1127,41 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         if (freightIn.address == undefined) {
             alert("Choose address first")
         } else {
-            var freight = new YD.Freight()
-            //freight.address = null
-            freight.freightIn = freightIn
-            //freight.statusGroup = $scope.getStatusList(freightIn)
+            //var test = AV.Object.extend("Freight")
+            //var freight = new test()
+            var freight = new YD.Freight
+            freight.address = null
+            //freight.freightIn = freightIn
+            //freight.set("freightIn", freightIn)
             freight.add("statusGroup", YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION)
 
             freight.user = $scope.currentUser
             freight.weight = freightIn.weight
             freight.trackingNumber = freightIn.trackingNumber
-            freight.estimatedPrice = freightIn.weight * $scope.PRICE
+            //freight.estimatedPrice = freightIn.weight * $scope.PRICE
             freight.status = YD.Freight.STATUS_INITIALIZED
             freight.save(null, {
                 success: function (freight) {
                     console.log("freight has been saved: " + freight.id)
-                    $scope.badgeCount -= 1
+                    //$scope.badgeCount -= 1
+                    freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                    freightIn.save(null, {
+                        success: function (freightIn) {
+                            console.log("freightIn has been saved: " + freightIn.id)
+                            //$scope.badgeCount += 1
 
+                        },
+                        error: function (freightIn, error) {
+                            console.log("ERROR: freightIn not save: " + error.code + " - " + error.message)
+                        }
+                    })
                 },
                 error: function (freight, error) {
                     console.log("ERROR: freight not save: " + error.code + " - " + error.message)
+                    console.log("ERROR: freight.status: " + typeof(freight.get("status")))
                 }
             })
-            freightIn.status = YD.FreightIn.STATUS_FINISHED;
-            freightIn.save(null, {
-                success: function (freightIn) {
-                    console.log("freightIn has been saved: " + freightIn.id)
-                    $scope.badgeCount += 1
 
-                },
-                error: function (freightIn, error) {
-                    console.log("ERROR: freightIn not save: " + error.code + " - " + error.message)
-                }
-            })
         }
         $scope.reloadFreightInConfirmed()
     }
@@ -1153,6 +1205,94 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
     }
 
 })
+
+YundaApp.controller('FreightPendingCtrl', function($scope, $rootScope) {
+
+    $scope.getStatus = function () {
+
+        for (var i = 0; i < $scope.freights.length; i++) {
+            //$scope.freights[i].statusToString = " "
+            var statusList = $scope.freights[i].statusGroup
+            var statusString = ' '
+
+            if ($scope.freights[i].statusGroup != undefined) {
+                for (var j = 0; j < statusList.length; j++) {
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION) {
+                        statusString += "等待最后确认; "
+                    }
+
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_EXTRA_PACKAGING) {
+                        statusString += "等待加固; "
+                    }
+
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
+                        statusString += "等待减重; "
+                    }
+
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_CHECK_PACKAGE) {
+                        statusString += "等待开箱检查; "
+                    }
+
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE) {
+                        statusString += "等待普通分箱; "
+                    }
+
+                    if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED) {
+                        statusString += "等待精确分箱; "
+                    }
+                }
+            }
+
+            //statusString.substr(0, statusString.length - 22)   //remove trailing comma
+            $scope.freights[i].statusToString = statusString
+        }
+
+    }
+    $scope.reloadFreight = function() {
+        var query = new AV.Query(YD.Freight)
+        query.equalTo("status", YD.Freight.STATUS_INITIALIZED)
+        query.find({
+            success: function(list) {
+                $scope.$apply(function() {
+                    $scope.freights = list
+                    for(var i = 0; i < $scope.freights.length; i++) {
+                        var tmp = $scope.freights[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":" ;
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freights[i].createdAt = tmp_date
+
+                    }
+                    $rootScope.badgeTotalCount -= $scope.badgeECount
+                    $scope.badgeECount = list.length
+                    $rootScope.badgeTotalCount += $scope.badgeECount
+                    $scope.getStatus()
+                })
+            }
+        })
+    }
+
+    $scope.reloadFreight()
+})
+
+YundaApp.controller('ChooseAddressCtrl', function($scope, $modalInstance, addressList) {
+    $scope.addressList = addressList
+    $scope.chooseRecipient = function(address){
+            $scope.address = address
+            console.log("chosen address: " + address.recipient)
+
+    }
+    $scope.cancel = function() {
+        $modalInstance.dismiss()
+    }
+    $scope.confirmChoose = function() {
+        $modalInstance.close($scope.address)
+    }
+})
+
+
 YundaApp.controller('mergePackageCtrl', function ($scope, $modalInstance, freightInList) {
     $scope.getRecipient()
 
@@ -1243,6 +1383,7 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
     //$scope.baoshuijin = 0
     $scope.BAO_JIN = 0.02
     $scope.BAO_SHUI_JIN = 0.05
+    $scope.PRICE = 10
     //status to string
     $scope.getStatus = function () {
 
@@ -1254,27 +1395,27 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
             if ($scope.freights[i].statusGroup != undefined) {
                 for (var j = 0; j < statusList.length; j++) {
                     if (statusList[j] == YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION) {
-                        statusString += "等待用户最后确认; "
+                        statusString += "最后确认; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_EXTRA_PACKAGING) {
-                        statusString += "等待加固; "
+                        statusString += "已加固; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                        statusString += "等待减重; "
+                        statusString += "已减重; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_CHECK_PACKAGE) {
-                        statusString += "等待开箱检查; "
+                        statusString += "已开箱检查; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE) {
-                        statusString += "等待普通分箱; "
+                        statusString += "已普通分箱; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED) {
-                        statusString += "等待精确分箱; "
+                        statusString += "已精确分箱; "
                     }
                 }
             }
@@ -1290,7 +1431,7 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
             console.log("reloadFreightConfirmned: FREIGHT")
             var query = new AV.Query("Freight")
             query.equalTo("user", $scope.currentUser)
-            query.equalTo("status", YD.Freight.STATUS_INITIALIZED)
+            query.equalTo("status", YD.Freight.STATUS_PENDING_FINISHED)
             query.include("user")
             query.find({
                 success: function (results) {
@@ -1306,6 +1447,8 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
                         else
                             tmp_date += tmp.getMinutes();_
                         $scope.freights[i].createdAt = tmp_date
+                        $scope.freights[i].estimatedPrice = $scope.freights[i].weight * $scope.PRICE
+
                     }
 
                     $scope.getStatus()
@@ -1343,106 +1486,85 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
     }
 
 
-    //$scope.addInsurance = function () {
-    //    //if ($scope.confirmInsurance == true)
-    //    //    $scope.total += $scope.BAO_JIN
-    //    //if ($scope.confirmInsurance == false)
-    //    //    $scope.total -= $scope.BAO_JIN
-    //    var modalInstance = $modal.open({
-    //        templateUrl: 'partials/modal_insurance',
-    //        controller: 'InsuranceCtrl',
-    //        scope: $scope,
-    //        windowClass: 'center-modal',
-    //        size: 'sm',
-    //        resolve: {
-    //            baojin: function () {
-    //                return $scope.baojin
-    //            }
-    //        }
-    //    })
-    //    modalInstance.result.then(function (baojinAmount) {
-    //
-    //    })
+    $scope.payment = function () {
 
-
-
-
-
-$scope.payment = function () {
-    //1. check $scope.freights[i].selection and add all the values.
-    //
-    //2. change all freights' status to 500
-    var paymentAmount = 0;
-    if ($scope.confirmTC == false) {
-        alert("付款必须先同意条款")
-    } else {
-        var paymentList = []
-        for (var i = 0; i < $scope.freights.length; i++) {
-            if ($scope.freights[i].selection == true) {
-                paymentList.push($scope.freights[i])
-                $scope.freights[i].status = YD.Freight.STATUS_PENDING_DELIVERY
+        var paymentAmount = 0;
+        if ($scope.confirmTC == false) {
+            alert("付款必须先同意条款")
+            return
+        } else if ($scope.rewardAmount < $scope.current) {
+            alert("输入使用积分大于现有积分，请重新输入")
+            return
+        } else {
+            var paymentList = []
+            for (var i = 0; i < $scope.freights.length; i++) {
+                if ($scope.freights[i].selection == true) {
+                    paymentList.push($scope.freights[i])
+                    $scope.freights[i].status = YD.Freight.STATUS_PENDING_DELIVERY
+                }
             }
-        }
-    }
-    paymentAmount += $scope.total
-    if ($scope.confirmInsurance && $scope.confirmTaxInsurance && $scope.confirmReward) //add insurance, tax insurance and use reward
-        paymentAmount += paymentAmount * $scope.BAO_JIN + paymentAmount * $scope.BAO_SHUI_JIN - ($scope.currentUser.reward / 100).toFixed(2)
-    else if ($scope.confirmTaxInsurance && $scope.confirmReward)  // add tax insurance, and use reward
-        paymentAmount += paymentAmount * $scope.BAO_SHUI_JIN  - ($scope.currentUser.reward / 100).toFixed(2)
-    else if ($scope.confirmInsurance && $scope.confirmReward) // add insurance, and use reward
-        paymentAmount += paymentAmount * $scope.BAO_JIN  - ($scope.currentUser.reward / 100).toFixed(2)
-    else if ($scope.confirmTaxInsurance) // add tax insurance
-        paymentAmount += paymentAmount * $scope.BAO_SHUI_JIN
-    else if ($scope.confirmInsurance) // add insurance
-        paymentAmount += paymentAmount * $scope.BAO_JIN
-    else if ($scope.confirmReward) // use reward
-        paymentAmount -= ($scope.currentUser.reward / 100).toFixed(2)
-    else {}
+            paymentAmount += $scope.total
+            if ($scope.confirmInsurance && $scope.confirmTaxInsurance && $scope.confirmReward) //add insurance, tax insurance and use reward
+                paymentAmount += paymentAmount * $scope.BAO_JIN + paymentAmount * $scope.taxInsuranceAmount / 100 - ($scope.rewardAmount / 100).toFixed(2)
+            else if ($scope.confirmTaxInsurance && $scope.confirmReward)  // add tax insurance, and use reward
+                paymentAmount += paymentAmount * $scope.taxInsuranceAmount / 100 - ($scope.rewardAmount / 100).toFixed(2)
+            else if ($scope.confirmInsurance && $scope.confirmReward) // add insurance, and use reward
+                paymentAmount += paymentAmount * $scope.BAO_JIN - ($scope.rewardAmount / 100).toFixed(2)
+            else if ($scope.confirmTaxInsurance) // add tax insurance
+                paymentAmount += paymentAmount * $scope.taxInsuranceAmount / 100
+            else if ($scope.confirmInsurance) // add insurance
+                paymentAmount += paymentAmount * $scope.BAO_JIN
+            else if ($scope.confirmReward) // use reward
+                paymentAmount -= ($scope.rewardAmount / 100).toFixed(2)
+            else {
+            }
 
-    console.log("here is the paymentAmount: " + paymentAmount)
+            console.log("In payment -- here is the paymentAmount: " + paymentAmount)
+            console.log("In payment -- here is the userbalance: " + $scope.currentUser.balance)
+            console.log("In payment -- here is the balanceInDollar: " + $scope.currentUser.balanceInDollar)
 
-    if ($scope.currentUser.balanceInDollar < paymentAmount) {
-        alert("余额不足，请先充值")
-        console.log("balance not enough")
-        return
-    } else {
-        $scope.currentUser.balance -= paymentAmount
-        alert("扣款成功, 剩余金额为: " + $scope.currentUser.balance)
-        console.log("balance - success")
-        var transaction = new YD.Transaction()
-        //transaction.record = data;
-        transaction.status = YD.Transaction.STATUS_RECHARGE;
-        transaction.amount = paymentAmount * -1;
-        transaction.save(null, {
-            success: function (t) {
-                console.log("transaction saved")
-            },
-            error: function (t, error) {
-                console.log("transaction not saved " + error.message)
+
+            if ($scope.currentUser.balanceInDollar < paymentAmount) {
+                alert("余额不足，请先充值: balanceInDollar || paymentAmount " + $scope.currentUser.balanceInDollar + " || " + paymentAmount)
+                console.log("balance not enough")
+                return
+            } else {
+                $scope.currentUser.balanceInDollar -= paymentAmount
+                alert("扣款成功, 剩余金额为: " + $scope.currentUser.balanceInDollar + ", user.dollar: " + $scope.currentUser.balance)
+                console.log("balance - success")
+                var transaction = new YD.Transaction()
+                //transaction.record = data;
+                transaction.status = YD.Transaction.STATUS_RECHARGE;
+                transaction.amount = paymentAmount * -1;
+                transaction.save(null, {
+                    success: function (t) {
+                        console.log("transaction saved")
+                        AV.Object.saveAll(paymentList, {
+                            success: function (list) {
+                                console.log("confirmSplit: freightList has been saved")
+                                $scope.currentUser.save(null, {
+                                    success: function (user) {
+                                        console.log("currentUser balance saved")
+                                        $scope.reloadFreightConfirmed()
+
+                                    },
+                                    error: function (user, err) {
+                                        console.log("Substrat balance err: " + err.message)
+                                    }
+                                })
+                            },
+                            error: function (freights, error) {
+                                console.log("ERROR: confirmSplit: freightList has not been saved" + error.id + " - " + error.message)
+                            }
+                        })
+                    },
+                    error: function (t, error) {
+                        console.log("transaction not saved " + error.message)
                     }
                 })
             }
-            AV.Object.saveAll(paymentList, {
-                success: function (list) {
-                    console.log("confirmSplit: freightList has been saved")
-                },
-                error: function (freights, error) {
-                    console.log("ERROR: confirmSplit: freightList has not been saved" + error.id + " - " + error.message)
-                }
-            })
-            $scope.currentUser.save(null, {
-                success: function (user) {
-                    console.log("currentUser balance saved")
-                },
-                error: function (user, err) {
-                    console.log("Substrat balance err: " + err.message)
-                }
-            })
-    $scope.reloadFreightConfirmed()
-
-}
-
-
+        }
+    }
 })
 
 YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter) {
@@ -1468,7 +1590,7 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
 
                         else if ($scope.freights[i].status == YD.Freight.STATUS_DELIVERING)
                             statusToString = "正在发货"
-                        else if ($scope.freights[i].status == Freight.STATUS_PASSING_CUSTOM)
+                        else if ($scope.freights[i].status == YD.Freight.STATUS_PASSING_CUSTOM)
                             statusToString = "正在清关"
                         else if ($scope.freights[i].status == YD.Freight.STATUS_FINAL_DELIVERY)
                             statusToString = "国内运寄中"
@@ -1788,18 +1910,54 @@ YundaApp.controller('StripeCtrl', function ($scope, $rootScope, $modalInstance) 
 })
 
 YundaApp.controller('ZhifubaoCtrl', function ($scope) {
-    $scope.zhifubaoPayment = function () {
-        var transaction = new YD.Transaction()
-        transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
-        transaction.save(null, {
-            success: function (t) {
-                console.log("transaction saved")
-            },
-            error: function (t, error) {
-                console.log("transaction not saved " + error.id + ' - ' + error.message)
+    $scope.reloadZhifubao = function () {
+        var query = new AV.Query("Transaction")
+        query.equalTo("user", $scope.currentUser)
+        query.equalTo("status", YD.Transaction.STATUS_ZHIFUBAO)
+        query.find({
+            success: function (list) {
+                console.log("In ZhifubaoCtrl -- :" + list.length )
+                $scope.$apply(function () {
+                    $scope.transactions = list
+                    for (var i = 0; i < $scope.transactions.length; i++) {
+                        var tmp = $scope.transactions[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        $scope.transactions[i].createdAt = tmp_date
+                        $scope.transactions[i].status = "等待处理"
+                    }
+                })
             }
         })
+    }
+    $scope.reloadZhifubao()
 
+    $scope.zhifubaoPayment = function () {
+        console.log("typeof recharegeAmount: " + typeof($scope.rechargeAmount))
+        console.log("typeof 1: " + typeof(1))
+
+        if ($scope.rechargeAmount <= 0 || typeof($scope.rechargeAmount) != typeof(1)) {
+            alert("请输入正确充值金额！")
+            return
+        } else {
+            var transaction = new YD.Transaction()
+            transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
+            transaction.amount = $scope.rechargeAmount
+            transaction.user = $scope.currentUser
+            transaction.save(null, {
+                success: function (t) {
+                    console.log("transaction saved")
+                    alert("提交成功！金额为: $"+ t.amount + ",请等待管理员处理")
+                    $scope.reloadZhifubao()
+                },
+                error: function (t, error) {
+                    console.log("transaction not saved " + error.id + ' - ' + error.message)
+                }
+            })
+        }
     }
 })
 
@@ -1902,7 +2060,7 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
                 var query = new AV.Query("Transaction")
                 query.greaterThanOrEqualTo("createdAt", $scope.dt1)
                 query.lessThanOrEqualTo("createdAt", $scope.dt2)
-                query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_STRIPE])
+                query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE])
                 query.find({
                     success: function (tList) {
                         $scope.transactionList = tList
@@ -1937,18 +2095,54 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
 
 YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
     $scope.oneAtATime = true
-    $scope.view_tab = "aa"
-    $scope.change_tab = function (tab) {
-        $scope.view_tab = tab
+    $scope.openTab = {
+        setE : false,
+        setF : false,
+        setG : false,
+        setH : false
     }
+    $scope.view_tab = "ca"
+    $scope.openTab.setG = true
+    $scope.change_tab = function (tab) {
+
+        if(tab == "aa" || tab == "ab" || tab == "ac"){
+
+            $scope.openTab.setE = true
+            $scope.openTab.setF = false
+            $scope.openTab.setG = false
+            $scope.openTab.setH = false
+        } else if(tab == "ba" || tab == "bb" || tab == "bc" || tab == "bd"){
+
+            $scope.openTab.setE = false
+            $scope.openTab.setF = true
+            $scope.openTab.setG = false
+            $scope.openTab.setH = false
+        } else if(tab == "ca" || tab == "cb" || tab == "cc"){
+
+            $scope.openTab.setE = false
+            $scope.openTab.setF = false
+            $scope.openTab.setG = true
+            $scope.openTab.setH = false
+        } else if(tab == "da" || tab == "db" || tab == "dc"){
+
+            $scope.openTab.setE = false
+            $scope.openTab.setF = false
+            $scope.openTab.setG = false
+            $scope.openTab.setH = true
+        }
+        $scope.view_tab = tab
+
+    }
+
     $scope.badgeAAdminCount = 0
     $scope.badgeBAdminCount = 0
-    $scope.badgeCAdminCount = 0
-    $scope.badgeDAdminCount = 0
-    $scope.badgeEAdminCount = 0
-    $scope.badgeFAdminCount = 0
-    $scope.badgeGAdminCount = 0
-    $scope.badgeHAdminCount = 0
+    $scope.adminBadge = {}
+    $scope.adminBadge.C = 0
+    $scope.adminBadge.D = 0
+    $scope.adminBadge.E = 0
+    $scope.adminBadge.F = 0
+    $scope.adminBadge.G = 0
+    $scope.adminBadge.H = 0
 
 
     $scope.isLoading = false
@@ -1960,20 +2154,13 @@ YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
     $scope.hideProgressBar = function () {
         $scope.isLoading = false
         $scope.promote = undefined
-        $scope.$apply()
+        //$scope.$apply()
         console.log("probar hidden ")
     }
-    $scope.$watch('isLoading', function (newVal) {
-        $scope.isLoading = newVal
-        console.log("New Val isLoading is: " + newVal)
-    })
-    $scope.$watch('badgeHAdminCount', function (newVal) {
-        $scope.badgeHAdminCount = newVal
-        console.log("In ADMINCTRL, H badge:  " + newVal)
-    })
+
 })
 
-YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope) {
+YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $modal) {
     $scope.freightIn
     var user
     var query = new AV.Query("FreightIn")
@@ -1981,8 +2168,21 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope) {
     query.include("user")
     query.find({
         success: function (list) {
-            $scope.freightIn = list
             $scope.$apply(function () {
+                $rootScope.badgeAdminTotalCount -= $scope.badgeAAdminCount
+                $scope.badgeAAdminCount = list.length
+                $rootScope.badgeAdminTotalCount += $scope.badgeAAdminCount
+                $scope.freightIn = list
+                for (var i = 0; i < $scope.freightIn.length; i++) {
+                    $scope.freightIn[i].selection = false
+                    var tmp = $scope.freightIn[i].createdAt
+                    var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                    if(tmp.getMinutes() < 10)
+                        tmp_date += "0" + tmp.getMinutes()
+                    else
+                        tmp_date += tmp.getMinutes();_
+                    $scope.freightIn[i].createdAt = tmp_date
+                }
                 $rootScope.badgeAdminTotalCount -= $scope.badgeAAdminCount
                 $scope.badgeAAdminCount = list.length
                 $rootScope.badgeAdminTotalCount += $scope.badgeAAdminCount
@@ -2007,11 +2207,46 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope) {
             }
         })
     }
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
 
 })
 
-YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope) {
+YundaApp.controller("ShowDetailsCtrl", function($scope, $modalInstance, freight) {
+    $scope.freight = freight
+    $scope.close = function() {
+        $modalInstance.dismiss()
+    }
+})
+
+YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $modal) {
     $scope.freightIn
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     var query = new AV.Query("FreightIn")
     query.equalTo("status", YD.FreightIn.STATUS_CONFIRMED)
     query.include("user")
@@ -2022,6 +2257,16 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope) {
                 $rootScope.badgeAdminTotalCount -= $scope.badgeBAdminCount
                 $scope.badgeBAdminCount = list.length
                 $rootScope.badgeAdminTotalCount += $scope.badgeBAdminCount
+                for (var i = 0; i < $scope.freightIn.length; i++) {
+                    $scope.freightIn[i].selection = false
+                    var tmp = $scope.freightIn[i].createdAt
+                    var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                    if(tmp.getMinutes() < 10)
+                        tmp_date += "0" + tmp.getMinutes()
+                    else
+                        tmp_date += tmp.getMinutes();_
+                    $scope.freightIn[i].createdAt = tmp_date
+                }
                 console.log("Badge B now: " + $scope.badgeBAdminCount)
                 console.log("BadgeAdminTotal now: " + $rootScope.badgeAdminTotalCount)
             })
@@ -2030,15 +2275,11 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope) {
     $scope.saveComment = function () {
         $scope.showProgressBar("正在保存留言...")
 
-        for (var i = 0; i < $scope.freightIn.length; i++) {
-            console.log("f comments is: " + $scope.freightIn[i].comments)
-        }
         AV.Object.saveAll($scope.freightIn, {
             success: function (list) {
                 console.log("list of comment saved")
                 alert("留言保存成功！")
                 $scope.hideProgressBar()
-
             },
             error: function (error) {
 
@@ -2047,7 +2288,21 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope) {
     }
 })
 
-YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $window) {
+YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $window, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     $scope.getStatus = function () {
         for (var i = 0; i < $scope.freight.length; i++) {
             //$scope.freight[i].statusToString = " "
@@ -2100,14 +2355,26 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
         query.include("user")
         query.find({
             success: function (list) {
+                $scope.$apply(function(){
+
 
                 $scope.freight = list
                 for (var i = 0; i < $scope.freight.length; i++) {
                     $scope.freight[i].selection = false
-                }
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                    }
+
                 $scope.getStatus()
-                $scope.$apply(function () {
-                    $scope.badgeCAdminCount = list.length
+                })
+                $scope.$apply(function() {
+                    $scope.adminBadge.C = list.length
+                    console.log("Badge c: " + $scope.adminBadge.C)
                 })
 
             },
@@ -2131,9 +2398,39 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
 
         //$window.location.href = '/partials/print'
     }
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freightIn[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
+            }
+        })
+    }
 })
 
-YundaApp.controller('AdminFreightFinishCtrl', function ($scope) {
+YundaApp.controller('AdminFreightFinishCtrl', function ($scope, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     $scope.reloadFreight = function () {
         console.log("finished print")
         var query = new AV.Query("Freight")
@@ -2141,9 +2438,21 @@ YundaApp.controller('AdminFreightFinishCtrl', function ($scope) {
         query.include("user")
         query.find({
             success: function (list) {
-                $scope.freight = list
                 $scope.$apply(function () {
-                    $scope.badgeDAdminCount = list.length
+                    $scope.freight = list
+                    $scope.adminBadge.D = list.length
+                    for (var i = 0; i < $scope.freight.length; i++) {
+                        $scope.freight[i].selection = false
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                    }
+                    $scope.adminBadge.D = list.length
+
                 })
 
 
@@ -2154,10 +2463,40 @@ YundaApp.controller('AdminFreightFinishCtrl', function ($scope) {
         })
     }
     $scope.reloadFreight()
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freight[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
+            }
+        })
+    }
 
 })
 
-YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope) {
+YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     $scope.reloadPaidFreight = function () {
         console.log("realod paid")
         var query = new AV.Query("Freight")
@@ -2165,18 +2504,43 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope) {
         query.include("user")
         query.find({
             success: function (list) {
-                $scope.freight = list
                 $scope.$apply(function () {
-                    $scope.badgeEAdminCount = list.length
+                    $scope.adminBadge.E = list.length
+
+                    $scope.freight = list
+                    for (var i = 0; i < $scope.freight.length; i++) {
+                        $scope.freight[i].selection = false
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                        $scope.freight[i].selection = false
+
+                    }
                 })
 
-
-                for (var i = 0; i < $scope.freight.length; i++) {
-                    $scope.freight[i].selection = false
-                }
             },
             error: function (error) {
                 console.log("AdminFreightPaid ERROR: " + error.message)
+            }
+        })
+    }
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freight[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
             }
         })
     }
@@ -2196,7 +2560,21 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope) {
     }
 })
 
-YundaApp.controller('AdminFreightClearCtrl', function ($scope) {
+YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     var clearList = []
     $scope.reloadDeliveryFreight = function () {
         var query = new AV.Query("Freight")
@@ -2204,18 +2582,43 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope) {
         query.include("user")
         query.find({
             success: function (list) {
-                $scope.freight = list
                 $scope.$apply(function () {
-                    $scope.badgeFAdminCount = list.length
+                    $scope.freight = list
+                    $scope.adminBadge.F = list.length
+                    for (var i = 0; i < $scope.freight.length; i++) {
+                        $scope.freight[i].selection = false
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                        $scope.freight[i].selection = false
+                    }
                 })
 
 
-                for (var i = 0; i < $scope.freight.length; i++) {
-                    $scope.freight[i].selection = false
-                }
+
             },
             error: function (error) {
                 console.log("AdminFreightPaid ERROR: " + error.message)
+            }
+        })
+    }
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freight[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
             }
         })
     }
@@ -2224,17 +2627,18 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope) {
         for (var i = 0; i < $scope.freight.length; i++) {
             if ($scope.freight[i].selection == true) {
                 console.log("This one " + i + "has been added")
-                //$scope.generateFreight($scope.freightIn[i])
-                //$scope.reloadFreightInConfirmed()
                 $scope.freight[i].status = YD.Freight.STATUS_PASSING_CUSTOM
                 clearList.push($scope.freight[i])
             }
         }
         AV.Object.saveAll(clearList, {
             success: function (list) {
-                console.log("AdminFreightClearCtrl: freightList has been saved")
-                $scope.reloadDeliveryFreight()
-                $scope.$apply()
+                $scope.$apply(function() {
+                    console.log("AdminFreightClearCtrl: freightList has been saved")
+                    $scope.reloadDeliveryFreight()
+                })
+
+
             },
             error: function (error) {
                 console.log("ERROR: AdminFreightClearCtrl: freightList has not been saved" + error.message)
@@ -2244,15 +2648,40 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope) {
 })
 
 YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     $scope.reloadChineseFreight = function () {
         var query = new AV.Query("Freight")
         query.equalTo("status", YD.Freight.STATUS_PASSING_CUSTOM)
         query.include("user")
         query.find({
             success: function (list) {
-                $scope.freight = list
                 $scope.$apply(function () {
-                    $scope.badgeGAdminCount = list.length
+                    $scope.freight = list
+                    $scope.adminBadge.G = list.length
+                    for (var i = 0; i < $scope.freight.length; i++) {
+                        $scope.freight[i].selection = false
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                        $scope.freight[i].selection = false
+                    }
                 })
 
 
@@ -2266,6 +2695,22 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
         })
     }
     $scope.reloadChineseFreight()
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freight[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
+            }
+        })
+    }
     $scope.addInfo = function (freight) {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_addInfo',
@@ -2308,7 +2753,21 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
     }
 })
 
-YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope) {
+YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope, $modal) {
+    $scope.showDetails = function(freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        })
+    }
     $scope.reloadFinalDelivery = function () {
         var query = new AV.Query("Freight")
         query.equalTo("status", YD.Freight.STATUS_FINAL_DELIVERY)
@@ -2317,10 +2776,19 @@ YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope) {
             success: function (list) {
                 $scope.freight = list
                 $scope.$apply(function () {
-                    $scope.badgeHAdminCount = list.length
-                    console.log("in FInal H badge: " + $scope.badgeHAdminCount)
+                    $scope.adminBadge.H = list.length
+                    console.log("in FInal H badge: " + $scope.adminBadge.H)
+                    for (var i = 0; i < $scope.freight.length; i++) {
+                        $scope.freight[i].selection = false
+                        var tmp = $scope.freight[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if(tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();_
+                        $scope.freight[i].updatedAt = tmp_date
+                    }
                 })
-
 
                 console.log("reloadFinalDelivery: " + list.length)
             },
@@ -2330,6 +2798,23 @@ YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope) {
         })
     }
     $scope.reloadFinalDelivery()
+    $scope.saveComment = function () {
+        $scope.showProgressBar("正在保存留言...")
+        for (var i = 0; i < $scope.freight.length; i++) {
+            //console.log("f comments is: " + $scope.freight[i].comments)
+        }
+        AV.Object.saveAll($scope.freight, {
+            success: function (list) {
+                console.log("list of comment saved")
+                $scope.hideProgressBar()
+                alert("留言保存成功！")
+            },
+            error: function (error) {
+
+            }
+        })
+    }
+
 })
 
 YundaApp.controller('AdminViewUserCtrl', function ($scope) {
@@ -2337,17 +2822,20 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
     query.find({
         success: function (users) {
             console.log("AdminViewUser, length: " + users.length)
-            $scope.users = users
-            for (var i = 0; i < $scope.users.length; i++) {
-                var tmp = $scope.users[i].createdAt
-                var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
-                if(tmp.getMinutes() < 10)
-                    tmp_date += "0" + tmp.getMinutes()
-                else
-                    tmp_date += tmp.getMinutes();_
-                $scope.users[i].createdAt = tmp_date
-                $scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
-            }
+            $scope.$apply(function(){
+                $scope.users = users
+                for (var i = 0; i < $scope.users.length; i++) {
+                    var tmp = $scope.users[i].createdAt
+                    var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                    if(tmp.getMinutes() < 10)
+                        tmp_date += "0" + tmp.getMinutes()
+                    else
+                        tmp_date += tmp.getMinutes();_
+                    $scope.users[i].createdAt = tmp_date
+                    $scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
+                }
+            })
+
         },
         error: function (error) {
             console.log("AdminViewUser ERR: " + error.message)
@@ -2359,6 +2847,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
         $scope.$watch('newUser', function (newVal) {
         }, true)
     }
+
 })
 
 YundaApp.controller('AddInfoCtrl', function ($scope, $modalInstance, freight) {
@@ -2386,20 +2875,23 @@ YundaApp.controller('AdminReturnBalanceCtrl', function($scope, $modal) {
         query.equalTo("status", YD.Transaction.STATUS_PENDING_RETURN_BALANCE)
         query.find({
             success: function (list) {
-                $scope.transactionList = list
-                console.log("admin return balance: " + list.length)
-                for (var i = 0; i < $scope.transactionList.length; i++) {
-                    console.log("In AdminReturnBalanceCtrl -- user balance is: " + $scope.transactionList[i].user.balance)
-                    var tmp = $scope.transactionList[i].createdAt
-                    var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
-                    if (tmp.getMinutes() < 10)
-                        tmp_date += "0" + tmp.getMinutes()
-                    else
-                        tmp_date += tmp.getMinutes();
-                    $scope.transactionList[i].createdAt = tmp_date
+                $scope.$apply(function() {
+                    $scope.transactionList = list
+                    console.log("admin return balance: " + list.length)
+                    for (var i = 0; i < $scope.transactionList.length; i++) {
+                        console.log("In AdminReturnBalanceCtrl -- user balance is: " + $scope.transactionList[i].user.balance)
+                        var tmp = $scope.transactionList[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        $scope.transactionList[i].createdAt = tmp_date
 
 
-                }
+                    }
+                })
+
             },
             error: function (list, error) {
                 console.log("admin return balance ERR: " + error.message)
@@ -2525,16 +3017,19 @@ YundaApp.controller('AdminReturnGoodsCtrl', function($scope) {
         query.include("user")
         query.find({
             success: function (list) {
-                $scope.goodsList = list
-                for (var i = 0; i < $scope.goodsList.length; i++) {
-                    var tmp = $scope.goodsList[i].createdAt
-                    var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
-                    if (tmp.getMinutes() < 10)
-                        tmp_date += "0" + tmp.getMinutes()
-                    else
-                        tmp_date += tmp.getMinutes();
-                    $scope.goodsList[i].createdAt = tmp_date
-                }
+                $scope.$apply(function(){
+                    $scope.goodsList = list
+                    for (var i = 0; i < $scope.goodsList.length; i++) {
+                        var tmp = $scope.goodsList[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        $scope.goodsList[i].createdAt = tmp_date
+                    }
+                })
+
             },
             error: function (list, error) {
                 console.log("In AdminReturnGoodsCtrl -- ERROR: " + error.message)
@@ -2608,12 +3103,59 @@ YundaApp.controller('AdminChangeAddressCtrl', function($scope, $modal) {
 
     }
 })
-YundaApp.controller('PrintController', function ($scope, $rootScope) {
-    console.log("is printpage: " + $scope.printPage)
-    $scope.freightList = $rootScope.freightList
-    for (var i = 0; i < $scope.freightList.length; i++) {
-        //console.log("In Print: " + $scope.freightList[i].trackingNumber)
+
+YundaApp.controller('AdminZhifubaoCtrl', function($scope) {
+    $scope.reloadZhifubao = function() {
+        var query = new AV.Query("Transaction")
+        query.equalTo("status", YD.Transaction.STATUS_ZHIFUBAO)
+        query.include("user")
+        query.find({
+            success: function(list) {
+                $scope.$apply(function() {
+                    console.log("AdminZhifubao -- length: " + list.length)
+                    $scope.transactions = list
+                    for(var i = 0; i < $scope.transactions.length; i++) {
+                            var tmp = $scope.transactions[i].createdAt
+                            var tmp_date = tmp.getFullYear() + "/" + tmp.getMonth() + "/" + tmp.getDay() + " " + tmp.getHours() + ":";
+                            if (tmp.getMinutes() < 10)
+                                tmp_date += "0" + tmp.getMinutes()
+                            else
+                                tmp_date += tmp.getMinutes();
+                            $scope.transactions[i].createdAt = tmp_date
+                    }
+                })
+            }
+        })
     }
+    $scope.reloadZhifubao()
+    $scope.confirmRecharge = function(transaction) {
+        transaction.user.reward = Math.round(transaction.amount)
+        transaction.user.balanceInDollar += transaction.amount
+        transaction.status = YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED
+        transaction.save(null, {
+            success: function(t) {
+                console.log("transaction saved -- reward: " + Math.round(t.amount) + " | amount: " + t.amount)
+                transaction.user.save(null, {
+                    success: function(u) {
+                        alert("操作成功！")
+                        $scope.reloadZhifubao()
+                    }
+                })
+            }
+        })
+
+    }
+})
+
+YundaApp.controller('PrintController', function ($scope, $rootScope) {
+    //console.log("is printpage: " + $scope.printPage)
+    $scope.freightList = $rootScope.freightList
+    if( $scope.freightList.length == 0) {
+        $scope.isShow = true
+    }
+    //for (var i = 0; i < $scope.freightList.length; i++) {
+    //    console.log("In PrintController -- " + $scope.freightList[i].trackingNumber)
+    //}
 
 })
 // AngularJS Google Maps loader

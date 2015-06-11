@@ -1,0 +1,26 @@
+<div class="container-fluid" height="100%">
+    <h2 class="text-center"> 请选择收件人</h2>
+    选择地址： <span ng-bind="address.recipient"></span> - <span
+            ng-bind="address.country"></span><span
+            ng-bind="address.state"></span><span
+            ng-bind="address.city"></span><span
+            ng-bind="address.suburb"></span></span><span
+            ng-bind="address.street1"></span><span
+            ng-bind="address.street2"></span></span>
+    </br>
+    <ul ng-repeat="address in addressList">
+        <li ng-click="chooseRecipient(address)">
+            <button class="btn btn-sm"><span ng-bind="address.recipient"></span> - <span
+                        ng-bind="address.country"></span><span
+                        ng-bind="address.state"></span><span
+                        ng-bind="address.city"></span><span
+                        ng-bind="address.suburb"></span></span><span
+                        ng-bind="address.street1"></span><span
+                        ng-bind="address.street2"></span></button>
+        </li>
+    </ul>
+
+    </br>
+    <button class="btn btn-sm btn-success" ng-click="confirmChoose()">确认</button>
+    <button class="btn btn-sm btn-info" ng-click="cancel()">取消</button>
+</div>

@@ -344,30 +344,50 @@
       this.set("user", user);
     }
   }, {
-    STATUS_INITIALIZED: 0,
-    //Pending user action
-    STATUS_PENDING_USER_ACTION: 100,
-    //Pending admin action
-    STATUS_PENDING_SPLIT_PACKAGE: 200,
-    STATUS_PENDING_SPLIT_PACKAGE_CHARGED: 210,
-    STATUS_PENDING_REDUCE_WEIGHT: 220,
-    STATUS_PENDING_EXTRA_PACKAGING: 230,
-    STATUS_PENDING_CHECK_PACKAGE:240,
-    //Pending user action
-    STATUS_PENDING_FINAL_CONFIRMATION: 300,
-    //Pending admin action
-    STATUS_PENDING_FINISHED: 400,
-    STATUS_PENDING_DELIVERY: 500,
-    STATUS_DELIVERING: 510,
-    //Pending chinese admin action
-    STATUS_PASSING_CUSTOM: 600,
-    STATUS_FINAL_DELIVERY: 610,
-    STATUS_DELIVERED: 620,
-    //return goods, cancel
-    STATUS_CANCELED: 990
+    //STATUS_INITIALIZED: 0,
+    ////Pending user action
+    //STATUS_PENDING_USER_ACTION: 100,
+    ////Pending admin action
+    //STATUS_PENDING_SPLIT_PACKAGE: 200,
+    //STATUS_PENDING_SPLIT_PACKAGE_CHARGED: 210,
+    //STATUS_PENDING_REDUCE_WEIGHT: 220,
+    //STATUS_PENDING_EXTRA_PACKAGING: 230,
+    //STATUS_PENDING_CHECK_PACKAGE:240,
+    ////Pending user action
+    //STATUS_PENDING_FINAL_CONFIRMATION: 300,
+    ////Pending admin action
+    //STATUS_PENDING_FINISHED: 400,
+    //STATUS_PENDING_DELIVERY: 500,
+    //STATUS_DELIVERING: 510,
+    ////Pending chinese admin action
+    //STATUS_PASSING_CUSTOM: 600,
+    //STATUS_FINAL_DELIVERY: 610,
+    //STATUS_DELIVERED: 620,
+    ////return goods, cancel
+    //STATUS_CANCELED: 990
 
   });
-
+     YD.Freight.STATUS_INITIALIZED = 0;
+    //Pending user action
+      YD.Freight.STATUS_PENDING_USER_ACTION = 100;
+    //Pending admin action
+      YD.Freight.STATUS_PENDING_SPLIT_PACKAGE = 200;
+      YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED = 210;
+      YD.Freight.STATUS_PENDING_REDUCE_WEIGHT = 220;
+      YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
+      YD.Freight.STATUS_PENDING_CHECK_PACKAGE =240;
+    //Pending user action
+      YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION = 300;
+    //Pending admin action
+      YD.Freight.STATUS_PENDING_FINISHED = 400;
+      YD.Freight.STATUS_PENDING_DELIVERY = 500;
+      YD.Freight.STATUS_DELIVERING = 510;
+    //Pending chinese admin action
+      YD.Freight.STATUS_PASSING_CUSTOM = 600;
+      YD.Freight.STATUS_FINAL_DELIVERY = 610;
+      YD.Freight.STATUS_DELIVERED = 620;
+    //return goods; cancel
+      YD.Freight.STATUS_CANCELED = 990;
 
   Object.defineProperty(YD.Freight.prototype, "address", {
     get: function() {
@@ -450,7 +470,7 @@
       return this.get("status");
     },
     set: function(value) {
-      this.set("status", value);
+      this.set("status", parseInt(value));
     }
   });
 
@@ -949,6 +969,14 @@
       this.set("balance", value);
     }
   });
+  Object.defineProperty(YD.User.prototype, "balanceInDollar", {
+    get: function() {
+      return (parseInt(this.get("balance"))/ 100).toFixed(2);
+    },
+    set: function(value) {
+      this.set("balance", value*100);
+    }
+  });
   Object.defineProperty(YD.User.prototype, "reward", {
     get: function() {
       return this.get("reward");
@@ -1100,6 +1128,7 @@
   YD.Transaction.STATUS_RECHARGE = 400;
   YD.Transaction.STATUS_PENDING_RETURN_BALANCE = 500;
   YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE = 590;
+  YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
 
 
 
