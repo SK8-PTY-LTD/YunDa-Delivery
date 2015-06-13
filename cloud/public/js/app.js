@@ -47,7 +47,26 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
           templateUrl: 'partials/dashboard'
       }).
       when('/administrator', {
-          templateUrl: 'partials/administrator'
+          templateUrl: 'partials/administrator',
+          controller: 'AdminCtrl'
+          //resolve: {
+          //    load: function($q, $rootScope, $location) {
+          //        var deferred = $q.defer();
+          //        console.log("in app -- $rootScope.isAdmin: " + $rootScope.isAdmin)
+          //        var log;
+          //        angular.forEach($rootScope, function(value, key) {
+          //            console.log("key: " + key  + " | value: " + value);
+          //        }, log);
+          //        if (!$rootScope.isAdmin) {
+          //            console.log("in != adminrole")
+          //            deferred.reject()
+          //            $location.path('/');
+          //        } else
+          //            console.log("in = adminrole")
+          //        deferred.resolve();
+          //        return deferred.promise;
+          //    }
+          //}
       }).
       when('/print', {
           templateUrl: 'partials/print'
@@ -67,13 +86,35 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
   $httpProvider.defaults.headers.common = {
     'Content-Type': 'application/json',
     'X-AVOSCloud-Application-Id': AV_APP_ID,
-    'X-AVOSCloud-Application-Key': AV_APP_KEY,
+    'X-AVOSCloud-Application-Key': AV_APP_KEY
     //'Authorization': 'Bearer ' + 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
 }
 //Stripe
     var STRIPE_KEY = "pk_test_6pRNASCoBOKtIshFeQd4XMUh";
     Stripe.setPublishableKey(STRIPE_KEY);
 
+}).run( function($rootScope, $location) {
+
+    // register listener to watch route changes
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+        if ($rootScope.currentUser != undefined) {
+            if (($rootScope.currentUser.role == YD.User.ROLE_ADMIN ||  $rootScope.currentUser.role == 190) &&(next.templateUrl == "partials/administrator")) {
+                //$rootScope.isAdmin = true;
+                //$location.path('/administrator')
+            } else if($rootScope.currentUser.role != YD.User.ROLE_ADMIN && (next.templateUrl == "partials/administrator")) {
+                alert(" You are not an admin!")
+                $location.path('/home')
+
+            }
+
+        } else {
+            console.log("user is not defined")
+            //console.log("double check -- $scope.currentUser.role: " + $rootScope.currentUser.role)
+            if((next.templateUrl == "partials/administrator") || (next.templateUrl == "partials/dashboard"))
+            $location.path('home')
+        }
+
+    });
 });
 
 //YundaApp.config(function($window) {

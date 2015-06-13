@@ -4,8 +4,7 @@
     <accordion close-others="oneAtATime">
         <accordion-group heading="账户管理" is-open="openTab.setE">
             <ul>
-                <li ng-click="change_tab('aa')">账户信息</li>
-                <li ng-click="change_tab('ac')">仓库地址</li>
+                <li ng-click="change_tab('aa')">系统管理</li>
             </ul>
         </accordion-group>
 
@@ -40,6 +39,14 @@
 <!-- col-sm-3 -->
 
 <div class="col-sm-9">
+<div ng-show="view_tab=='aa'" ng-controller="AdminSystemCtrl">
+    <label>  开启小包裹渠道选择：
+        <input type="checkbox" ng-model="selected">
+    </label><br/>
+
+    <button class="btn btn-default" ng-click="confirm()">保存</button>
+
+</div>
 <div ng-show="view_tab=='ba'">
     <tabset>
         <tab ng-controller="AdminFreightInArriveCtrl">
@@ -368,12 +375,14 @@
         <thead>
         <th>用户名</th>
         <th>序号</th>
+        <th>参考号</th>
         <th>创建时间</th>
         <th>处理</th>
         </thead>
         <tr ng-repeat="f in freights | orderBy:'-createdAt'">
             <td ng-bind="f.user.username"></td>
             <td ng-bind="f.id"></td>
+            <td ng-bind="f.reference"></td>
             <td ng-bind="f.createdAt"></td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmChange(f)">确认更换</button>

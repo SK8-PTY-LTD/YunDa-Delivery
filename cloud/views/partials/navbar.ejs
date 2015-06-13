@@ -82,7 +82,7 @@
                     <!--<li class="divider-vertical" ng-if="currentUser.id">-->
                         <!--<a ng-href="/dashboard">会员中心</a>-->
                     <!--</li>-->
-                    <li class="divider-vertical" ng-show="currentUser.id" class="btn-group" dropdown >
+                    <li class="divider-vertical" ng-show="currentUser.role == 200 || currentUser.role == 190" class="btn-group" dropdown >
                         <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
                             <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
                             <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
@@ -98,6 +98,25 @@
                             <li><a ng-click="logOut()">登出</a></li>
                         </ul>
                     </li>
+
+                    <li class="divider-vertical" ng-show="currentUser.role == 100 || currentUser.role == 190" class="btn-group" dropdown >
+                        <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
+                            <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
+                            <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
+                            管理员中心<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <!--<li>-->
+                            <!--<a ng-href="/profile/">Profile</a>-->
+                            <!--</li>-->
+                            <li><a ng-click="change_tab('aa')" ng-href="/administrator">我的账户</a></li>
+                            <li><a ng-click="logOut()">登出</a></li>
+                        </ul>
+                    </li>
+                    <!--<li class="divider-vertical">-->
+                        <!--<a ng-href="/administrator" ng-show="currentUser.role == 100">管理员中心</a>-->
+                    <!--</li>-->
+
                     <li class="divider-vertical">
                         <a ng-show="!currentUser.id" ng-click="open()">成员登入</a>
                     </li>

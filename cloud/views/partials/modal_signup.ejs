@@ -30,7 +30,7 @@
             <label class="control-label">手机号:</label>
             <span ng-show="!loginForm.mobile.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.mobile.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="text" pattern="(\+|\d)(\d)+" name="mobile" class="form-control" id="mobile" ng-model="currentUser.mobilePhoneNumber" required>
+            <input type="text" name="mobile" class="form-control" id="mobile" ng-model="currentUser.mobilePhoneNumber" required>
         </div>
         <div class="form-group">
             <button type="submit" class="col-xs-12 btn btn-info" ng-click="signup()" ng-disabled="!loginForm.$valid">注册</button>

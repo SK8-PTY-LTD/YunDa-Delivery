@@ -137,10 +137,9 @@
     <div class="row">
         <div class="col-sm-7">
             收货人：<input type="text" ng-model="recipientLookup"/>
-        </div>
-        <div class="col-sm-2">
             <button class="btn btn-sm btn-default" ng-click="searchRecipient()">搜索</button>
         </div>
+
         <div class="col-sm-3">
             <button class="btn btn-sm btn-default" ng-click="addNewAddress()">新增</button>
         </div>
@@ -449,6 +448,7 @@
     <tab-heading>
         已生成运单<span class="badge" style="margin-left:5px;">{{badgeCCount}}</span>
     </tab-heading>
+
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <tr>
@@ -457,7 +457,6 @@
             <th>入库时间</th>
             <th>状态</th>
             <th>重量</th>
-            <th>付款金额</th>
             <th>反馈</th>
             <th>备注</th>
 
@@ -466,29 +465,37 @@
         <tr ng-repeat="freight in freights  | orderBy:'-createdAt'">
             <td><input type="checkbox" ng-model="freight.selection" ng-click="selecting(freight)"></td>
             <td ng-bind="freight.id"></td>
-            <td ng-bind="freight.estimatedPrice"></td>
             <td ng-bind="freight.createdAt"></td>
             <td ng-bind="freight.statusToString"></td>
-            <td ng-bind="freight.weight"></td>
-            <td ng-bind="freight.estimatedPrice"></td>
+            <td ng-bind="freight.weight +'Lb'"></td>
             <td ng-bind="freight.comments"></td>
             <td><textarea placeholder="备注" ng-model="f.notes"></textarea></td>
-
         </tr>
     </table>
     </p>
     <!--<p>-->
     <!--</p>-->
-
     <div class="row">
-        <div class="col-lg-2 col-lg-offset-10 text-right">
+        <col-md-12>
+            <hr>
+        </col-md-12>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
         <input type="checkbox" ng-model="confirmTC">
-        <label>同意条款</label>
+            <a ng-href="/service"><label>同意条款</label></a>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label>选择运输渠道：<select ng-model="selectedMethod" ng-options="method.name for method in options" ></select></label>
+        </div>
+        <!--<button class="btn" ng-click="output()">output</button>-->
+
     </div>
 
     <div class="row">
-            <div class="col-lg-2 col-lg-offset-5 text-right">
+            <div class="col-lg-2">
                 <input type="checkbox" ng-model="confirmReward">
                 <label>使用积分<i tooltip="（100积分可抵$1）"
                               tooltip-placement="top"
@@ -497,7 +504,7 @@
                               class="fa fa-question-circle"></i></label>
 
             </div>
-            <div class="col-lg-2 text-right">
+            <div class="col-lg-2 ">
                 <input type="checkbox" ng-model="confirmInsurance">
                 <label>加保金<i tooltip="保金为物品总价值 x 2%"
                              tooltip-placement="top"
@@ -506,7 +513,7 @@
                              class="fa fa-question-circle"></i></label>
 
             </div>
-            <div class="col-lg-3 text-right">
+            <div class="col-lg-3">
                 <input type="checkbox" ng-model="confirmTaxInsurance">
                 <label>加保税金 <i tooltip="保税金至少为物品总价值 x 5%,请输入需要的保税金"
                                tooltip-placement="top"
@@ -518,13 +525,30 @@
 
     </div>
     <div class="row">
-        <div ng-if="confirmTaxInsurance">
-            <div class="col-lg-offset-9 col-lg-3">
-                输入保税金：
+        <div ng-if="confirmInsurance">
+            <div class="col-lg-4">
+                输入总申报价值（保价）：
                 <form class="form-inline">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="number" step="any" class="form-control" ng-model="taxInsuranceAmount"
+                            <div class="input-group-addon">$</div>
+
+                            <input type="number" step="any" class="form-control" ng-model="insurance.value"
+                                   id="insuranceValue" >
+
+                        </div>
+                    </div>
+                </form>
+                需付保金(自动计算):<span ng-bind="'$' + insurance.amount"></span>
+            </div>
+        </div>
+        <div ng-if="confirmTaxInsurance">
+            <div class="col-lg-3">
+                输入总保税金比例：
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="number" step="any" class="form-control" ng-model="taxInsurance.amount"
                                    id="taxInsuranceAmount" >
 
                             <div class="input-group-addon">%</div>
@@ -534,13 +558,13 @@
             </div>
         </div>
         <div ng-if="confirmReward">
-            <div class="col-lg-3 col-lg-offset-9">
+            <div class="col-lg-3 ">
                 使用积分：
                 <form class="form-inline">
                     <div class="form-group">
                         <div class="input-group">
 
-                            <input type="number" step="any" class="form-control" ng-model="rewardAmount"
+                            <input type="number" step="any" class="form-control" ng-model="reward.amount"
                                    id="taxInsuranceAmount" >
 
                             <div class="input-group-addon">分</div>
@@ -557,11 +581,11 @@
 <br>
     <div class="row">
     <div class="col-lg-offset-9 col-lg-3 text-right">
-        <p style="font-size:1.5em; color: red; font-weight:bold;">
-            实付金额: ${{confirmInsurance ? confirmTaxInsurance ? confirmReward ? total + total*0.02 +
+        <div style="font-size:1.5em; color: red; font-weight:bold;">
+           <p> 实付金额: <span ng-show="selectedMethod != undefined">${{confirmInsurance ? confirmTaxInsurance ? confirmReward ? total + total*0.02 +
             total*taxInsuranceAmount/100 - rewardAmount/100 : total + total*0.02 + total*taxInsuranceAmount/100: total + total*0.02 :
-            total}}
-        </p>
+            total}}</span></p>
+        </div>
     </div>
     <div class="col-lg-offset-10 col-lg-2 ">
         <button type="button" class="btn btn-info" ng-click="payment()">
@@ -584,7 +608,7 @@
         </tr>
         </thead>
         <tr ng-repeat="freight in freights">
-            <td ng-bind="freight.trackingNumber"></td>
+            <td ng-bind="freight.id"></td>
             <td ng-bind="freight.statusToString"></td>
         </tr>
 
@@ -617,7 +641,7 @@
         <th>创建时间</th>
         </thead>
         <tr ng-repeat="f in resultList  | orderBy:'-createdAt'">
-            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.id"></td>
             <td ng-bind="f.info"></td>
             <td ng-bind="f.createdAt"></td>
         </tr>
@@ -949,7 +973,9 @@
             <td ng-bind="freight.id"></td>
             <td ng-bind="freight.createdAt"></td>
             <td ng-bind="freight.status"></td>
+            <div ng-if="freight.hasEvidence">
             <td><a ng-href="{{freight.adminEvidence}}">点此下载</a></td>
+            </div>
 
         </tr>
     </table>
@@ -959,16 +985,26 @@
     <form>
         <div class="form-group">
             <label for="id">输入运单号（必填）</label>
-            <input type="text" class="form-control" ng-model="changeAddressFreight.id" required>
+            <input type="text" class="form-control" ng-model="changeAddressFreight.reference" required>
         </div>
         <div class="form-group">
-            <label for="address">收件人（必填）</label>
-            <input type="text" class="form-control" ng-model="changeAddressFreight.recipient" required>
+            <div class="col-md-5">
+                <button class="btn btn-default" ng-click="chooseRecipient()">选择收件人地址</button>
+                <button class="btn btn-sm btn-default" ng-click="addNewRecipient()">添加新收件人</button>
+            </div>
+            <div class="col-md-3">
+
+            </div>
+
         </div>
-        <div class="form-group">
-            <label for="address">地址（必填）</label>
-            <input type="text" class="form-control" ng-model="changeAddressFreight.address" required>
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label for="address">收件人（必填）</label>-->
+            <!--<input type="text" class="form-control" ng-model="changeAddressFreight.recipient" required>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<label for="address">地址（必填）</label>-->
+            <!--<input type="text" class="form-control" ng-model="changeAddressFreight.address" required>-->
+        <!--</div>-->
 
         <button class="btn btn-info" ng-click="applyChangeAddress()">申请改地址</button>
     </form>

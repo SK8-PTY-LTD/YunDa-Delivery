@@ -904,6 +904,15 @@
       this.set("addressId", value.id);
     }
   });
+  Object.defineProperty(YD.User.prototype, "role", {
+    get: function() {
+      return this.get("role");
+    },
+    set: function(value) {
+      this.set("role", value);
+    }
+  });
+
   Object.defineProperty(YD.User.prototype, "addressId", {
     get: function() {
       return this.get("addressId");
@@ -1034,7 +1043,8 @@
       this.set("identityBack", value);
     }
   });
-
+  YD.User.ROLE_ADMIN = 100
+  YD.User.ROLE_USER = 200
   //var StatusGroup = AV.Object.extend("StatusGroup");
   //Object.defineProperty(StatusGroup.prototype, "url", {
   //  get: function(){
@@ -1047,12 +1057,12 @@
 
   YD.FreightChangeAddress = AV.Object.extend("FreightChangeAddress", {}, {});
 
-  Object.defineProperty(YD.FreightChangeAddress.prototype, "trackingNumber", {
+  Object.defineProperty(YD.FreightChangeAddress.prototype, "reference", {
     get: function() {
-      return this.get("trackingNumber");
+      return this.get("reference");
     },
     set: function(value) {
-      this.set("trackingNumber", value);
+      this.set("reference", value);
     }
   });
 
@@ -1115,7 +1125,16 @@
   //YD.FreightChangeAddress.STATUS_AWAITING = 100;
 
 
+  YD.SystemSetting = AV.Object.extend("SystemSetting", {}, {});
 
+  Object.defineProperty(YD.SystemSetting.prototype, "isSmallPackageAllowed", {
+    get: function() {
+      return this.get("isSmallPackageAllowed");
+    },
+    set: function(value) {
+      this.set("isSmallPackageAllowed", value);
+    }
+  });
 
 
   YD.Transaction = AV.Object.extend("Transaction", {},{
