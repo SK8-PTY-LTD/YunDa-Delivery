@@ -27,7 +27,8 @@
                             <a class="weibo" href="http://overseas.weibo.com/"><i class="fa fa-weibo fa-lg"></i></a>
                         </li>
                         <li>
-                            <a class="qq" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><i class="fa fa-qq fa-lg"></i></a>
+                            <a class="qq" href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><i
+                                        class="fa fa-qq fa-lg"></i></a>
                         </li>
                         <li ng-click="openWeChat()">
                             <a class="weixin" href="#"><i class="fa fa-weixin fa-lg"></i></a>
@@ -47,82 +48,86 @@
     <div class="navbar navbar-default navbar-top">
         <div class="container">
             <div class="row">
-                <div class="col-md2 navbar-header">
-                <!-- Stat Toggle Nav Link For Mobiles -->
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <i class="fa fa-bars"></i>
-                </button>
-                <!-- End Toggle Nav Link For Mobiles -->
-                <a class="navbar-brand" href="#">
-                    <img alt="" src="http://placehold.it/140x45">
-                </a>
-            </div>
-            <div class="col-md10 navbar-collapse collapse">
-                <!-- Start Navigation List -->
-                <ul class="nav navbar-nav navbar-right">
+                <div class="col-md-2 navbar-header">
+                    <!-- Stat Toggle Nav Link For Mobiles -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- End Toggle Nav Link For Mobiles -->
+                    <a class="navbar-brand" ng-href="/">
+                        <img alt="Yunda Logistic" src="/image/YUNDA_LOGO_ORIN-03.png" width="180px" height="126px" >
+                    </a>
+                </div>
+                <div class="col-md-10 navbar-collapse collapse">
+                    <!-- Start Navigation List -->
+                    <ul class="nav navbar-nav navbar-right">
 
-                    <li class="divider-vertical">
-                        <a ng-href="/home">首页</a>
-                    </li>
-                    <li class="divider-vertical">
-                        <a ng-href="/about">关于我们</a>
-                    </li>
-                    <li class="divider-vertical">
-                        <a ng-href="/faq">常见问题</a>
-                    </li>
-                    <li class="divider-vertical">
-                        <a ng-href="/service">服务收费</a>
-                    </li>
-                    <li class="divider-vertical">
-                        <a ng-href="/help">帮助</a>
-                    </li>
-                    <li class="divider-vertical">
-                        <a ng-href="/contact">联系我们</a>
-                    </li>
-                    <!--<li class="divider-vertical" ng-if="currentUser.id">-->
+                        <li class="divider-vertical">
+                            <a ng-href="/home">首页</a>
+                        </li>
+                        <li class="divider-vertical">
+                            <a ng-href="/about">关于我们</a>
+                        </li>
+                        <li class="divider-vertical">
+                            <a ng-href="/faq">常见问题</a>
+                        </li>
+                        <li class="divider-vertical">
+                            <a ng-href="/service">服务收费</a>
+                        </li>
+                        <li class="divider-vertical">
+                            <a ng-href="/help">帮助</a>
+                        </li>
+                        <li class="divider-vertical">
+                            <a ng-href="/contact">联系我们</a>
+                        </li>
+                        <!--<li class="divider-vertical" ng-if="currentUser.id">-->
                         <!--<a ng-href="/dashboard">会员中心</a>-->
-                    <!--</li>-->
-                    <li class="divider-vertical" ng-show="currentUser.role == 200 || currentUser.role == 190" class="btn-group" dropdown >
-                        <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
-                            <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
-                            <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
-                            会员中心<span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <!--<li>-->
+                        <!--</li>-->
+                        <li class="divider-vertical" ng-show="currentUser.role == 200 || currentUser.role == 190"
+                            class="btn-group" dropdown>
+                            <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle
+                               ng-disabled="disabled">
+                                <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
+                                <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
+                                会员中心<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <!--<li>-->
                                 <!--<a ng-href="/profile/">Profile</a>-->
-                            <!--</li>-->
-                            <li><a ng-click="change_tab('aa')" ng-href="/dashboard">我的账户</a></li>
-                            <li><a ng-click="change_tab('ba')" ng-href="/dashboard#myfreight">物流管理</a></li>
-                            <li><a ng-click="change_tab('ca')" ng-href="/dashboard#recharge">充值管理</a></li>
-                            <li><a ng-click="logOut()">登出</a></li>
-                        </ul>
-                    </li>
+                                <!--</li>-->
+                                <li><a ng-click="change_tab('aa')" ng-href="/dashboard">我的账户</a></li>
+                                <li><a ng-click="change_tab('ba')" ng-href="/dashboard#myfreight">物流管理</a></li>
+                                <li><a ng-click="change_tab('ca')" ng-href="/dashboard#recharge">充值管理</a></li>
+                                <li><a ng-click="logOut()">登出</a></li>
+                            </ul>
+                        </li>
 
-                    <li class="divider-vertical" ng-show="currentUser.role == 100 || currentUser.role == 190" class="btn-group" dropdown >
-                        <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle ng-disabled="disabled">
-                            <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
-                            <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
-                            管理员中心<span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <!--<li>-->
-                            <!--<a ng-href="/profile/">Profile</a>-->
-                            <!--</li>-->
-                            <li><a ng-click="change_tab('aa')" ng-href="/administrator">我的账户</a></li>
-                            <li><a ng-click="logOut()">登出</a></li>
-                        </ul>
-                    </li>
-                    <!--<li class="divider-vertical">-->
+                        <li class="divider-vertical" ng-show="currentUser.role == 100 || currentUser.role == 190"
+                            class="btn-group" dropdown>
+                            <a type="button" class="dropdown-toggle" id="navbar-image" dropdown-toggle
+                               ng-disabled="disabled">
+                                <!--<img ng-src="{{ currentUser.profileImage.thumbnailURL(80,80) }}" ng-show="currentUser.profileImage" alt="">-->
+                                <!--<img src="img/default_profile_image.png" ng-show="!currentUser.profileImage" alt="">-->
+                                管理员中心<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <!--<li>-->
+                                <!--<a ng-href="/profile/">Profile</a>-->
+                                <!--</li>-->
+                                <li><a ng-click="change_tab('aa')" ng-href="/administrator">我的账户</a></li>
+                                <li><a ng-click="logOut()">登出</a></li>
+                            </ul>
+                        </li>
+                        <!--<li class="divider-vertical">-->
                         <!--<a ng-href="/administrator" ng-show="currentUser.role == 100">管理员中心</a>-->
-                    <!--</li>-->
+                        <!--</li>-->
 
-                    <li class="divider-vertical">
-                        <a ng-show="!currentUser.id" ng-click="open()">成员登入</a>
-                    </li>
-                </ul>
-                <!-- End Navigation List -->
-            </div>
+                        <li class="divider-vertical">
+                            <a ng-show="!currentUser.id" ng-click="open()">成员登入</a>
+                        </li>
+                    </ul>
+                    <!-- End Navigation List -->
+                </div>
             </div>
         </div>
     </div>

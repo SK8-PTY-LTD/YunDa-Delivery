@@ -254,6 +254,27 @@ Object.defineProperty(YDUser.prototype, "username", {
   }
 });
 
+Object.defineProperty(YDUser.prototype, "balanceInDollar", {
+  get: function() {
+    return (parseInt(this.get("balance"))/ 100).toFixed(2);
+  },
+  set: function(value) {
+    value = parseFloat(value)
+    this.set("balance", (value.toFixed(2))*100);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "pendingBalanceInDollar", {
+  get: function () {
+    var result = parseFloat((parseInt(this.get("pendingBalance")) / 100).toFixed(2))
+    return result;
+  },
+  set: function (value) {
+    value = parseFloat(value)
+    this.set("pendingBalance",(value.toFixed(2))*100);
+  }
+});
+
 YDUser.prototype.getAddress = function() {
   var addressId = this.get("addressId");
   if (addressId != undefined) {

@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h3>用户详细信息: </h3>
+</div>
+<div class="modal-body">
+    <p>用户名:<span ng-bind="freight.user.username"></span></p>
+
+    <p>手机号:<span ng-bind="freight.user.mobilePhoneNumber"></span></p>
+    <!--<p>邮件: <span ng-bind="freight.user.email"></span></p>-->
+    <p>用户备注: <span ng-bind="freight.comments"></span></p>
+    <div ng-if="freight.isMerge">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <hr>
+        </div>
+    </div>
+        <h4 >合包信息</h4>
+        <table class="table table-bordered" style="font-size: 0.0em">
+            <thead>
+            <th>编号</th>
+            <th>物流号</th>
+            </thead>
+            <tr ng-repeat="f in freight.freightInGroup">
+                <td>{{$index+1}}.</td>
+                <td ng-bind="f"></td>
+            </tr>
+        </table>
+    </div>
+    <div ng-if="freight.isSplit">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <hr>
+            </div>
+        </div>
+        <h4 >普通分包信息</h4>
+        <div class="form-group">
+            <label for="ref">备注:  </label><p ng-bind="freight.splitReference"></p>
+        </div>
+    </div>
+
+    <div ng-if="freight.isSplitPremium">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <hr>
+            </div>
+        </div>
+        <h4>精确分包信息</h4>
+        <div class="form-group">
+            <label for="ref">备注: </label><p ng-bind="freight.splitReference"></p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-sm btn-info" ng-click="close()">关闭</button>
+</div>

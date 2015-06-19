@@ -76,7 +76,7 @@
   YD.Freight = require('cloud/yunda/objects/YDFreight.js')
   YD.FreightGroup = require('cloud/yunda/objects/YDFreightGroup.js')
   YD.FreightIn = require('cloud/yunda/objects/YDFreightIn.js')
-  // YD.Transactoin = require('cloud/yunda/objects/YDTransactoin.js')
+  YD.Transactoin = require('cloud/yunda/objects/YDTransaction.js')
   YD.User = require('cloud/yunda/objects/YDUser.js')
   //YD.Transaction = AV.Object.extend("Transaction", {},{});
   //Object.defineProperty(YD.Transaction.prototype, "record", {

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="modal-body">
     <div ng-show="!resultList">
         请稍候……
     </div>
@@ -10,10 +10,12 @@
         <th>创建时间</th>
         </thead>
         <tr ng-repeat="f in resultList">
-            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.id"></td>
             <td ng-bind="f.info"></td>
             <td ng-bind="f.createdAt"></td>
         </tr>
     </table>
+</div>
+<div class="modal-footer">
     <button class="btn btn-info" ng-click="close()">关闭</button>
 </div>

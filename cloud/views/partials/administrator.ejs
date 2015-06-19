@@ -4,32 +4,32 @@
     <accordion close-others="oneAtATime">
         <accordion-group heading="账户管理" is-open="openTab.setE">
             <ul>
-                <li ng-click="change_tab('aa')">系统管理</li>
+                <li ng-class="{'accordion-focused' : view_tab=='aa'}" ng-click="change_tab('aa')">系统管理</li>
             </ul>
         </accordion-group>
 
         <accordion-group heading="物流管理" is-open="openTab.setF">
             <ul>
-                <li ng-click="change_tab('ba')">已入库<span class="badge pull-right">{{badgeAdminTotalCount}}</span></li>
-                <li ng-click="change_tab('bb')">待处理运单<span class="badge pull-right">{{adminBadge.C}}</span></li>
-                <li ng-click="change_tab('bc')">等待付款<span class="badge pull-right">{{adminBadge.D}}</span></li>
-                <li ng-click="change_tab('bd')">等待发货<span class="badge pull-right">{{adminBadge.E}}</span></li>
-                <li ng-click="change_tab('be')">确认清关<span class="badge pull-right">{{adminBadge.F}}</span></li>
-                <li ng-click="change_tab('bf')">国内接收<span class="badge pull-right">{{adminBadge.G}}</span></li>
-                <li ng-click="change_tab('bg')">发往目的地<span class="badge pull-right">{{adminBadge.H}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">已入库<span class="badge pull-right">{{badgeAdminTotalCount}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">待处理运单<span class="badge pull-right">{{adminBadge.C}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bc'}" ng-click="change_tab('bc')">等待付款<span class="badge pull-right">{{adminBadge.D}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bd'}" ng-click="change_tab('bd')">等待发货<span class="badge pull-right">{{adminBadge.E}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='be'}" ng-click="change_tab('be')">确认清关<span class="badge pull-right">{{adminBadge.F}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bf'}" ng-click="change_tab('bf')">国内接收<span class="badge pull-right">{{adminBadge.G}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bg'}" ng-click="change_tab('bg')">发往目的地<span class="badge pull-right">{{adminBadge.H}}</span></li>
             </ul>
         </accordion-group>
         <accordion-group heading="用户管理" is-open="openTab.setG">
             <ul>
-                <li ng-click="change_tab('ca')">用户信息</li>
-                <li ng-click="change_tab('cb')">退款处理</li>
-                <li ng-click="change_tab('cc')">退货处理</li>
-                <li ng-click="change_tab('cd')">改地址处理</li>
+                <li ng-class="{'accordion-focused' : view_tab=='ca'}" ng-click="change_tab('ca')">用户信息</li>
+                <li ng-class="{'accordion-focused' : view_tab=='cb'}" ng-click="change_tab('cb')">退款处理</li>
+                <li ng-class="{'accordion-focused' : view_tab=='cc'}" ng-click="change_tab('cc')">退货处理</li>
+                <li ng-class="{'accordion-focused' : view_tab=='cd'}" ng-click="change_tab('cd')">改地址处理</li>
             </ul>
         </accordion-group>
         <accordion-group heading="用户财务管理" is-open="openTab.setH">
             <ul>
-                <li ng-click="change_tab('da')">支付宝充值</li>
+                <li ng-class="{'accordion-focused' : view_tab=='da'}" ng-click="change_tab('da')">支付宝充值</li>
             </ul>
         </accordion-group>
 
@@ -40,11 +40,73 @@
 
 <div class="col-sm-9">
 <div ng-show="view_tab=='aa'" ng-controller="AdminSystemCtrl">
-    <label>  开启小包裹渠道选择：
-        <input type="checkbox" ng-model="selected">
-    </label><br/>
+    <form>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4">
+                    <label for="checking"> 开启小包裹渠道选择：</label>
+                    <input class="form-control" type="checkbox" id="checking" ng-model="selected">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>小包裹渠道首磅价：</label>
+                    <input class="form-control" type="number" step="any" ng-model="smallPackageInitial">
+                </div>
+                <div class="col-lg-6">
+                    <label>小包裹渠道续磅价：</label>
+                    <input class="form-control" type="number" step="any" ng-model="smallPackageContinue">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>普通渠道首磅价：</label>
+                    <input class="form-control" type="number" step="any" ng-model="normalPackageInitial">
+                </div>
+
+                <div class="col-lg-6">
+                    <label>普通渠道续磅价：</label>
+                    <input class="form-control" type="number" step="any" ng-model="normalPackageContinue">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>仓库地址:</label>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>地址</label>
+                    <input type="text" class="form-control" ng-model="systemStreet">
+                </div>
+                <div class="col-lg-6">
+                    <label>城市</label>
+                    <input type="text" class="form-control" ng-model="systemCity">
+                </div>
+            </div>
+        </div>
+        <div class=form-group>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>州/省</label>
+                    <input type="text" class="form-control" ng-model="systemState">
+                </div>
+                <div class="col-lg-6">
+                    <label>邮编</label>
+                    <input type="text" class="form-control" ng-model="systemZipcode">
+                </div>
+            </div>
+        </div>
+
+    </form>
 
     <button class="btn btn-default" ng-click="confirm()">保存</button>
+
+
 
 </div>
 <div ng-show="view_tab=='ba'">
@@ -60,19 +122,27 @@
                 <th>入单号</th>
                 <th>入库时间</th>
                 <th>重量</th>
-                <th>通知</th>
+                <th>操作</th>
                 </thead>
                 <tr ng-repeat="f in freightIn | orderBy:'-createdAt'">
                     <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
                     <td ng-bind="f.trackingNumber"></td>
                     <td ng-bind="f.createdAt"></td>
                     <td><span ng-bind="f.weight"></span>Lb</td>
-                    <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    <td>
+                        <div ng-if="f.status == 100">
+                            <button class="btn btn-sm btn-default" ng-click="freightInDelivered(f)">已寄到</button>
+                            <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+                        </div>
+                        <div ng-if="f.status == 210">
+                            <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)">添加验货信息</button>
+                        </div>
+                        <div ng-if="f.status == 200">
+                            <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+                        </div>
+                    </td>
                 </tr>
             </table>
-            <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
-            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
-                        ng-bind="promote"></span></progressbar>
 
         </tab>
         <tab ng-controller="AdminFreightInConfirmCtrl">
@@ -83,7 +153,7 @@
                 <thead>
                 <th>发件人</th>
                 <th>入单号</th>
-                <th>入库时间</th>
+                <th>创建时间</th>
                 <th>重量</th>
                 <th>通知</th>
                 </thead>
@@ -93,21 +163,21 @@
                     <td ng-bind="f.id"></td>
                     <td ng-bind="f.createdAt"></td>
                     <td><span ng-bind="f.weight"></span>Lb</td>
-                    <td><textarea placeholder="添加给用户的通知" ng-model="f.comments"></textarea></td>
+                    <td>
+                        <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+                    </td>
                 </tr>
             </table>
-            <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
-            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
-                        ng-bind="promote"></span></progressbar>
+
 
         </tab>
     </tabset>
 
 </div>
 <div ng-show="view_tab=='bb'" ng-controller="AdminFreightConfirmCtrl">
-    <h4>待处理运单</h4>
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
-                ng-bind="promote"></span></progressbar>
+    <!--<h4>待处理运单</h4>-->
+    <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span-->
+                <!--ng-bind="promote"></span></progressbar>-->
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th width="7%">选择</th>
@@ -116,25 +186,28 @@
         <th>更新时间</th>
         <th>重量</th>
         <th width="20%">处理信息</th>
-        <th width="13%">通知</th>
+        <th>通知</th>
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <td><input type="checkbox" ng-model="f.selection"></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
+            <td><a ng-click="showDetailsWithMerge(f)"><span  ng-bind="f.user.realName"></span></a></td>
             <td ng-bind="f.id"></td>
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
             <td ng-bind="f.statusToString"></td>
-            <td><input placeholder="添加给用户的通知" ng-model="f.comments"></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+            </td>
+
         </tr>
     </table>
-    <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
     <a ng-href="/print">
-        <button class="btn btn-info" ng-click="printAll()" ng-href="/print">批量打印文件</button>
+        <button class="btn btn-info" ng-click="printAll()">批量打印文件</button>
     </a>
+
 </div>
 <div ng-show="view_tab=='bc'" ng-controller="AdminFreightFinishCtrl">
-    <h4>等待付款</h4>
+    <!--<h4>等待付款</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -152,15 +225,16 @@
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
             <td>等待付款</td>
-            <td><input placeholder="添加给用户的通知" ng-model="f.comments"></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+            </td>
         </tr>
     </table>
-    <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
 
 </div>
 
 <div ng-show="view_tab=='bd'" ng-controller="AdminFreightPaidCtrl">
-    <h4>等待发货</h4>
+    <!--<h4>等待发货</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -180,10 +254,11 @@
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
             <!--<td>等待付款</td>-->
-            <td><input placeholder="添加给用户的通知" ng-model="f.comments"></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+            </td>
         </tr>
     </table>
-    <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
 
     <a ng-href="/print">
         <button class="btn btn-info" ng-click="printAll()">批量打印文件</button>
@@ -191,7 +266,7 @@
 </div>
 
 <div ng-show="view_tab=='be'" ng-controller="AdminFreightClearCtrl">
-    <h4>确认清关</h4>
+    <!--<h4>确认清关</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -209,16 +284,17 @@
             <td ng-bind="f.id"></td>
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
-            <td><input placeholder="添加给用户的通知" ng-model="f.comments"></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+            </td>
         </tr>
     </table>
-    <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
 
     <button class="btn btn-info" ng-click="deliver()">确认清关</button>
 </div>
 
 <div ng-show="view_tab=='bf'" ng-controller="AdminChineseFreightCtrl">
-    <h4>国内接收</h4>
+    <!--<h4>国内接收</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -238,19 +314,20 @@
             <td ng-bind="f.id"></td>
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
-            <td><input placeholder="添加给用户的通知" ng-model="f.comments"></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+            </td>
             <td>
                 <button class="btn btn-sm btn-info" ng-click="addInfo(f)">添加</button>
             </td>
         </tr>
     </table>
-    <button class="btn btn-info" ng-click="saveComment()">确认添加留言</button>
 
     <button class="btn btn-info" ng-click="finalDeliver()">确认接收</button>
 </div>
 
 <div ng-show="view_tab=='bg'" ng-controller="AdminFinalDeliveryCtrl">
-    <h4>发往目的地</h4>
+    <!--<h4>发往目的地</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -279,7 +356,7 @@
 
 </div>
 <div ng-show="view_tab=='ca'" ng-controller="AdminViewUserCtrl">
-    <h4>用户信息</h4>
+    <!--<h4>用户信息</h4>-->
     <div class="col-lg-8">
         <table class="table table-hover" style="font-size: 0.9em">
             <thead>
@@ -314,7 +391,7 @@
                 <span class="form-control" ng-bind="newUser.realName"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">积分</label>
+                <label class="control-label">YD币</label>
                 <span class="form-control" ng-bind="newUser.reward"></span>
             </div>
         </form>
@@ -322,7 +399,7 @@
 </div>
 
 <div ng-show="view_tab=='cb'" ng-controller="AdminReturnBalanceCtrl">
-    <h4>退款处理</h4>
+    <!--<h4>退款处理</h4>-->
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>用户名</th>
@@ -346,7 +423,7 @@
 </div>
 
 <div ng-show="view_tab=='cc'" ng-controller="AdminReturnGoodsCtrl">
-    <h4>退货处理</h4>
+    <!--<h4>退货处理</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
@@ -369,7 +446,7 @@
 </div>
 
 <div ng-show="view_tab=='cd'" ng-controller="AdminChangeAddressCtrl">
-    <h4>改地址处理</h4>
+    <!--<h4>改地址处理</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
@@ -396,14 +473,14 @@
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>用户名</th>
-        <th>序号</th>
+        <th>支付宝交易号</th>
         <th>金额</th>
         <th>创建时间</th>
         <th>处理</th>
         </thead>
-        <tr ng-repeat="t in transactions | orderBy:'-createdAt'">
-            <td ng-bind="t.user.username"></td>
-            <td ng-bind="t.id"></td>
+        <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
+            <td ng-bind="t.user.id"></td>
+            <td ng-bind="t.record"></td>
             <td ng-bind="'$'+ t.amount"></td>
             <td ng-bind="t.createdAt"></td>
             <td>

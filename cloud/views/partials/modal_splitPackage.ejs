@@ -1,22 +1,39 @@
-<div class="modal-splitPackage" style="margin-top: 50px;" >
-
-    <form name="splitForm" class="form-group">
-
-        <label for="amount">分包数量</label></br>
-        <input type="text" id="amount" ng-model="amount" ng-change="generateFreightList()"/></br>
-
-        <label for="notes">分包备注</label></br>
+<div class="modal-body">
+    <div ng-if="isPremium">
+        <em class="text-center">此次精确分包将收取$3.5的额外费用</em>
+        <div class="row">
+            <div class="col-lg-12"><hr></div>
+        </div>
+    </div>
+    <form name="splitForm">
+        <div class="form-group">
+            <label for="amount">分包数量</label></br>
+            <input type="text" id="amount" ng-model="amount" class="form-control"
+                   ng-change="generateFreightList()"/></br>
+        </div>
+        <div class="form-group">
+            <label for="notes">分包备注</label></br>
+        </div>
 
         <div ng-repeat="freight in freightList">
-            <label for="split">分包{{$index+1}}备注: </label></br>
-            <input type="text" class="split" ng-model="freight.notes"/></br>
-            <label for="split">分包{{$index+1}}发送地址: </label></br>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-repeat="address in addressList">
-                <li ng-click="splitChooseRecipient(address, freight)"><span ng-bind="address.recipient"> - </span><span ng-bind="address.country"></span><span ng-bind="address.state"></span><span ng-bind="address.city"></span><span ng-bind="address.suburb"></span></span><span ng-bind="address.street1"></span><span ng-bind="address.street2"></span></li>
-            </ul
+            <div class="form-group">
+                <label for="split">分包{{$index+1}}备注: </label></br>
+                <input type="text" class="split" ng-model="freight.comments"/>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="split">分包{{$index+1}}发送地址: </label></br>-->
+                <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-repeat="address in addressList">-->
+                    <!--<li ng-click="splitChooseRecipient(address, freight)"><span-->
+                                <!--ng-bind="address.recipient"> - </span><span ng-bind="address.country"></span><span-->
+                                <!--ng-bind="address.state"></span><span ng-bind="address.city"></span><span-->
+                                <!--ng-bind="address.suburb"></span></span><span ng-bind="address.street1"></span><span-->
+                                <!--ng-bind="address.street2"></span></li>-->
+                <!--</ul>-->
+            <!--</div>-->
         </div>
-        <button type="submit" ng-click="confirmSplit()" >保存</button>
     </form>
 
 </div>
-
+<div class="modal-footer">
+    <button type="submit" ng-click="confirmSplit()">保存</button>
+</div>

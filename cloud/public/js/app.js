@@ -98,9 +98,10 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
         if ($rootScope.currentUser != undefined) {
-            if (($rootScope.currentUser.role == YD.User.ROLE_ADMIN ||  $rootScope.currentUser.role == 190) &&(next.templateUrl == "partials/administrator")) {
-                //$rootScope.isAdmin = true;
-                //$location.path('/administrator')
+            if (($rootScope.currentUser.role == YD.User.ROLE_ADMIN ||  $rootScope.currentUser.role == YD.User.ROLE_DEVELOPER) &&(next.templateUrl == "partials/administrator")) {
+
+                // Let user(admin) go to administrator page
+
             } else if($rootScope.currentUser.role != YD.User.ROLE_ADMIN && (next.templateUrl == "partials/administrator")) {
                 alert(" You are not an admin!")
                 $location.path('/home')

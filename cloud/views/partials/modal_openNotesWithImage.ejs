@@ -1,0 +1,18 @@
+<div class="modal-body">
+    <form >
+        <div class="form-group-sm" >
+            <label for="notes">管理员留言: </label>
+            <input type="text" ng-model="freightIn.notes" id="notes" class="form-control">
+        </div>
+        <br>
+        <div class="form-group-sm" style=" margin-bottm: 20px;">
+            <label for="img">照片证据: </label>
+            <a target="_blank" ng-href="{{freightIn.adminEvidence.url()}}">点此打开</a>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="form-group-sm">
+        <button class="btn btn-sm btn-default" ng-click="close()">关闭</button>
+    </div>
+</div>

@@ -1,23 +1,25 @@
-<div class="container-fluid" ng-controller="PrintController">
+<div ng-controller="PrintController">
+
     <div ng-if="isShow">
         <p>请先选择需要答应的运单</p>
     </div>
     <div ng-if="!isShow">
-    <div ng-repeat="freight in freightList">
+        <div ng-repeat="freight in freightList">
         <div class="row">
+            <div class="a4-print-page-half">
             <form class="form-horizontal" style="width: 90%">
                 <div class="form-group">
                     <div class="col-lg-6">
                         <label for="name">姓名</label>
                         <input class="form-control" ng-model="freight.user.realName">
                         <label for="address">地址</label>
-                        <input class="form-control" ng-model="freight.address">
+                        <input type="text" class="form-control" ng-model="freight.address">
                         <label for="mobile">手机号</label>
-                        <input class="form-control" ng-model="freight.id">
+                        <input class="form-control" ng-model="freight.user.mobilePhoneNumber">
                     </div>
                     <div class="col-lg-6">
-                        <label for="trackingNumber">入库号</label>
-                        <input class="form-control" ng-model="freight.trackingNumber">
+                        <label for="trackingNumber">运单号</label>
+                        <input class="form-control" ng-model="freight.id">
                         <label for="createdAt">入库时间</label>
                         <input class="form-control" ng-model="freight.createdAt">
                         <label for="weight">重量</label>
@@ -26,18 +28,19 @@
                 </div>
 
             </form>
-        </div>
+
         <div class="row">
             <!--<div barcode-generator="{{freight.trackingNumber}}" style="height:208px;">-->
             <!--<div barcode-generator="0123456789012" style="height:208px;">-->
             <!--</div>-->
             <div barcode-api="freight.id" id="freight.id"></div>
         </div>
+
+        </div></div>
     </div>
     <!--<div barcode-generator="0123456789012" style="height:208px;">-->
     <!--<img alt="Barcoded value 1234567890"-->
          <!--ng-src="http://api-bwipjs.rhcloud.com/?bcid=code128&text=1234567890&includetext">-->
-
     <!--</div>-->
     </div>
 </div>

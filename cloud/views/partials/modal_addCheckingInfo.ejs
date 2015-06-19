@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+    <h4>添加验货信息</h4>
+</div>
+
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <label for="notes">留言：</label>
+            <input id="notes" type="text" ng-model="freightIn.notes" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="id-front">上传截图</label>
+            <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFront(this)" />
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-sm btn-info" ng-click="save()"> 上传 </button>
+    <button class="btn btn-sm btn-info" ng-click="close()">关闭</button>
+</div>

@@ -367,16 +367,19 @@
     //STATUS_CANCELED: 990
 
   });
-     YD.Freight.STATUS_INITIALIZED = 0;
-    //Pending user action
-      YD.Freight.STATUS_PENDING_USER_ACTION = 100;
-    //Pending admin action
-      YD.Freight.STATUS_PENDING_SPLIT_PACKAGE = 200;
-      YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED = 210;
-      YD.Freight.STATUS_PENDING_REDUCE_WEIGHT = 220;
-      YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
-      YD.Freight.STATUS_PENDING_CHECK_PACKAGE =240;
-    //Pending user action
+  YD.Freight.STATUS_INITIALIZED = 0;
+  //Pending user action
+  YD.Freight.STATUS_PENDING_USER_ACTION = 100;
+  //Pending admin action
+  YD.Freight.STATUS_PENDING_SPLIT_PACKAGE = 200;
+  YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED = 210;
+  YD.Freight.STATUS_PENDING_REDUCE_WEIGHT = 220;
+  YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
+  YD.Freight.STATUS_PENDING_CHECK_PACKAGE = 240;
+  YD.Freight.STATUS_PENDING_MERGE_PACKAGE = 250;
+
+
+  //Pending user action
       YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION = 300;
     //Pending admin action
       YD.Freight.STATUS_PENDING_FINISHED = 400;
@@ -528,15 +531,40 @@
     }
   });
 
-  Object.defineProperty(YD.Freight.prototype, "reductWeight", {
+  Object.defineProperty(YD.Freight.prototype, "isMerge", {
     get: function() {
-      return this.get("reductWeight");
+      return this.get("isMerge");
     },
     set: function(value) {
-      this.set("reductWeight", value);
+      this.set("isMerge", value);
     }
   });
 
+  Object.defineProperty(YD.Freight.prototype, "isSplit", {
+    get: function() {
+      return this.get("isSplit");
+    },
+    set: function(value) {
+      this.set("isSplit", value);
+    }
+  });
+  Object.defineProperty(YD.Freight.prototype, "isSplitPremium", {
+    get: function() {
+      return this.get("isSplitPremium");
+    },
+    set: function(value) {
+      this.set("isSplitPremium", value);
+    }
+  });
+
+  Object.defineProperty(YD.Freight.prototype, "splitReference", {
+    get: function() {
+      return this.get("splitReference");
+    },
+    set: function(value) {
+      this.set("splitReference", value);
+    }
+  });
 
   YD.FreightGroup = AV.Object.extend("FreightGroup", {
     getStatus: function() {
@@ -642,6 +670,8 @@
 //Pending user action
   YD.FreightIn.STATUS_MANUAL = 100
   YD.FreightIn.STATUS_ARRIVED = 200
+  YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE = 210
+  YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE = 290
   YD.FreightIn.STATUS_CONFIRMED = 300
   YD.FreightIn.STATUS_FINISHED = 900
   YD.FreightIn.STATUS_CANCELED = 990
@@ -709,6 +739,15 @@
     }
   });
 
+  Object.defineProperty(YD.FreightIn.prototype, "notes", {
+    get: function() {
+      return this.get("notes");
+    },
+    set: function(value) {
+      this.set("notes", value);
+    }
+  });
+
   Object.defineProperty(YD.FreightIn.prototype, "status", {
     get: function() {
       return this.get("status");
@@ -723,6 +762,33 @@
     },
     set: function(value) {
       this.set("estimatedPrice", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightIn.prototype, "splitReference", {
+    get: function() {
+      return this.get("splitReference");
+    },
+    set: function(value) {
+      this.set("splitReference", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightIn.prototype, "isSplit", {
+    get: function() {
+      return this.get("isSplit");
+    },
+    set: function(value) {
+      this.set("isSplit", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightIn.prototype, "isSplitPremium", {
+    get: function() {
+      return this.get("isSplitPremium");
+    },
+    set: function(value) {
+      this.set("isSplitPremium", value);
     }
   });
 
@@ -771,6 +837,14 @@
     },
     set: function(value) {
       this.set("user", value);
+    }
+  });
+  Object.defineProperty(YD.FreightIn.prototype, "adminEvidence", {
+    get: function() {
+      return this.get("adminEvidence");
+    },
+    set: function(value) {
+      this.set("adminEvidence", value);
     }
   });
 
@@ -913,8 +987,28 @@
     }
   });
 
-  Object.defineProperty(YD.User.prototype, "addressId", {
+  Object.defineProperty(YD.User.prototype, "pendingBalance", {
     get: function() {
+      return this.get("pendingBalance");
+    },
+    set: function (value) {
+      this.set("pendingBalance", value);
+    }
+  });
+
+  Object.defineProperty(YD.User.prototype, "pendingBalanceInDollar", {
+    get: function () {
+      var result = parseFloat((parseInt(this.get("pendingBalance")) / 100).toFixed(2))
+      return result;
+    },
+    set: function (value) {
+      value = parseFloat(value)
+      this.set("pendingBalance",(value.toFixed(2))*100);
+    }
+  });
+
+  Object.defineProperty(YD.User.prototype, "addressId", {
+    get: function () {
       return this.get("addressId");
     },
     set: function(value) {
@@ -983,7 +1077,8 @@
       return (parseInt(this.get("balance"))/ 100).toFixed(2);
     },
     set: function(value) {
-      this.set("balance", value*100);
+      value = parseFloat(value)
+      this.set("balance", (value.toFixed(2))*100);
     }
   });
   Object.defineProperty(YD.User.prototype, "reward", {
@@ -1045,6 +1140,7 @@
   });
   YD.User.ROLE_ADMIN = 100
   YD.User.ROLE_USER = 200
+  YD.User.ROLE_DEVELOPER = 190
   //var StatusGroup = AV.Object.extend("StatusGroup");
   //Object.defineProperty(StatusGroup.prototype, "url", {
   //  get: function(){
@@ -1136,6 +1232,74 @@
     }
   });
 
+  Object.defineProperty(YD.SystemSetting.prototype, "smallPackageInitial", {
+    get: function() {
+      return this.get("smallPackageInitial");
+    },
+    set: function(value) {
+      this.set("smallPackageInitial", value);
+    }
+  });
+
+  Object.defineProperty(YD.SystemSetting.prototype, "smallPackageContinue", {
+    get: function() {
+      return this.get("smallPackageContinue");
+    },
+    set: function(value) {
+      this.set("smallPackageContinue", value);
+    }
+  });
+
+  Object.defineProperty(YD.SystemSetting.prototype, "normalPackageInitial", {
+    get: function() {
+      return this.get("normalPackageInitial");
+    },
+    set: function(value) {
+      this.set("normalPackageInitial", value);
+    }
+  });
+
+  Object.defineProperty(YD.SystemSetting.prototype, "normalPackageContinue", {
+    get: function() {
+      return this.get("normalPackageContinue");
+    },
+    set: function(value) {
+      this.set("normalPackageContinue", value);
+    }
+  });
+
+  Object.defineProperty(YD.SystemSetting.prototype, "systemStreet", {
+    get: function() {
+      return this.get("systemStreet");
+    },
+    set: function(value) {
+      this.set("systemStreet", value);
+    }
+  });
+  Object.defineProperty(YD.SystemSetting.prototype, "systemCity", {
+    get: function() {
+      return this.get("systemCity");
+    },
+    set: function(value) {
+      this.set("systemCity", value);
+    }
+  });
+  Object.defineProperty(YD.SystemSetting.prototype, "systemState", {
+    get: function() {
+      return this.get("systemState");
+    },
+    set: function(value) {
+      this.set("systemState", value);
+    }
+  });
+  Object.defineProperty(YD.SystemSetting.prototype, "systemZipcode", {
+    get: function() {
+      return this.get("systemZipcode");
+    },
+    set: function(value) {
+      this.set("systemZipcode", value);
+    }
+  });
 
   YD.Transaction = AV.Object.extend("Transaction", {},{
 

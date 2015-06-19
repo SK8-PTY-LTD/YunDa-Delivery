@@ -12,13 +12,24 @@ body {
 }
 
 h4.help-title  {
-    color: #3071a9;
+    color: #013086;
 }
 
 span.help-question {
-    color: #00A0E9;
+    color:#013086;
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.freightIn-table {
+    margin: 10px auto;
+    padding: 2px 0;
+    font-size: 1.3em;
+    font-weight: normal;
+    color: white;
+    background-color: #013086;
+    border: 2px solid #013000;
+    border-radius: 4px;
 }
 
 .angular-google-map-container {
@@ -30,6 +41,10 @@ span.help-question {
     /*background-color: #31b0d5;*/
 /*}*/
 
+.accordion-focused {
+    text-decoration: underline;
+    color: #013086;
+}
 .center-modal {
     position: fixed;
     top: 15%;
@@ -38,9 +53,30 @@ span.help-question {
     width: 80%;
 }
 
+.a4-print-page {
+    width: 2480px;
+    height: 3508px;
+}
+
+.a4-print-page-half {
+    box-sizing: border-box;
+    /*border: dotted 2px;*/
+    border-color: black;
+    width: 1000px;
+    height: 1000px;
+    padding: 5px;
+    margin: auto;
+}
+
+.brand-image {
+    position: absolute;
+    bottom: 500px;
+}
+
 #email-body {
     font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu;
 }
+
 
 .ng-invalid {
     color: red;
@@ -54,13 +90,17 @@ fieldset {
     padding-bottom: 0.625em;
     padding-left: 0.75em;
     padding-right: 0.75em;
-    border: 4px ridge #6eb6f9;
+    border: 4px solid #013086;
 }
+
 
 .bottom-buffer{
     margin-bottom: 50px;
 }
 
+.bottom-buffer-1 {
+    margin-bottom: 10px;
+}
 .ad-top-buffer {
     margin-top: 18px;
 }
@@ -70,7 +110,7 @@ fieldset {
 }
 .home-icon {
     margin-right: 10px;
-    color: #6eb6f9;
+    color: #013086;
 }
 
 .indent-p {
@@ -100,8 +140,8 @@ padding-left: 25px
 /*QQ sidebar*/
 /*-----------*/
 
-*{ margin:0; padding:0; list-style:none;}
-img{ border:0;}
+/**{ margin:0; padding:0; list-style:none;}*/
+/*img{ border:0;}*/
 
 .rides-cs {  font-size: 12px; background:#29a7e2; position: fixed; top: 250px; right: 0px; _position: absolute; z-index: 1500; border-radius:6px 0px 0 6px;}
 .rides-cs a { color: #00A0E9;}
@@ -284,8 +324,8 @@ ul.social-list li:last-child a i {
 .navbar {
     margin-bottom: 0;
     background: #ffffff;
-    border-top: 3px solid #6eb6f9;
-    border-bottom: 3px solid #6eb6f9;
+    border-top: 3px solid #013086;
+    border-bottom: 3px solid #013086;
 
     border-radius: 2;
     -webkit-border-radius: 2;
@@ -295,13 +335,19 @@ ul.social-list li:last-child a i {
 
 .navbar-brand {
     position: absolute;
-    bottom: 30px;
+    bottom: 0px;
+    right: 3px;
     padding: 27px 0;
     margin: 0!important;
     transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -webkit-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
+}
+@media (max-width: 768px) {
+    .navbar-brand {
+        display: none;
+    }
 }
 
 .navbar-default .navbar-nav {
@@ -322,7 +368,7 @@ ul.social-list li:last-child a i {
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: #6eb6f9;
+    color: #013086;
     display: block;
     font-size: 16px;
     font-weight: 400;
@@ -336,8 +382,8 @@ ul.social-list li:last-child a i {
 }
 
 .navbar-default .navbar-nav > li > a.active, .navbar-default .navbar-nav > li:hover > a {
-    border-bottom: 3px solid #6eb6f9;
-    color: #6eb6f9;
+    border-bottom: 3px solid #013086;
+    color: #013086;
 }
 
 .navbar-default .navbar-nav > li > a i {
@@ -369,11 +415,11 @@ ul.social-list li:last-child a i {
     opacity: 1;
 }
 .dropdown-menu > li > a {
-    color: #6eb6f9;
+    color: #013086;
 
 }
 .dropdown-menu > li > a:hover {
-    color: #6eb6f9;
+    color: #013086;
 }
 .navbar-default .navbar-nav .dropdown {
     position: absolute;
@@ -411,7 +457,7 @@ ul.social-list li:last-child a i {
 
 .dropdown li a, .sup-dropdown li a {
     display: block;
-    color: #6eb6f9;
+    color: #013086;
     font-size: 13px;
     font-family: 'Open Sans', sans-serif;
     padding: 11px 16px;

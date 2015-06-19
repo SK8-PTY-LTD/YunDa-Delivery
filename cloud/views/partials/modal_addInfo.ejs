@@ -1,5 +1,5 @@
-<div class="container">
-    <form style="width: 20%">
+<div class="modal-body">
+    <form>
         <div class="form-group">
             <label for="name">快递公司</label>
             <input ng-model="freight.chineseCourier" class="form-control">
@@ -9,7 +9,9 @@
             <input ng-model="freight.chineseTrackingNumber" class="form-control">
         </div>
     </form>
-    <button class="btn btn-info" ng-click="confirmAddInfo()">确定添加</button>
-    <button class="btn btn-primary" ng-click="cancelAddInfo()">取消</button>
+    </div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="confirmAddInfo()">确定添加</button>
+    <button class="btn btn-sm btn-default" ng-click="cancelAddInfo()">取消</button>
 
 </div>
