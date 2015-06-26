@@ -200,6 +200,15 @@
     }
   });
 
+  Object.defineProperty(YD.Address.prototype, "mobileNumber", {
+    get: function() {
+      return this.get("mobileNumber");
+    },
+    set: function(value) {
+      this.set("mobileNumber", value);
+    }
+  });
+
   Object.defineProperty(YD.Address.prototype, "street1", {
     get: function() {
       return this.get("street1");
@@ -232,6 +241,7 @@
   YD.FreightReturn.STATUS_PENDING = 100;
   // after admin confirmation
   YD.FreightReturn.STATUS_AWAITING = 200;
+  YD.FreightReturn.STATUS_REFUSED = 900;
   YD.FreightReturn.STATUS_FINISHED = 990;
 
 
@@ -290,6 +300,26 @@
       this.set("status", value);
     }
   });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "notes", {
+    get: function() {
+      return this.get("notes");
+    },
+    set: function(value) {
+      this.set("notes", value);
+    }
+  });
+
+  Object.defineProperty(YD.FreightReturn.prototype, "adminEvidence", {
+    get: function() {
+      return this.get("adminEvidence");
+    },
+    set: function(value) {
+      this.set("adminEvidence", value);
+    }
+  });
+
+
 
 
 
@@ -388,7 +418,7 @@
     //Pending chinese admin action
       YD.Freight.STATUS_PASSING_CUSTOM = 600;
       YD.Freight.STATUS_FINAL_DELIVERY = 610;
-      YD.Freight.STATUS_DELIVERED = 620;
+      YD.Freight.STATUS_DELIVERED = 690;
     //return goods; cancel
       YD.Freight.STATUS_CANCELED = 990;
 
@@ -449,7 +479,14 @@
       this.set("chineseTrackingNumber", value);
     }
   });
-
+  Object.defineProperty(YD.Freight.prototype, "exceedWeight", {
+    get: function() {
+      return this.get("exceedWeight");
+    },
+    set: function(value) {
+      this.set("exceedWeight", value);
+    }
+  });
   Object.defineProperty(YD.Freight.prototype, "insurance", {
     get: function() {
       return this.get("insurance");
@@ -989,6 +1026,8 @@
 
   Object.defineProperty(YD.User.prototype, "pendingBalance", {
     get: function() {
+      var result = this.get("pendingBalance")
+      //console.log("In SDK -- pendingBalance: " + result + " type: " + typeof(result))
       return this.get("pendingBalance");
     },
     set: function (value) {
@@ -998,12 +1037,13 @@
 
   Object.defineProperty(YD.User.prototype, "pendingBalanceInDollar", {
     get: function () {
-      var result = parseFloat((parseInt(this.get("pendingBalance")) / 100).toFixed(2))
+      var result = parseFloat((this.get("pendingBalance") / 100).toFixed(2))
+      //console.log("In SDK -- pendingBalanceInDollar: " +  this.get("pendingBalance") + " | type: " + typeof((this.get("pendingBalance"))))
       return result;
     },
     set: function (value) {
       value = parseFloat(value)
-      this.set("pendingBalance",(value.toFixed(2))*100);
+      this.set("pendingBalance",(parseFloat(value.toFixed(2)))*100);
     }
   });
 
@@ -1074,11 +1114,11 @@
   });
   Object.defineProperty(YD.User.prototype, "balanceInDollar", {
     get: function() {
-      return (parseInt(this.get("balance"))/ 100).toFixed(2);
+      return parseFloat((parseInt(this.get("balance"))/ 100).toFixed(2));
     },
     set: function(value) {
       value = parseFloat(value)
-      this.set("balance", (value.toFixed(2))*100);
+      this.set("balance", (parseFloat(value.toFixed(2)))*100);
     }
   });
   Object.defineProperty(YD.User.prototype, "reward", {
@@ -1103,6 +1143,15 @@
     },
     set: function(value) {
       this.set("mobilePhoneNumber", value);
+    }
+  });
+
+  Object.defineProperty(YD.User.prototype, "contactNumber", {
+    get: function() {
+      return this.get("contactNumber");
+    },
+    set: function(value) {
+      this.set("contactNumber", value);
     }
   });
   Object.defineProperty(YD.User.prototype, "identityFront", {
@@ -1152,6 +1201,8 @@
   //});
 
   YD.FreightChangeAddress = AV.Object.extend("FreightChangeAddress", {}, {});
+
+
 
   Object.defineProperty(YD.FreightChangeAddress.prototype, "reference", {
     get: function() {
@@ -1207,6 +1258,15 @@
     }
   });
 
+  Object.defineProperty(YD.FreightChangeAddress.prototype, "notes", {
+    get: function() {
+      return this.get("notes");
+    },
+    set: function(value) {
+      this.set("notes", value);
+    }
+  });
+
 
   Object.defineProperty(YD.FreightChangeAddress.prototype, "adminEvidence", {
     get: function() {
@@ -1218,6 +1278,7 @@
   });
   YD.FreightChangeAddress.STATUS_AWAITING = 100;
   YD.FreightChangeAddress.STATUS_CONFIRMED = 200;
+  YD.FreightChangeAddress.STATUS_REFUSED = 900
   //YD.FreightChangeAddress.STATUS_AWAITING = 100;
 
 
@@ -1308,9 +1369,14 @@
   YD.Transaction.STATUS_ZHIFUBAO = 100;
   YD.Transaction.STATUS_STRIPE = 200;
   YD.Transaction.STATUS_CONSUME = 300;
+  YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE = 310;
+  YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE = 320;
+
   YD.Transaction.STATUS_RECHARGE = 400;
   YD.Transaction.STATUS_PENDING_RETURN_BALANCE = 500;
   YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE = 590;
+  YD.Transaction.STATUS_REFUSED_RETURN_BALANCE = 580;
+
   YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
 
 
@@ -1369,6 +1435,15 @@
     }
   });
 
+  Object.defineProperty(YD.Transaction.prototype, "notes", {
+    get: function() {
+      return this.get("notes");
+    },
+    set: function(value) {
+      this.set("notes", value);
+    }
+  });
+
   Object.defineProperty(YD.Transaction.prototype, "adminEvidence", {
     get: function() {
       return this.get("adminEvidence");
@@ -1378,5 +1453,25 @@
     }
   });
 
+
+YD.News = AV.Object.extend("News", {}, {});
+
+  Object.defineProperty(YD.News.prototype, "title", {
+    get: function() {
+      return this.get("title");
+    },
+    set: function(value) {
+      this.set("title", value);
+    }
+  });
+
+  Object.defineProperty(YD.News.prototype, "link", {
+    get: function() {
+      return this.get("link");
+    },
+    set: function(value) {
+      this.set("link", value);
+    }
+  });
 
 }).call(this);

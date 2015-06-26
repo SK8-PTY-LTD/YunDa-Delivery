@@ -5,42 +5,52 @@
     </div>
     <div ng-if="!isShow">
         <div ng-repeat="freight in freightList">
-        <div class="row">
             <div class="a4-print-page-half">
-            <form class="form-horizontal" style="width: 90%">
-                <div class="form-group">
-                    <div class="col-lg-6">
-                        <label for="name">姓名</label>
-                        <input class="form-control" ng-model="freight.user.realName">
-                        <label for="address">地址</label>
-                        <input type="text" class="form-control" ng-model="freight.address">
-                        <label for="mobile">手机号</label>
-                        <input class="form-control" ng-model="freight.user.mobilePhoneNumber">
+                    <div class="row btm-buffer-2">
+                        <div class="col-xs-6">
+                            <h3> 运单号：<label ng-bind="freight.id"></label></h3>
+                        </div>
+                        <div class="col-xs-5 col-xs-offset-1">
+                            <div barcode-api="freight.id" id="freight.id"></div>
+                        </div>
                     </div>
-                    <div class="col-lg-6">
-                        <label for="trackingNumber">运单号</label>
-                        <input class="form-control" ng-model="freight.id">
-                        <label for="createdAt">入库时间</label>
-                        <input class="form-control" ng-model="freight.createdAt">
-                        <label for="weight">重量</label>
-                        <input class="form-control" ng-model="freight.weight">
-                    </div>
-                </div>
+                    <table class="table table-bordered">
+                        <thead>
+                        <th width="50%">寄件人信息</th>
+                        <th>收件人信息</th>
+                        </thead>
+                        <tr>
+                            <td>姓名：<span ng-bind="freight.user.realName"></span></td>
+                            <td>姓名：<span ng-bind="freight.recipient"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Email:<span ng-bind="freight.user.username"></span></td>
+                            <td>地址：<span ng-bind="freight.address"></span></td>
+                        </tr>
+                        <tr>
+                            <td>电话：<span ng-bind="freight.user.contactNumber"></span></td>
+                            <td>电话：<span ng-bind="freight.recipientPhone"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>附加要求 --  </strong>
+                                加固:  <input type="checkbox" ng-model="freight.checkModel.isExtraPackaging" disabled> |
+                                减重:  <input type="checkbox" ng-model="freight.checkModel.isReduceWeight" disabled> |
+                                普通分包:  <input type="checkbox" ng-model="freight.checkModel.isSplit" disabled> |
+                                精确分包:  <input type="checkbox" ng-model="freight.checkModel.isSplitCharge" disabled> |
+                                直接派送:  <input type="checkbox" ng-model="freight.checkModel.isDelivery" disabled>
 
-            </form>
-
-        <div class="row">
-            <!--<div barcode-generator="{{freight.trackingNumber}}" style="height:208px;">-->
-            <!--<div barcode-generator="0123456789012" style="height:208px;">-->
-            <!--</div>-->
-            <div barcode-api="freight.id" id="freight.id"></div>
+                            </td>
+                        </tr>
+                        <div ng-show="freight.isSplitPremium">
+                        <tr>
+                            <td colspan="2">
+                                备注: <span ng-bind="freight.comments"></span>
+                            </td>
+                        </tr>
+                        </div>
+                    </table>
+            </div>
         </div>
-
-        </div></div>
-    </div>
-    <!--<div barcode-generator="0123456789012" style="height:208px;">-->
-    <!--<img alt="Barcoded value 1234567890"-->
-         <!--ng-src="http://api-bwipjs.rhcloud.com/?bcid=code128&text=1234567890&includetext">-->
-    <!--</div>-->
     </div>
 </div>

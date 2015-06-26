@@ -26,7 +26,7 @@
                 <!--<a href="http://www.lanrenzhijia.com/js" target="_blank">懒人之家js</a>-->
                 <!--<div class="div_clear"></div>-->
                 <!--</li>-->
-                <li style="border:none;"><span>电话：9268 0883</span></li>
+                <li style="border:none;"><span>电话：+1 (626) 863-5725</span></li>
             </ul>
         </div>
     </div>
@@ -76,14 +76,14 @@
                 <fieldset style="height: 100%">
                     <h4 class="text-center"><i class="fa fa-users fa-lg home-icon"></i>用户登陆
                     </h4>
-                    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+                    <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>-->
 
                     <div class="form-group has-feedback">
                         <label class="control-label">用户名:</label>
                                     <span ng-show="loginForm.email.$valid"
                                           class="glyphicon glyphicon-ok form-control-feedback"></span>
                         <input type="email" name="email" class="form-control" id="username"
-                               ng-model="currentUser.username" placeholder="email"
+                               ng-model="currentUser.username" placeholder="注册时的电子邮箱"
                                required>
                     </div>
                     <div class="form-group has-feedback">
@@ -94,16 +94,16 @@
                                     <span ng-show="loginForm.password.$valid"
                                           class="glyphicon glyphicon-ok form-control-feedback"></span>
                         <input type="password" name="password" class="form-control" id="password"
-                               ng-model="currentUser.password" placeholder="At least 8 characters long"
+                               ng-model="currentUser.password" placeholder="密码"
                                ng-minlength="8" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="col-md-5 btn btn-success" ng-click="login()"
-                                ng-show="loginForm.$valid">登陆
+                                ng-disabled="!loginForm.$valid">登陆
                         </button>
                         <button type="submit" class="col-md-5 col-md-offset-2 btn btn-info"
                                 ng-click="signup()"
-                                ng-show="loginForm.$valid">注册
+                                >注册
                         </button>
                     </div>
                     <br>
@@ -125,7 +125,7 @@
                 </br>
                 <label for="username">账户余额： </label>
                 $<span ng-bind="currentUser.balanceInDollar"></span></br>
-                <label for="username">积分余额： </label>
+                <label for="username">YD币： </label>
                 <span ng-bind="currentUser.reward"></span></br>
                 <div style="margin-bottom: 25px;"></div>
                <a ng-href="/dashboard"> <button class="btn btn-info pull-right">进入会员中心</button></a>
@@ -155,10 +155,9 @@
     <div class="col-lg-4 col-lg-offset-1">
         <h4><i class="fa fa-newspaper-o fa-lg home-icon"></i>最新公告
         </h4>
-        <iframe width="90%" height="200" class="share_self"
-                frameborder="0" scrolling="no"
-                src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1570047451&verifier=8fdd137b&dpc=1"></iframe>
-
+            <ul ng-repeat="news in newsList | orderBy: -createdAt">
+                <li><a target="_blank" ng-href="{{news.link}}"><strong ><p class="word-wrap" ng-bind="news.title"></p></strong></a></li>
+            </ul>
     </div>
     <div class="col-lg-4">
         <h4><i class="fa fa-bell fa-lg home-icon"></i>客服中心

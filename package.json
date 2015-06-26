@@ -7,6 +7,7 @@
         "body-parser": "^1.0.2",
         "error-handler": "^0.1.4",
         "jade": "~0.31.2",
+        "mailgun-js": "0.5",
         "method-override": "^1.0.0",
         "morgan": "^1.0.0",
         "ng-route-it": "0.3.2"

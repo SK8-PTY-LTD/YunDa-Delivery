@@ -1,28 +1,30 @@
 <div class="modal-body">
+    <img src="/image/logo-simple.jpg" alt="Yunda Logistics" width="150px" height="150px" class="loginIcon">
+
     <button type="button" class="close" aria-label="Close" ng-click="dismissViewController()"><span aria-hidden="true">&times;</span></button>
-    <img ng-src="{{ currentShop.icon._url }}" alt="" class="loginIcon">
-    <img ng-src="{{ currentShop.tagline._url }}" alt="" class="loginIcon">
+    <!--<img ng-src="{{ currentShop.icon._url }}" alt="" class="loginIcon">-->
+    <!--<img ng-src="{{ currentShop.tagline._url }}" alt="" class="loginIcon">-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
     <form name="loginForm" >
         <div class="form-group has-feedback">
             <label class="control-label">用户名:</label>
             <span ng-show="!loginForm.email.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="email" required>
+            <input type="email" name="email" class="form-control" id="username" ng-model="currentUser.username" placeholder="您注册时填写的电子邮箱" required>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">密码:</label>
             <label class="control-label pull-right"><a ng-click="resetPassword()">忘记密码?</a></label>
             <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
             <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="At least 8 characters long" ng-minlength="8" required>
+            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="密码" ng-minlength="8" required>
         </div>
         <div class="form-group">
             <button type="submit" class="col-xs-12 btn btn-success" ng-click="login()" ng-disabled="!loginForm.$valid">登陆</button>
-            <button type="submit" style="margin-top:1px;" class="col-xs-12 btn btn-info" ng-click="signup()" ng-disabled="!loginForm.$valid">注册新账号</button>
+            <button type="submit" style="margin-top:1px;" class="col-xs-12 btn btn-info" ng-click="signup()">注册新账号</button>
         </div>
         <div class="form-group">
-            <label class="control-label"><a href="http://www.sk8.asia">Powered by SK8 Tech</a></label>
+            <label class="control-label"><a href="http://www.sk8.asia">Powered by SK8科技</a></label>
         </div>
     </form>
 </div>

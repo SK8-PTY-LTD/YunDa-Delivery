@@ -5,6 +5,12 @@
             <div class="col-lg-12"><hr></div>
         </div>
     </div>
+    <div ng-if="!isPremium">
+        <em class="text-center">普通分箱将随机按重量平均分配</em>
+        <div class="row">
+            <div class="col-lg-12"><hr></div>
+        </div>
+    </div>
     <form name="splitForm">
         <div class="form-group">
             <label for="amount">分包数量</label></br>
@@ -35,5 +41,7 @@
 
 </div>
 <div class="modal-footer">
-    <button type="submit" ng-click="confirmSplit()">保存</button>
+    <button class="btn btn-default btn-sm" type="submit" ng-click="confirmSplit()">保存</button>
+    <button class="btn btn-default btn-sm" ng-click="close()">关闭</button>
+
 </div>

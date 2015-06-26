@@ -49,24 +49,6 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/administrator', {
           templateUrl: 'partials/administrator',
           controller: 'AdminCtrl'
-          //resolve: {
-          //    load: function($q, $rootScope, $location) {
-          //        var deferred = $q.defer();
-          //        console.log("in app -- $rootScope.isAdmin: " + $rootScope.isAdmin)
-          //        var log;
-          //        angular.forEach($rootScope, function(value, key) {
-          //            console.log("key: " + key  + " | value: " + value);
-          //        }, log);
-          //        if (!$rootScope.isAdmin) {
-          //            console.log("in != adminrole")
-          //            deferred.reject()
-          //            $location.path('/');
-          //        } else
-          //            console.log("in = adminrole")
-          //        deferred.resolve();
-          //        return deferred.promise;
-          //    }
-          //}
       }).
       when('/print', {
           templateUrl: 'partials/print'
@@ -109,7 +91,6 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
             }
 
         } else {
-            console.log("user is not defined")
             //console.log("double check -- $scope.currentUser.role: " + $rootScope.currentUser.role)
             if((next.templateUrl == "partials/administrator") || (next.templateUrl == "partials/dashboard"))
             $location.path('home')
@@ -118,6 +99,3 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
     });
 });
 
-//YundaApp.config(function($window) {
-//    $window.Stripe.setPublishableKey(STRIPE_KEY);
-//});

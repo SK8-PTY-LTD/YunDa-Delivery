@@ -1,0 +1,20 @@
+<div class="modal-body">
+    <h2 class="text-center">收件人信息</h2>
+    <table class="table table-bordered">
+        <tr>
+            <td>姓名: <span ng-bind="freight.address.recipient"></span> </td>
+            <td>电话: <span ng-bind="freight.address.contactNumber"></span></td>
+        </tr>
+        <tr>
+            <td colspan="2">地址: <span ng-bind="address"></span></td>
+        </tr>
+        <tr>
+            <td>中国物流：<span ng-bind="freight.chineseCourier"></span></td>
+            <td>物流单号: <span ng-bind="freight.chineseTrackingNumber"></span></td>
+        </tr>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="close()">关闭</button>
+</div>

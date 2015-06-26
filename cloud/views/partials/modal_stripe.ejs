@@ -1,37 +1,62 @@
+<div class="modal-header">
+
+
+    <h3 style="color:#013086" class="text-center">昀達信用卡充值</h3>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                ng-bind="promote"></span></progressbar>
+</div>
 <div class="modal-body">
     <form stripe:form="stripeCallback">
         <div class="form-group">
-            <label for="amount" ng-bind="USD"></label>
+            <!--<label for="amount" ng-bind="USD"></label>-->
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-credit-card"></i></div>
+                <input type="text" class="form-control" ng-model="number"
+                       id="exampleInputAmount" placeholder="卡号" data-stripe="number"/>
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+        <!--<label for="number"></label>-->
+        <!--<input type="text" ng-model="number" placeholder="Card Number" data-stripe="number"/>-->
+        <!--</div>-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                <input type="text" class="form-control" ng-model="cvc"
+                       id="exampleInputAmount" placeholder="CVC" data-stripe="cvc"/>
+            </div>
+            <!--<label for="amount"></label>-->
+            <!--<input type="text" ng-model="cvc" placeholder="CVC" data-stripe="cvc"/>-->
         </div>
         <div class="form-group">
-            <label for="number"></label>
-            <input type="text" ng-model="number" placeholder="Card Number" data-stripe="number"/>
+            <!--<label for="amount"></label>-->
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                <input type="text" class="form-control" ng-model="expiryMonth"
+                       id="exampleInputAmount" placeholder="过期月份(MM)" data-stripe="exp-month"/>
+            </div>
+            <!--<input type="text" ng-model="expiryMonth" placeholder="Expiration Month" data-stripe="exp-month"/>-->
         </div>
         <div class="form-group">
-            <label for="amount"></label>
-            <input type="text" ng-model="cvc" placeholder="CVC" data-stripe="cvc"/>
+            <!--<label for="amount"></label>-->
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                <input type="text" class="form-control" ng-model="expiryYear"
+                       id="exampleInputAmount" placeholder="过期年份(YYYY)" data-stripe="exp-year"/>
+            </div>
+            <!--<input type="text" ng-model="expiryYear" placeholder="Expiration Year" data-stripe="exp-year"/>-->
         </div>
-        <div class="form-group">
-            <label for="amount"></label>
-            <input type="text" ng-model="expiryMonth" placeholder="Expiration Month" data-stripe="exp-month"/>
+        <div class="modal-footer">
+                <button class="btn btn-info pull-right" type="submit" ng-disabled="isPaid">$<span ng-bind="USD"></span>充值
+                </button>
+
         </div>
-        <div class="form-group">
-            <label for="amount"></label>
-            <input type="text" ng-model="expiryYear" placeholder="Expiration Year" data-stripe="exp-year"/>
-        </div>
+
     </form>
-    <div ng-if="form.card.$invalid">
-        Error: invalid card number!
-    </div>
-    <div ng-if="form.expiry.$invalid">
-        Error: invalid expiration date!
-    </div>
-    <div ng-if="form.cvc.$invalid">
-        Error: invalid CVC!
+</div>
+
+    <div class="pull-right">
+        <img src="/image/stripeLabel.png" width="65px" height="18px" alt="Stripe label">
     </div>
 
-</div>
-<div class="modal-footer">
-    <button type="submit">提交</button>
-</div>
 
