@@ -56,39 +56,39 @@
 
             <!--<p>字母ID：<span ng-bind="currentUser.stringId"></span></p>-->
 
-            <div ng-if="currentUser.identityFront && currentUser.identityBack">
-                <p>已上传身份证</p>
-            </div>
-            <div ng-if="!currentUser.identityFront || !currentUser.identityBack">
-                <form ng-controller="fileUploadCtrl">
+            <!--<div ng-if="currentUser.identityFront && currentUser.identityBack">-->
+                <!--<p>已上传身份证</p>-->
+            <!--</div>-->
+            <!--<div ng-if="!currentUser.identityFront || !currentUser.identityBack">-->
+                <!--<form ng-controller="fileUploadCtrl">-->
 
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="id-front">身份证正面</label>
-                                <input type="file" class="form-control"
-                                       onchange="angular.element(this).scope().filesChangedFront(this)"/>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="id-front">身份证反面</label>
-                                <input type="file" class="form-control"
-                                       onchange="angular.element(this).scope().filesChangedBack(this)"/>
-                            </div>
-                            <div class="col-md-3" style="margin-top:22px;">
-                                <button class="btn btn-info form-control" ng-click="uploadIdentity()"> 上传</button>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-md-4">-->
+                                <!--<label for="id-front">身份证正面</label>-->
+                                <!--<input type="file" class="form-control"-->
+                                       <!--onchange="angular.element(this).scope().filesChangedFront(this)"/>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-4">-->
+                                <!--<label for="id-front">身份证反面</label>-->
+                                <!--<input type="file" class="form-control"-->
+                                       <!--onchange="angular.element(this).scope().filesChangedBack(this)"/>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-3" style="margin-top:22px;">-->
+                                <!--<button class="btn btn-info form-control" ng-click="uploadIdentity()"> 上传</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
-                </form>
-            </div>
+                <!--</form>-->
+            <!--</div>-->
         </accordion-group>
 
         <accordion-group is-open="true">
             <accordion-heading id="info3">
                 财务信息
             </accordion-heading>
-            <p>账户余额：$<span ng-bind="currentUser.balanceInDollar"></span></p>
+            <p>账户余额：$<span ng-bind="currentUser.balanceInDollar + '(参考人民币: ￥' + currentUser.balanceInYuan + ') '"></span><a ng-click="change_tab('ca')" ng-href="/dashboard#recharge">充值</a></p>
 
 
             <div ng-if="currentUser.pendingBalanceInDollar == undefined || currentUser.pendingBalanceInDollar == 0">
@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <table class="table table-hover" style="font-size: 0.9em">
+    <table class="table table-hover small-table" >
         <thead>
         <tr>
             <th>收件人</th>
@@ -197,7 +197,7 @@
 
         </tr>
         </thead>
-        <tr ng-repeat="address in recipientAddresses">
+        <tr ng-repeat="address in recipientAddresses | orderBy: '-createdAt'">
             <td ng-bind="address.recipient"></td>
             <td><span ng-bind="address.country + address.state"></span></td>
             <td><a ng-click="showRecipientDetails(address)">详细地址</a></td>
@@ -212,19 +212,18 @@
     <accordion close-others="false">
         <accordion-group is-open="true">
             <accordion-heading>
-                唯一的收货地址
+                免税州(OR)收货地址
             </accordion-heading>
             <div class="jumbotron">
-                <p>{{currentUser.realName}}唯一收货地址 </p>
                 <!--<address> SE Bollam Dr<br> Clackamas<br> OR 97015 USA <br></address>-->
                 <!--<br>{{currentUser.stringId}}-->
                 <div class="row">
                     <div class="col-lg-5">
                         <span style="font-weight:bold;color:#013086;">名(First Name): </span><span
-                                ng-bind="currentUser.stringId"></span>
+                                ng-bind="currentUser.username"></span>
                     </div>
                     <div class="col-lg-4 col-lg-offset-3">
-                        <span style="font-weight:bold">姓(Last Name): </span><span ng-bind="currentUser.realName"></span>
+                        <span style="font-weight:bold">姓(Last Name): Ni</span>
                     </div>
                     <div class="col-lg-8">
                         <span style="font-weight:bold"> 地址1(Address): </span><span ng-bind="systemStreet"></span>
@@ -299,7 +298,8 @@
         待确认入库<span class="badge" style="margin-left:5px;">{{badgeACount}}</span>
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
-        <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+        <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                    ng-bind="promote"></span></progressbar>
 
         <thead>
         <tr>
@@ -321,11 +321,12 @@
             </td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="leaveComments(freightIn)">留言</button>
-                <button class="btn btn-sm btn-default" ng-click="checkPackage(freightIn)" ng-disabled="freightIn.status == 240">开箱检查<i tooltip="开箱检查需要收费($3.5/件)"
-                                                                                                                                       tooltip-placement="top"
-                                                                                                                                       tooltip-trigger="mouseenter"
-                                                                                                                                       tooltip-enable="true"
-                                                                                                                                       class="fa fa-question-circle"></i></button>
+                <button class="btn btn-sm btn-default" ng-click="checkPackage(freightIn)"
+                        ng-disabled="freightIn.status == 240">开箱检查<i tooltip="开箱检查需要收费($3.5/件)"
+                                                                     tooltip-placement="top"
+                                                                     tooltip-trigger="mouseenter"
+                                                                     tooltip-enable="true"
+                                                                     class="fa fa-question-circle"></i></button>
                 <button class="btn btn-sm btn-info" ng-click="freightInConfirm(freightIn)">确认入库</button>
             </td>
         </tr>
@@ -362,10 +363,10 @@
                 <div class="row">
                     <div class="col-lg-5">
 
-                            <button class="btn btn-xs btn-default" ng-click="openNotes(freightIn)">查看管理员反馈</button>
+                        <button class="btn btn-xs btn-default" ng-click="openNotes(freightIn)">查看管理员反馈</button>
 
 
-                            <button class="btn btn-xs btn-default" ng-click="openComments(freightIn)">给管理员留言</button>
+                        <button class="btn btn-xs btn-default" ng-click="openComments(freightIn)">给管理员留言</button>
 
                     </div>
                     <div class="col-lg-3">
@@ -733,7 +734,8 @@
 
     <tabset>
         <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
-            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                        ng-bind="promote"></span></progressbar>
 
             <table class="table table-striped" style="font-size: 0.9em">
                 <thead>
@@ -793,45 +795,50 @@
             <!--<button type="submit" class="btn btn-primary">Transfer cash</button>-->
 
         </tab>
-        <tab heading="信用卡充值" ng-controller="RechargeCtrl">
-            <!--账户余额($): <span ng-bind="currentUser.balanceInDollar"></span> </br></br>-->
+        <!-------------------------------->
+        <!-- Hide Recharge from Cr card -->
+        <!-------------------------------->
 
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="exampleInputAmount">*充值数额 (￥): </label>
 
-                    <div class="input-group">
-                        <div class="input-group-addon">RMB</div>
-                        <input type="number" step="any" class="form-control" ng-model="CNY"
-                               id="exampleInputAmount" placeholder="人民币金额">
+        <!--<tab heading="信用卡充值" ng-controller="RechargeCtrl">-->
+        <!--<!--账户余额($): <span ng-bind="currentUser.balanceInDollar"></span> </br></br>-->-->
 
-                        <div class="input-group-addon">.00</div>
-                    </div>
-                    <i class="glyphicon glyphicon-menu-right"></i>
-                    <label class="sr-only" for="exampleInputAmount">数额 (美元)</label>
+        <!--<form class="form-inline">-->
+        <!--<div class="form-group">-->
+        <!--<label for="exampleInputAmount">*充值数额 (￥): </label>-->
 
-                    <div class="input-group">
-                        <div class="input-group-addon">$</div>
-                        <input type="number" step="any" class="form-control" ng-model="USD"
-                               id="exampleInputAmount" placeholder="美元金额" disabled>
+        <!--<div class="input-group">-->
+        <!--<div class="input-group-addon">RMB</div>-->
+        <!--<input type="number" step="any" class="form-control" ng-model="CNY"-->
+        <!--id="exampleInputAmount" placeholder="人民币金额">-->
 
-                        <div class="input-group-addon"></div>
-                    </div>
-                </div>
+        <!--<div class="input-group-addon">.00</div>-->
+        <!--</div>-->
+        <!--<i class="glyphicon glyphicon-menu-right"></i>-->
+        <!--<label class="sr-only" for="exampleInputAmount">数额 (美元)</label>-->
 
-            </form>
+        <!--<div class="input-group">-->
+        <!--<div class="input-group-addon">$</div>-->
+        <!--<input type="number" step="any" class="form-control" ng-model="USD"-->
+        <!--id="exampleInputAmount" placeholder="美元金额" disabled>-->
 
-            <!--请输入充值额度(￥): <input type="text" ng-model=""/>-->
+        <!--<div class="input-group-addon"></div>-->
+        <!--</div>-->
+        <!--</div>-->
 
-            <!--<div ng-if="!USD">美元为：$</div>-->
-            <!--<div ng-if="USD">美元为：$<span ng-bind=""></span></div>-->
-            </br></br>
-            <em>信用卡充值手续费: 2.9%＋30 cents, 由用户承担，以上实充数额已自动加入手续费(汇率: 美元/人民币=1/6.4)</em>
+        <!--</form>-->
 
-            </br></br>
-            <button class="btn btn-info" ng-click="stripePayment()"> 确认充值</button>
+        <!--<!--请输入充值额度(￥): <input type="text" ng-model=""/>-->-->
 
-        </tab>
+        <!--<!--<div ng-if="!USD">美元为：$</div>-->-->
+        <!--<!--<div ng-if="USD">美元为：$<span ng-bind=""></span></div>-->-->
+        <!--</br></br>-->
+        <!--<em>信用卡充值手续费: 2.9%＋30 cents, 由用户承担，以上实充数额已自动加入手续费(汇率: 美元/人民币=1/6.4)</em>-->
+
+        <!--</br></br>-->
+        <!--<button class="btn btn-info" ng-click="stripePayment()"> 确认充值</button>-->
+
+        <!--</tab>-->
 
     </tabset>
 </div>
@@ -842,37 +849,37 @@
 
     <!--<div class="row">-->
 
-        <!--<div class="col-md-6">-->
-            <!--<h5>起始日期:</h5>-->
+    <!--<div class="col-md-6">-->
+    <!--<h5>起始日期:</h5>-->
 
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
-                            <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
-                            <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
+    <!--<p class="input-group">-->
+    <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
+    <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--</p>-->
+    <!--</div>-->
 
-        <!--<div class="col-md-6">-->
-            <!--<h5>截止日期:</h5>-->
+    <!--<div class="col-md-6">-->
+    <!--<h5>截止日期:</h5>-->
 
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
-                            <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
+    <!--<p class="input-group">-->
+    <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
+    <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--</p>-->
+    <!--</div>-->
     <!--</div>-->
     <!--<div class="pull-right">-->
-        <!--<button class="btn btn-info" ng-click="reloadTransaction()">查找</button>-->
+    <!--<button class="btn btn-info" ng-click="reloadTransaction()">查找</button>-->
     <!--</div>-->
 
-    <table class="table table-hover small-table" >
+    <table class="table table-hover small-table">
         <thead>
         <tr>
             <th>交易单号</th>
@@ -902,35 +909,35 @@
 
     <!--<div class="row">-->
 
-        <!--<div class="col-md-6">-->
-            <!--<h5>起始日期:</h5>-->
+    <!--<div class="col-md-6">-->
+    <!--<h5>起始日期:</h5>-->
 
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
-                            <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
-                            <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
+    <!--<p class="input-group">-->
+    <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
+    <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--</p>-->
+    <!--</div>-->
 
-        <!--<div class="col-md-6">-->
-            <!--<h5>截止日期:</h5>-->
+    <!--<div class="col-md-6">-->
+    <!--<h5>截止日期:</h5>-->
 
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
-                            <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
+    <!--<p class="input-group">-->
+    <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
+    <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--</p>-->
+    <!--</div>-->
 
     <!--</div>-->
     <!--<div class="pull-right">-->
-        <!--<button class="btn btn-info" ng-click="reloadTransaction()">查找</button>-->
+    <!--<button class="btn btn-info" ng-click="reloadTransaction()">查找</button>-->
     <!--</div>-->
 
     <table class="table table-hover" style="font-size: 0.9em">
@@ -1089,26 +1096,29 @@
 
     <form>
         <div class="form-group">
-        <div class="row">
-            <div class="col-md-12">
-            <div class="input-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="changeAddressFreight.reference" placeholder="输入昀達物流运单号进行搜索" required>
+                        <input type="text" class="form-control" ng-model="changeAddressFreight.reference"
+                               placeholder="输入昀達物流运单号进行搜索" required>
 <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchForFreight()" ng-disabled="isSearch">搜索</button>
       </span>
-            </div><!-- /input-group --></div>
+                    </div>
+                    <!-- /input-group --></div>
+            </div>
         </div>
-        </div>
-        <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+        <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                    ng-bind="promote"></span></progressbar>
 
 
         <div class="form-group">
             <div class="row">
-            <div class="col-md-10">
-               原发货地址: <span ng-bind="origin.address"></span>
-            </div>
+                <div class="col-md-10">
+                    原发货地址: <span ng-bind="origin.address"></span>
+                </div>
 
 
             </div>
@@ -1117,8 +1127,8 @@
         <div class="form-group">
             <div class="row">
 
-                    <button class="btn btn-default" ng-click="chooseRecipient()">选择收件人地址</button>
-                    <button class="btn btn-default" ng-click="addNewRecipient()">添加新收件人</button>
+                <button class="btn btn-default" ng-click="chooseRecipient()">选择收件人地址</button>
+                <button class="btn btn-default" ng-click="addNewRecipient()">添加新收件人</button>
 
             </div>
         </div>

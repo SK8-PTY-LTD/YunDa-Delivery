@@ -872,6 +872,7 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal) {
 
             var query = new AV.Query("Address")
             query.equalTo("user", $scope.currentUser)
+            query.include("identity")
             if (YD.User.current() != undefined) {
                 query.find({
                     success: function (results) {
@@ -893,6 +894,8 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal) {
         var query = new AV.Query("Address")
         query.equalTo("user", $scope.currentUser)
         query.equalTo("recipient", $scope.recipientLookup)
+        query.include("identity")
+
         if (YD.User.current() != undefined) {
             query.find({
                 success: function (results) {
@@ -2597,26 +2600,90 @@ YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
 YundaApp.controller('EditAddressCtrl', function ($scope, $modalInstance, address) {
     $scope.isLoading = false
     $scope.promote = ""
+    $scope.isSaving = false;
     $scope.address = address
+    if(!$scope.address.identity) {
+        $scope.identity = new YD.Identity();
+    } else {
+        $scope.identity = $scope.address.identity;
+    }
+    $scope.filesChangedFront = function (elm) {
+        $scope.identityFront = elm.files
+        $scope.$apply()
+    }
+
+    $scope.filesChangedBack = function (elm) {
+        $scope.identityBack = elm.files
+        $scope.$apply()
+    }
+    $scope.uploadIdentity = function () {
+        //console.log("In fileUpload back: " + $scope.identityBack[0])
+        //console.log("In fileUpload front: " + $scope.identityFront[0])
+
+        if ($scope.identityFront != undefined && $scope.identityBack != undefined) {
+            //console.log("In fileUpload back: " + $scope.identityFront[0].name)
+            //console.log("In fileUpload front: " + $scope.identityBack[0].name)
+            $scope.isLoading = true
+            $scope.promote = "正在上传身份证照片，请稍后..."
+            $scope.isSaving = true;
+            var frontName = 'front.jpg'
+            var backName = 'back.jpg'
+            var avFileFront = new AV.File(frontName, $scope.identityFront[0])
+            var avFileBack = new AV.File(backName, $scope.identityBack[0])
+
+            //var identity = new YD.Identity();
+
+            $scope.identity.identityFront = avFileFront
+            $scope.identity.identityBack = avFileBack
+            $scope.identity.save(null, {
+                success: function(id) {
+                    alert("身份证上传成功,请保存修改")
+                    $scope.identity = id;
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    $scope.isSaving = false
+                    $scope.$apply()
+                },
+                error: function(id, error) {
+                    alert("错误！: " + error.message);
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    $scope.isSaving = false
+                    $scope.$apply()
+
+                }
+            });
+
+        } else {
+            alert("请先上传身份证照片.")
+
+        }
+    }
+
     $scope.saveAddressSubmit = function () {
         $scope.address.user = $scope.currentUser
+        $scope.address.identity = $scope.identity;
         $scope.isLoading = true
         $scope.promote = "正在保存..."
-        $scope.address.save().then(function (address) {
-            alert("成功保存收件人信息！")
-            $scope.isLoading = false
-            $scope.promote = ""
-            $modalInstance.close(address)
-        }, function (error) {
-            alert("出错！" + error.message)
-            $scope.isLoading = false
-            $scope.promote = ""
-            $modalInstance.dismiss()
-        })
+        $scope.address.save(null, {
+            success: function(address) {
+                alert("成功保存收件人信息！")
+                $scope.isLoading = false
+                $scope.promote = ""
+                $modalInstance.close(address)
+            },
+            error: function(address, error) {
+                alert("出错！" + error.message)
+                $scope.isLoading = false
+                $scope.promote = ""
+                $modalInstance.dismiss()
+            }
+        });
     }
     $scope.close = function() {
         $modalInstance.dismiss()
     }
+
 })
 YundaApp.controller('SplitPackageCtrl', function ($scope, $modalInstance, freightIn) {
     $scope.notes

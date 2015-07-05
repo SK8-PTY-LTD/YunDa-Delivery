@@ -80,6 +80,66 @@
             </div>
         </div>
     </form>
+
+    <hr>
+
+
+
+    <!--<div ng-if="!address.identity.identityFront || !address.identity.identityBack">-->
+        <form>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="identity">身份证号: </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text"  class="form-control" ng-model="identity.number" />
+                    </div>
+                    <div ng-if="identity.identityFront && identity.identityBack">
+                        <div class="col-md-4">
+                            <strong><em>已上传身份证</em></strong>
+                        </div>
+                    </div>
+                </div>
+
+                    <em><small>在需要身份证的口岸时需要上传,身份证号码请务必上传与身份证匹配,否则被扣关需要客户自行负责</small></em>
+
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="id-front">身份证正面</label>
+                        <input type="file" class="form-control"
+                               onchange="angular.element(this).scope().filesChangedFront(this)"/>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="id-front">身份证反面</label>
+                        <input type="file" class="form-control"
+                               onchange="angular.element(this).scope().filesChangedBack(this)"/>
+                    </div>
+
+
+                    <div class="col-md-3" style="margin-top:22px;">
+                        <button class="btn btn-info form-control" ng-click="uploadIdentity()" ng-disabled="isSaving">
+                            <div ng-if="!identity.identityFront || !identity.identityBack">
+                            上传
+                                </div>
+                            <div ng-if="identity.identityFront && identity.identityBack">
+                                重新上传
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <em><small>文件大小限制在1M以下,每次最多上传1个文件,允许的扩展名:.jpg , .jpeg , .gif , .png<br>
+
+                    在需要身份证的口岸时需要上传身份证正反照,图片小于2M,图像清晰
+                    请在同一张图片里上传收件人的正反身份证照,图片不清晰导致的清关延误等后果客户需自行负责</small></em>
+            </div>
+
+        </form>
+    <!--</div>-->
 </div>
 
 <div class="modal-footer">

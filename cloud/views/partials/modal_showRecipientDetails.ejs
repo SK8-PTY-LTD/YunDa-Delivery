@@ -1,79 +1,120 @@
 <div class="modal-body">
-    <form name="addressForm">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="recipient">收件人:</label></div>
-                <div class="col-md-10">
-                    <input type="text" id="recipient" class="form-control" ng-model="address.recipient" required/>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="province">手机号码:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="country" class="form-control" ng-model="address.mobileNumber" required/>
-                </div>
-                <div class="col-md-2">
-                    <label for="province">固定电话:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="state" class="form-control" ng-model="address.contactNumber"/>
-                </div>
-            </div>
-        </div>
+    <!--<form name="addressForm">-->
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="recipient">收件人:</label></div>-->
+                <!--<div class="col-md-10">-->
+                    <!--&lt;!&ndash;<input type="text" id="recipient" class="form-control" ng-model="address.recipient" required/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.recipient"></span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="province">手机号码:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="country" class="form-control" ng-model="address.mobileNumber" required/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.mobileNumber"></span>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="province">固定电话:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="state" class="form-control" ng-model="address.contactNumber"/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.contactNumber"></span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="province">收件国家:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="country" class="form-control" ng-model="address.country" required/>
-                </div>
-                <div class="col-md-2">
-                    <label for="province" class="">收件省份:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="state" class="form-control" ng-model="address.state"/>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="city">收件城市:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="city" class="form-control" ng-model="address.city" required/>
-                </div>
-                <div class="col-md-2">
-                    <label for="district">邮政编码:</label></div>
-                <div class="col-md-4">
-                    <input type="text" id="district" class="form-control" ng-model="address.postalCode"/>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="street">收件地址:</label></div>
-                <div class="col-md-10">
-                    <input type="text" id="street" class="form-control" ng-model="address.street1" required/>
-                </div>
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="province">收件国家:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="country" class="form-control" ng-model="address.country" required/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.country"></span>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="province" class="">收件省份:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="state" class="form-control" ng-model="address.state"/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.state"></span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="city">收件城市:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="city" class="form-control" ng-model="address.city" required/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.city"></span>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="district">邮政编码:</label></div>-->
+                <!--<div class="col-md-4">-->
+                    <!--&lt;!&ndash;<input type="text" id="district" class="form-control" ng-model="address.postalCode"/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.postalCode"></span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="street">收件地址:</label></div>-->
+                <!--<div class="col-md-10">-->
+                    <!--&lt;!&ndash;<input type="text" id="street" class="form-control" ng-model="address.street1" required/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.street1"></span>-->
+                <!--</div>-->
 
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="recipient">公司:</label>
-                </div>
-                <div class="col-md-10">
-                    <input type="text" id="postalCode" class="form-control" ng-model="address.street2"/>
-                </div>
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-2">-->
+                    <!--<label for="recipient">公司:</label>-->
+                <!--</div>-->
+                <!--<div class="col-md-10">-->
+                    <!--&lt;!&ndash;<input type="text" id="postalCode" class="form-control" ng-model="address.street2"/>&ndash;&gt;-->
+                    <!--<span ng-bind="address.street2"></span>-->
+                <!--</div>-->
 
-            </div>
-        </div>
-    </form>
+            <!--</div>-->
+        <!--</div>-->
+    <!--</form>-->
+    <table class="table table-bordered">
+       <tr>
+           <td>收件人: </td>
+           <td colspan="3" ng-bind="address.recipient"></td>
+       </tr>
+        <tr>
+            <td>手机号码: </td>
+            <td ng-bind="address.mobileNumber"></td>
+            <td>固定电话: </td>
+            <td ng-bind="address.contactNumber"></td>
+        </tr>
+        <tr>
+            <td>收件国家</td>
+            <td ng-bind="address.country"></td>
+            <td>收件省份</td>
+            <td ng-bind="address.state"></td>
+        </tr>
+        <tr>
+            <td>收件城市</td>
+            <td ng-bind="address.city"></td>
+            <td>邮政编码</td>
+            <td ng-bind="address.postalCode"></td>
+        </tr>
+        <tr>
+            <td>收件地址</td>
+            <td colspan="3" ng-bind="address.street1"></td>
+        </tr>
+        <tr>
+            <td>收件公司</td>
+            <td colspan="3" ng-bind="address.street2"></td>
+        </tr>
+    </table>
 </div>
 
 <div class="modal-footer">
