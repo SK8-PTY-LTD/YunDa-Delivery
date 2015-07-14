@@ -49,8 +49,8 @@ span.help-question {
 
 .freightIn-table {
     margin: 10px auto;
-    padding: 2px 0;
-    font-size: 1.3em;
+    padding: 6px 0;
+    /*font-size: 1.3em;*/
     font-weight: normal;
     color: white;
     background-color: #013086;
@@ -58,9 +58,19 @@ span.help-question {
     border-radius: 4px;
 }
 
+.yd-green-btn {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+}
 .small-table {
     font-size: 0.9em;
 }
+
+.small-text {
+    font-size: 0.9em;
+}
+
 
 .word-wrap {
     margin-left: -40px;
@@ -68,6 +78,10 @@ span.help-question {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.word-wrap:before {
+    content: '● ';
+    color: #013086;
 }
 
 .validation-error {
@@ -101,7 +115,7 @@ span.help-question {
     position: fixed;
     top: 15%;
     left: 15%;
-    z-index: 1050;
+    z-index: 10;
     width: 80%;
 }
 
@@ -153,12 +167,23 @@ fieldset {
 .bottom-buffer-1 {
     margin-bottom: 10px;
 }
+
+.bottom-buffer-2 {
+    margin-bottom: 20px;
+}
 .ad-top-buffer {
     margin-top: 18px;
 }
 
 .top-buffer {
     margin-top: 15px;
+}
+
+.top-buffer-1 {
+    margin-top: 10px;
+}
+.top-buffer-2 {
+    margin-top: 25px;
 }
 .home-icon {
     margin-right: 10px;
@@ -385,6 +410,7 @@ ul.social-list li:last-child a i {
     -webkit-border-radius: 2;
     -moz-border-radius: 2;
     -o-border-radius: 2;
+    z-index: 1030;
 }
 
 .navbar-brand {

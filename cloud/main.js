@@ -8,6 +8,7 @@ var Mailgun = require('mailgun-js');
 var MAINGUN_KEY = "key-1abb9ac6b44ecb7982ddf76079fd38fc";
 var MAINGUN_DOMAIN = "sk8.asia";
 //Your cloud code here
+AV.Cloud.useMasterKey();
 
 /**
  * Send Email to a particular address, Note, receiver has to be a valid email address
@@ -15,26 +16,22 @@ var MAINGUN_DOMAIN = "sk8.asia";
  * @param  {[Error or null]} response
  * @return {[type]}
  */
+//
+
 AV.Cloud.define("sendEmail", function(request, response) {
     //Check if a user is logged in
-    var user = request.user;
-    if (user == undefined) {
-        response.error("A logged in user is required before sending an email.");
-        return;
-    }
-
     //Construct email
-    var fullName = request.params.fullName;
+    var name = request.params.name;
+    var subject = request.params.subject;
     var message = request.params.message;
-    var contactNumber = request.params.contactNumber;
     var email = request.params.email;
     if (email == undefined) {
         email = "feedback@sk8.asia";
     }
     var receiver = request.params.receiver;
-    var sender = fullName + " <" + email +">"
+    var sender = name + " <" + email +">"
 
-    if (fullName == undefined) {
+    if (name == undefined) {
         response.error("A sender name is required for sending an email.");
         return;
     }
@@ -42,14 +39,18 @@ AV.Cloud.define("sendEmail", function(request, response) {
         response.error("An receiver is required for sending an email.");
         return;
     }
-    if (message == undefined) {
+    if (subject == undefined) {
         response.error("A subject is required for sending an email.");
         return;
     }
-    if (contactNumber == undefined) {
+    if (message == undefined) {
         response.error("A message is required for sending an email.");
         return;
     }
+
+    var Mailgun = require('mailgun-js');
+    var MAINGUN_KEY = "key-1abb9ac6b44ecb7982ddf76079fd38fc";
+    var MAINGUN_DOMAIN = "sk8.asia";
 
     //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
     var mailgun = new Mailgun({
@@ -63,7 +64,7 @@ AV.Cloud.define("sendEmail", function(request, response) {
         //The email to contact
         to: receiver,
         //Subject and text data
-        subject: "Yunda Customer Enquiry",
+        subject: subject,
         text: message
     }
 
@@ -71,11 +72,11 @@ AV.Cloud.define("sendEmail", function(request, response) {
     mailgun.messages().send(data, function(err, body) {
         //If there is an error, render the error page
         if (err) {
-            response.error(err);
+            response.error(httpResponse);
         }
         //Else we can greet    and leave
         else {
-            response.success(contactNumber);
+            response.success(message);
         }
     });
 });
@@ -83,46 +84,7 @@ AV.Cloud.define("sendEmail", function(request, response) {
  * @desc send out email when admin finishes packing
  * @required mailgun.js
  */
-//AV.Cloud.define("sendEmail", function(request, response) {
-//    //Check if a user is logged in
-//    var user = request.user;
-//    if (user == undefined) {
-//        response.error("A logged in user is required before sending an email.");
-//        return;
-//    }
-//    //Construct email
-//    var receiver = request.params.receiver;
-//    var subject = request.params.subject;
-//    var message = request.params.message;
-//
-//    //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
-//    var mailgun = new Mailgun({
-//        apiKey: MAINGUN_KEY,
-//        domain: MAINGUN_DOMAIN
-//    });
-//
-//    var data = {
-//        //Specify email data
-//        from: "feedback@sk8.asia",
-//        //The email to contact
-//        to: receiver,
-//        //Subject and text data
-//        subject: subject,
-//        text: message
-//    }
-//
-//    //Invokes the method to send emails given the above data with the helper library
-//    mailgun.messages().send(data, function(err, body) {
-//        //If there is an error, render the error page
-//        if (err) {
-//            response.error(httpResponse);
-//        }
-//        //Else we can greet    and leave
-//        else {
-//            response.success(message);
-//        }
-//    });
-//});
+
 
 
 /**
@@ -199,11 +161,68 @@ AV.Cloud.define("increaseUserBalance", function(request, response) {
 
 });
 
+AV.Cloud.define("chargingUser", function(request, response) {
+    console.log("in ChargeUser");
+    var query = new AV.Query("_User");
+    var id = request.params.userId;
+    var amount = parseFloat(request.params.amount);
+    console.log("getting user now: " + id + " | " + amount);
+    //query.equalTo("objectId", id);
+    query.get(id, {
+        success: function(user) {
+            var rewardBalance = parseInt(user.get("rewardBalance"))/100;
+            var balance = parseInt(user.get("balance"))/100;
+            var totalBalance = rewardBalance + balance;
+            console.log("user's total balance: " + totalBalance);
+            console.log("user's total balance: " + rewardBalance);
+            console.log("user's total balance: " + balance);
+
+            if(totalBalance < amount) {
+                response.error("用户金额不足$" + amount);
+            } else {
+
+                /**
+                 * Make sure user's rewardBalance is charged first.
+                 */
+                console.log("in else");
+                if(rewardBalance == 0) {
+                    balance -= amount;
+                } else if (rewardBalance < amount) {
+                    rewardBalance = 0;
+                    balance -= (amount - rewardBalance);
+                } else if (rewardBalance >= amount) {
+                    rewardBalance -= amount;
+                } else {
+                    balance -= amount;
+                }
+                user.set("balance", balance*100);
+                user.set("rewardBalance", rewardBalance*100);
+                console.log("user's total balance: " + rewardBalance);
+                console.log("user's total balance: " + balance);
+                user.save(null, {
+                    success: function(u) {
+                        console.log("user saved");
+                        response.success();
+                    },
+                    error: function(u, error) {
+                        response.error(error.message);
+                    }
+                });
+            }
+        },
+        error: function(user, error) {
+            console.log("find user error: " + error.message);
+            response.error(error.message);
+        }
+    });
+});
+
+
 
 /**
- * @desc generate user's numberId and StringId
- * using AV Cloud code after update
- */
+* @desc generate user's numberId and StringId
+* using AV Cloud code after update
+*/
 AV.Cloud.afterUpdate('_User', function(request) {
     var user = request.object;
     console.log("In AfterUpdate -- username: " + user.id)
@@ -230,19 +249,14 @@ AV.Cloud.afterUpdate('_User', function(request) {
     }
     //Check if user has a Number id and String id
     if (user.numberId != undefined && user.stringId != undefined) {
-        console.log("user.numberId != undefined && user.stringId != undefined")
+        console.log("user.numberId != undefined && user.stringId != undefined");
 
     } else {
         //Generate 8 digits random id
-        var numberId = user.get("numberId");
-        if (numberId == undefined) {
-            numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
-            numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
-        } else {
-            //now fetched numberId is string
-            console.log("AfterUpdate -- numId isn't undefined, numberId: " + numberId )
 
-        }
+            numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+            numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
+
         //Ensure there is no repeat
 
         var query = new AV.Query("_User");
@@ -256,16 +270,16 @@ AV.Cloud.afterUpdate('_User', function(request) {
                 if (count == 0) {
                     //No repeat
                     //Convert hex value
-                    var stringId = toStringId((parseInt(numberId)));
-                    //Add it to user
+                    //var stringId = toStringId((parseInt(numberId)));
+                    ////Add it to user
                     user.set('numberId', numberId);
-                    user.set('stringId', stringId);
+                    //user.set('stringId', stringId);
                     console.log("1a = string id: " + user.stringId)
                     console.log("AfterUpdate First round --  string id: " + user.get('stringId'))
                     user.save(null, {
                         success: function(user) {
-                            console.log("1user saved: " + user.stringId)
-                            console.log("AfterUpdate First round --  saved: "  + user.get('stringId'))
+                            console.log("1user saved: " + user.numberId)
+                            console.log("AfterUpdate First round --  saved: "  + user.get('numberId'))
 
                         },
                         error: function(user, error) {
@@ -276,11 +290,10 @@ AV.Cloud.afterUpdate('_User', function(request) {
                 } else {
                     //Try another time. Maximum try twice
                     console.log("AfterUpdate -- 2nd round success")
-                    if (numberId == undefined) {
-                        numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
+
+                        numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
                         numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
-                    }
                     //Ensure there is no repeat
                     var query = new AV.Query(YD.User);
                     query.equalTo("numberId", numberId);
@@ -290,10 +303,10 @@ AV.Cloud.afterUpdate('_User', function(request) {
                             if (count == 0) {
                                 //No repeat
                                 //Convert hex value
-                                var stringId = toStringId((parseInt(numberId)));
+                                //var stringId = toStringId((parseInt(numberId)));
                                 //Add it to user
                                 user.set('numberId', numberId);
-                                user.set('stringId', stringId);
+                                //user.set('stringId', stringId);
                                 //console.log("2a = string id: " + user.stringId)
                                 console.log("2b = string id: " + user.get('stringId'))
 
@@ -324,12 +337,12 @@ AV.Cloud.afterUpdate('_User', function(request) {
         });
     }
 });
-
-
+//
+//
 /**
- * @desc generate user's numberId and StringId
- * using AV Cloud code beforeSave
- */
+* @desc generate user's numberId and StringId
+* using AV Cloud code beforeSave
+*/
 AV.Cloud.beforeSave ('_User', function(request, response) {
     var user = request.object;
     console.log("In AfterUpdate -- username: " + user.id)
@@ -360,15 +373,10 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
 
     } else {
         //Generate 8 digits random id
-        var numberId = user.get("numberId");
-        if (numberId == undefined) {
+
             numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
             numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
-        } else {
-            //now fetched numberId is string
-            console.log("AfterUpdate -- numId isn't undefined, numberId: " + numberId )
 
-        }
         //Ensure there is no repeat
 
         var query = new AV.Query("_User");
@@ -382,12 +390,12 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
                 if (count == 0) {
                     //No repeat
                     //Convert hex value
-                    var stringId = toStringId((parseInt(numberId)));
+                    //var stringId = toStringId((parseInt(numberId)));
                     //Add it to user
                     user.set('numberId', numberId);
-                    user.set('stringId', stringId);
-                    console.log("1a = string id: " + user.stringId)
-                    console.log("AfterUpdate First round --  string id: " + user.get('stringId'))
+                    //user.set('stringId', stringId);
+                    console.log("1a = string id: " + user.numberId)
+                    console.log("AfterUpdate First round --  string id: " + user.get('numberId'))
                     //user.save(null, {
                     //    success: function(user) {
                     //        console.log("1user saved: " + user.stringId)
@@ -403,11 +411,9 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
                 } else {
                     //Try another time. Maximum try twice
                     console.log("AfterUpdate -- 2nd round success")
-                    if (numberId == undefined) {
                         numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
                         numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
-                    }
                     //Ensure there is no repeat
                     var query = new AV.Query(YD.User);
                     query.equalTo("numberId", numberId);
@@ -417,12 +423,12 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
                             if (count == 0) {
                                 //No repeat
                                 //Convert hex value
-                                var stringId = toStringId((parseInt(numberId)));
+                                //var stringId = toStringId((parseInt(numberId)));
                                 //Add it to user
                                 user.set('numberId', numberId);
-                                user.set('stringId', stringId);
+                                //user.set('stringId', stringId);
                                 //console.log("2a = string id: " + user.stringId)
-                                console.log("2b = string id: " + user.get('stringId'))
+                                console.log("2b = string id: " + user.get('numberId'))
 
                                 //
                                 //user.save(null, {

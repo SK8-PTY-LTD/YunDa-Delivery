@@ -1,18 +1,35 @@
 <div class="modal-body">
-    <div ng-show="!resultList">
-        请稍候……
-    </div>
+    <!--<div ng-show="!resultList">-->
+        <!--请稍候……-->
+    <!--</div>-->
 
-    <table class="table table-striped" style="width:90%">
+    <table class="table table-hover" style="font-size: 0.9em">
         <thead>
-            <th>运单号</th>
-        <th>状态</th>
-        <th>创建时间</th>
+        <th>YD运单号</th>
+        <th width="10%">收件人</th>
+        <th>货物描述</th>
+        <th>提交时间</th>
+        <th width="15%">状态</th>
+        <th>分/合包</th>
         </thead>
-        <tr ng-repeat="f in resultList">
-            <td ng-bind="f.id"></td>
-            <td ng-bind="f.info"></td>
-            <td ng-bind="f.createdAt"></td>
+        <tr ng-repeat="freight in freights  | orderBy:'-updatedAt'">
+            <td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>
+            <td ng-bind="freight.address.recipient"></td>
+            <td ng-bind="freight.packageComments"></td>
+            <td><span ng-bind="freight.updatedAtToString"></span></td>
+            <td ng-bind="freight.statusToString"></td>
+            <td>
+                <div ng-show="freight.isMerged">
+                    合包
+                </div>
+                <div ng-show="freight.isSplit || freight.isSplitPremium">
+                    分包
+                </div>
+                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium">
+                    无
+                </div>
+            </td>
+
         </tr>
     </table>
 </div>

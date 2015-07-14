@@ -277,6 +277,15 @@
         }
     });
 
+    Object.defineProperty(YD.FreightReturn.prototype, "YDNumber", {
+        get: function () {
+            return this.get("YDNumber");
+        },
+        set: function (value) {
+            this.set("YDNumber", value);
+        }
+    });
+
     Object.defineProperty(YD.FreightReturn.prototype, "reason", {
         get: function () {
             return this.get("reason");
@@ -310,6 +319,33 @@
         },
         set: function (value) {
             this.set("notes", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightReturn.prototype, "identityFirst", {
+        get: function () {
+            return this.get("identityFirst");
+        },
+        set: function (value) {
+            this.set("identityFirst", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightReturn.prototype, "identitySecond", {
+        get: function () {
+            return this.get("identitySecond");
+        },
+        set: function (value) {
+            this.set("identitySecond", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightReturn.prototype, "identityThird", {
+        get: function () {
+            return this.get("identityThird");
+        },
+        set: function (value) {
+            this.set("identityThird", value);
         }
     });
 
@@ -373,6 +409,62 @@
         },
         setUser: function (user) {
             this.set("user", user);
+        },
+        generateYDNumber: function(callback) {
+            var min = 1000000000;
+            var max = 9999999999;
+            var random;
+            var YDNumber = "";
+            if(this.YDNumber) {
+                console.log("freightIn has RKNumber already");
+                return;
+            } else if (!this.YDNumber || this.YDNumber == 0) {
+                random = Math.floor(Math.random() * (max - min + 1)) + min;
+                YDNumber = 'YD' + random.toString() + 'DH';
+                var query = new AV.Query(YD.Freight);
+                query.equalTo("YDNumber", YDNumber);
+                query.count({
+                    success: function(count) {
+                        console.log("In SDK -- count: " + count);
+                        if(count == 0) {
+                            //no repeat
+                            //this.save(null, {
+                            //    success: function(f) {
+                            //        console.log("successfuly generate RKNumber: " + RKNumber);
+                            //        callback(true, RKNumber);
+                            //    },
+                            //    error: function(f, error) {
+                            //        console.log("cant generate RKNumber: " + error.message);
+                            //        callback(false, error);
+                            //    }
+                            //});
+                            callback(true, YDNumber);
+                        } else {
+                            //try it again
+                            random = Math.floor(Math.random() * (max - min + 1)) + min;
+                            YDNumber = 'YD' + random.toString() + 'DH';
+                            query = new AV.Query(YD.Freight);
+                            query.equalTo("YDNumber", YDNumber);
+                            query.count({
+                                success: function(count) {
+                                    if(count == 0) {
+                                        callback(true, YDNumber);
+                                    } else {
+                                        callback(false, "tried twice, give up");
+                                    }
+                                },
+                                error: function(error) {
+                                    console.log("second count error:L " + error.message);
+                                }
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        console.log("count error: " + error.message);
+                        callback(false, error);
+                    }
+                });
+            }
         }
     }, {
         //STATUS_INITIALIZED: 0,
@@ -401,6 +493,7 @@
     YD.Freight.STATUS_INITIALIZED = 0;
     //Pending user action
     YD.Freight.STATUS_PENDING_USER_ACTION = 100;
+    YD.Freight.STATUS_SPEED_MANUAL = 110;
     //Pending admin action
     YD.Freight.STATUS_PENDING_SPLIT_PACKAGE = 200;
     YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED = 210;
@@ -408,6 +501,7 @@
     YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
     YD.Freight.STATUS_PENDING_CHECK_PACKAGE = 240;
     YD.Freight.STATUS_PENDING_MERGE_PACKAGE = 250;
+    YD.Freight.STATUS_PENDING_PAY_INSURANCE = 260
 
 
     //Pending user action
@@ -422,6 +516,15 @@
     YD.Freight.STATUS_DELIVERED = 690;
     //return goods; cancel
     YD.Freight.STATUS_CANCELED = 990;
+
+    Object.defineProperty(YD.Freight.prototype, "YDNumber", {
+        get: function () {
+            return this.get("YDNumber");
+        },
+        set: function (value) {
+            this.set("YDNumber", value);
+        }
+    });
 
     Object.defineProperty(YD.Freight.prototype, "address", {
         get: function () {
@@ -525,6 +628,15 @@
         }
     });
 
+    Object.defineProperty(YD.Freight.prototype, "RKNumber", {
+        get: function () {
+            return this.get("RKNumber");
+        },
+        set: function (value) {
+            this.set("RKNumber", value);
+        }
+    });
+
     Object.defineProperty(YD.Freight.prototype, "comments", {
         get: function () {
             return this.get("comments");
@@ -561,7 +673,7 @@
         }
     });
 
-    Object.defineProperty(YD.Freight.prototype, "extraStrength", {
+    Object.defineProperty(YD.Freight.prototype, "isAddPackage", {
         get: function () {
             return this.get("extraStrength");
         },
@@ -570,12 +682,30 @@
         }
     });
 
-    Object.defineProperty(YD.Freight.prototype, "isMerge", {
+    Object.defineProperty(YD.Freight.prototype, "isReduceWeight", {
+        get: function () {
+            return this.get("isReduceWeight");
+        },
+        set: function (value) {
+            this.set("isReduceWeight", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "isMerged", {
         get: function () {
             return this.get("isMerge");
         },
         set: function (value) {
             this.set("isMerge", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "mergeReference", {
+        get: function () {
+            return this.get("mergeReference");
+        },
+        set: function (value) {
+            this.set("mergeReference", value);
         }
     });
 
@@ -602,6 +732,42 @@
         },
         set: function (value) {
             this.set("splitReference", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "descriptionList", {
+        get: function () {
+            return this.get("descriptionList");
+        },
+        set: function (value) {
+            this.set("descriptionList", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "channel", {
+        get: function () {
+            return this.get("channel");
+        },
+        set: function (value) {
+            this.set("channel", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "isOperated", {
+        get: function () {
+            return this.get("isOperated");
+        },
+        set: function (value) {
+            this.set("isOperated", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "packageComments", {
+        get: function () {
+            return this.get("packageComments");
+        },
+        set: function (value) {
+            this.set("packageComments", value);
         }
     });
 
@@ -693,6 +859,77 @@
         },
         setUser: function (user) {
             this.set("user", user);
+        },
+        generateRKNumber: function() {
+            var min = 1000000000;
+            var max = 9999999999;
+            var random;
+            var RKNumber = "";
+            if(this.RKNumber) {
+                console.log("freightIn has RKNumber already");
+                return;
+            } else if (!this.RKNumber || this.RKNumber == 0) {
+                random = Math.floor(Math.random() * (max - min + 1)) + min;
+                RKNumber = 'RK' + random.toString();
+                return RKNumber;
+            }
+        },
+        generateRKNumberWithCallback: function(callback) {
+            var min = 1000000000;
+            var max = 9999999999;
+            var random;
+            var RKNumber = "";
+            if(this.RKNumber) {
+                console.log("freightIn has RKNumber already");
+                return;
+            } else if (!this.RKNumber || this.RKNumber == 0) {
+                random = Math.floor(Math.random() * (max - min + 1)) + min;
+                RKNumber = 'RK' + random.toString();
+                var query = new AV.Query(YD.FreightIn);
+                query.equalTo("RKNumber", RKNumber);
+                query.count({
+                    success: function(count) {
+                        console.log("In SDK -- count: " + count);
+                        if(count == 0) {
+                            //no repeat
+                            //this.save(null, {
+                            //    success: function(f) {
+                            //        console.log("successfuly generate RKNumber: " + RKNumber);
+                            //        callback(true, RKNumber);
+                            //    },
+                            //    error: function(f, error) {
+                            //        console.log("cant generate RKNumber: " + error.message);
+                            //        callback(false, error);
+                            //    }
+                            //});
+                            callback(true, RKNumber);
+                        } else {
+                            //try it again
+                            random = Math.floor(Math.random() * (max - min + 1)) + min;
+                            RKNumber = 'RK' + random.toString();
+                            query = new AV.Query(YD.FreightIn);
+                            query.equalTo("RKNumber", RKNumber);
+                            query.count({
+                                success: function(count) {
+                                    if(count == 0) {
+                                        callback(true, RKNumber);
+                                    } else {
+                                        callback(false, "tried twice, give up");
+                                    }
+                                },
+                                error: function(error) {
+                                    console.log("second count error:L " + error.message);
+                                }
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        console.log("count error: " + error.message);
+                        callback(false, error);
+                    }
+                });
+            }
+
         }
     }, {
         STATUS_INITIALIZED: 0,
@@ -709,6 +946,7 @@
     YD.FreightIn.STATUS_INITIALIZED = 0
 //Pending user action
     YD.FreightIn.STATUS_MANUAL = 100
+    YD.FreightIn.STATUS_SPEED_MANUAL = 110
     YD.FreightIn.STATUS_ARRIVED = 200
     YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE = 210
     YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE = 290
@@ -833,6 +1071,65 @@
         }
     });
 
+
+    Object.defineProperty(YD.FreightIn.prototype, "isChecking", {
+        get: function () {
+            return this.get("isChecking");
+        },
+        set: function (value) {
+            this.set("isChecking", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "packageComments", {
+        get: function () {
+            return this.get("packageComments");
+        },
+        set: function (value) {
+            this.set("packageComments", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "checkInfo", {
+        get: function () {
+            return this.get("checkInfo");
+        },
+        set: function (value) {
+            this.set("checkInfo", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "isCheckingCharged", {
+        get: function () {
+            return this.get("isCheckingCharged");
+        },
+        set: function (value) {
+            this.set("isCheckingCharged", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "isMerged", {
+        get: function () {
+            return this.get("isMerged");
+        },
+        set: function (value) {
+            this.set("isMerged", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "mergeReference", {
+        get: function () {
+            return this.get("mergeReference");
+        },
+        set: function (value) {
+            this.set("mergeReference", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightIn.prototype, "RKNumber", {
+        get: function () {
+            return this.get("RKNumber");
+        },
+        set: function (value) {
+            this.set("RKNumber", value);
+        }
+    });
+
     //
     //Object.defineProperty(YD.FreightIn.prototype, "realName", {
     //  get: function() {
@@ -903,6 +1200,24 @@
         },
         set: function (value) {
             this.set("weight", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightIn.prototype, "isAddPackage", {
+        get: function () {
+            return this.get("isAddPackage");
+        },
+        set: function (value) {
+            this.set("isAddPackage", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightIn.prototype, "isReduceWeight", {
+        get: function () {
+            return this.get("isReduceWeight");
+        },
+        set: function (value) {
+            this.set("isReduceWeight", value);
         }
     });
     // YD.Transactoin = require('cloud/shelf/objects/YDTransactoin.js')
@@ -1017,6 +1332,8 @@
             this.set("addressId", value.id);
         }
     });
+
+
     Object.defineProperty(YD.User.prototype, "role", {
         get: function () {
             return this.get("role");
@@ -1025,6 +1342,16 @@
             this.set("role", value);
         }
     });
+
+    Object.defineProperty(YD.User.prototype, "email", {
+        get: function () {
+            return this.get("email");
+        },
+        set: function (value) {
+            this.set("email", value);
+        }
+    });
+
 
     Object.defineProperty(YD.User.prototype, "pendingBalance", {
         get: function () {
@@ -1066,12 +1393,12 @@
             this.set("emailVerified", value);
         }
     });
-    Object.defineProperty(YD.User.prototype, "mobileNumber", {
+    Object.defineProperty(YD.User.prototype, "mobile", {
         get: function () {
-            return this.get("mobileNumber");
+            return this.get("mobile");
         },
         set: function (value) {
-            this.set("mobileNumber", value);
+            this.set("mobile", value);
         }
     });
     Object.defineProperty(YD.User.prototype, "password", {
@@ -1123,21 +1450,52 @@
             this.set("balance", (parseFloat(value.toFixed(2))) * 100);
         }
     });
+
+    Object.defineProperty(YD.User.prototype, "totalBalanceInDollar", {
+        get: function () {
+            return parseFloat(((parseInt(this.get("balance")) / 100) + (parseInt(this.get("rewardBalance")) / 100)).toFixed(2));
+        }
+        //,
+        //set: function (value) {
+        //    value = parseFloat(value)
+        //    this.set("balance", (parseFloat(value.toFixed(2))) * 100);
+        //}
+    });
     Object.defineProperty(YD.User.prototype, "balanceInYuan", {
         get: function () {
-            var dollar = this.balanceInDollar;
+            var dollar = this.totalBalanceInDollar;
             var yuan = parseFloat((dollar * 6.4).toFixed(2));
             return yuan;
         }
     });
-    Object.defineProperty(YD.User.prototype, "reward", {
+    Object.defineProperty(YD.User.prototype, "rewardBalance", {
         get: function () {
-            return this.get("reward");
+            return this.get("rewardBalance");
         },
         set: function (value) {
-            this.set("reward", value);
+            this.set("rewardBalance", value);
         }
     });
+
+    Object.defineProperty(YD.User.prototype, "rewardBalanceInDollar", {
+        get: function () {
+            var rewardDollar = this.get("rewardBalance") / 100;
+            return rewardDollar;
+        },
+        set: function (value) {
+            value = parseFloat(value);
+            this.set("rewardBalance", (parseFloat(value.toFixed(2))) * 100);
+        }
+    });
+    Object.defineProperty(YD.User.prototype, "accumulatedReward", {
+        get: function () {
+            return this.get("accumulatedReward");
+        },
+        set: function (value) {
+            this.set("accumulatedReward", value);
+        }
+    });
+
     Object.defineProperty(YD.User.prototype, "username", {
         get: function () {
             return this.get("username");
@@ -1196,6 +1554,8 @@
             this.set("stringId", value);
         }
     });
+
+
 
     YD.User.ROLE_ADMIN = 100
     YD.User.ROLE_USER = 200
@@ -1293,6 +1653,62 @@
 
     YD.SystemSetting = AV.Object.extend("SystemSetting", {}, {});
 
+    Object.defineProperty(YD.SystemSetting.prototype, "rate", {
+        get: function () {
+            return this.get("rate");
+        },
+        set: function (value) {
+            this.set("rate", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "contactNumber", {
+        get: function () {
+            return this.get("contactNumber");
+        },
+        set: function (value) {
+            this.set("contactNumber", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "contactEmail", {
+        get: function () {
+            return this.get("contactEmail");
+        },
+        set: function (value) {
+            this.set("contactEmail", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "addPackageCharge", {
+        get: function () {
+            return this.get("addPackageCharge");
+        },
+        set: function (value) {
+            this.set("addPackageCharge", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "splitPackageCharge", {
+        get: function () {
+            return this.get("splitPackageCharge");
+        },
+        set: function (value) {
+            this.set("splitPackageCharge", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "checkPackageCharge", {
+        get: function () {
+            return this.get("checkPackageCharge");
+        },
+        set: function (value) {
+            this.set("checkPackageCharge", value);
+        }
+    });
+    Object.defineProperty(YD.SystemSetting.prototype, "returnGoodsCharge", {
+        get: function () {
+            return this.get("returnGoodsCharge");
+        },
+        set: function (value) {
+            this.set("returnGoodsCharge", value);
+        }
+    });
     Object.defineProperty(YD.SystemSetting.prototype, "isSmallPackageAllowed", {
         get: function () {
             return this.get("isSmallPackageAllowed");
@@ -1302,39 +1718,47 @@
         }
     });
 
-    Object.defineProperty(YD.SystemSetting.prototype, "smallPackageInitial", {
+    //Object.defineProperty(YD.SystemSetting.prototype, "smallPackageInitial", {
+    //    get: function () {
+    //        return this.get("smallPackageInitial");
+    //    },
+    //    set: function (value) {
+    //        this.set("smallPackageInitial", value);
+    //    }
+    //});
+    //
+    //Object.defineProperty(YD.SystemSetting.prototype, "smallPackageContinue", {
+    //    get: function () {
+    //        return this.get("smallPackageContinue");
+    //    },
+    //    set: function (value) {
+    //        this.set("smallPackageContinue", value);
+    //    }
+    //});
+    //
+    //Object.defineProperty(YD.SystemSetting.prototype, "normalPackageInitial", {
+    //    get: function () {
+    //        return this.get("normalPackageInitial");
+    //    },
+    //    set: function (value) {
+    //        this.set("normalPackageInitial", value);
+    //    }
+    //});
+    //
+    //Object.defineProperty(YD.SystemSetting.prototype, "normalPackageContinue", {
+    //    get: function () {
+    //        return this.get("normalPackageContinue");
+    //    },
+    //    set: function (value) {
+    //        this.set("normalPackageContinue", value);
+    //    }
+    //});
+    Object.defineProperty(YD.SystemSetting.prototype, "channelList", {
         get: function () {
-            return this.get("smallPackageInitial");
+            return this.get("channelList");
         },
         set: function (value) {
-            this.set("smallPackageInitial", value);
-        }
-    });
-
-    Object.defineProperty(YD.SystemSetting.prototype, "smallPackageContinue", {
-        get: function () {
-            return this.get("smallPackageContinue");
-        },
-        set: function (value) {
-            this.set("smallPackageContinue", value);
-        }
-    });
-
-    Object.defineProperty(YD.SystemSetting.prototype, "normalPackageInitial", {
-        get: function () {
-            return this.get("normalPackageInitial");
-        },
-        set: function (value) {
-            this.set("normalPackageInitial", value);
-        }
-    });
-
-    Object.defineProperty(YD.SystemSetting.prototype, "normalPackageContinue", {
-        get: function () {
-            return this.get("normalPackageContinue");
-        },
-        set: function (value) {
-            this.set("normalPackageContinue", value);
+            this.set("channelList", value);
         }
     });
 
@@ -1370,6 +1794,14 @@
             this.set("systemZipcode", value);
         }
     });
+    Object.defineProperty(YD.SystemSetting.prototype, "addressList", {
+        get: function () {
+            return this.get("addressList");
+        },
+        set: function (value) {
+            this.set("addressList", value);
+        }
+    });
 
     YD.Transaction = AV.Object.extend("Transaction", {}, {});
 
@@ -1383,6 +1815,7 @@
     YD.Transaction.STATUS_PENDING_RETURN_BALANCE = 500;
     YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE = 590;
     YD.Transaction.STATUS_REFUSED_RETURN_BALANCE = 580;
+    YD.Transaction.STATUS_CLAIM_REWARD = 600;
 
     YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
 
@@ -1420,6 +1853,15 @@
         },
         set: function (value) {
             this.set("zhifubao", value);
+        }
+    });
+
+    Object.defineProperty(YD.Transaction.prototype, "isCredit", {
+        get: function () {
+            return this.get("isCredit");
+        },
+        set: function (value) {
+            this.set("isCredit", value);
         }
     });
 
@@ -1507,5 +1949,38 @@
         }
     });
 
+    YD.Channel = AV.Object.extend("Channel", {}, {});
+    Object.defineProperty(YD.Channel.prototype, "name", {
+        get: function () {
+            return this.get("name");
+        },
+        set: function (value) {
+            this.set("name", value);
+        }
+    });
+    Object.defineProperty(YD.Channel.prototype, "initialPrice", {
+        get: function () {
+            return this.get("initialPrice");
+        },
+        set: function (value) {
+            this.set("initialPrice", value);
+        }
+    });
+    Object.defineProperty(YD.Channel.prototype, "continuePrice", {
+        get: function () {
+            return this.get("continuePrice");
+        },
+        set: function (value) {
+            this.set("continuePrice", value);
+        }
+    });
 
+    Object.defineProperty(YD.Channel.prototype, "startAt", {
+        get: function () {
+            return this.get("startAt");
+        },
+        set: function (value) {
+            this.set("startAt", value);
+        }
+    });
 }).call(this);

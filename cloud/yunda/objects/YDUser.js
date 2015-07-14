@@ -147,11 +147,12 @@ YDUser.prototype.getAddressWithCallBack = function(callback) {
 // Property setters and getters
 //================================================================================
 
+
 Object.defineProperty(YDUser.prototype, "address", {
-  get: function() {
+  get: function () {
     var addressId = this.get("addressId");
     if (addressId != undefined) {
-      var address = new SH.Address({
+      var address = new YD.Address({
         "id": id
       });
       return address;
@@ -159,121 +160,234 @@ Object.defineProperty(YDUser.prototype, "address", {
       return undefined;
     }
   },
-  set: function(value) {
+  set: function (value) {
     this.set("addressId", value.id);
   }
 });
-Object.defineProperty(YDUser.prototype, "addressId", {
-  get: function() {
-    return this.get("addressId");
+Object.defineProperty(YDUser.prototype, "role", {
+  get: function () {
+    return this.get("role");
   },
-  set: function(value) {
-    this.set("addressId", value);
+  set: function (value) {
+    this.set("role", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "email", {
+  get: function () {
+    return this.get("email");
+  },
+  set: function (value) {
+    this.set("email", value);
   }
 });
 
-Object.defineProperty(YDUser.prototype, "numberId", {
-  get: function() {
-    return this.get("numberId");
-  },
-  set: function(value) {
-    this.set("numberId", value);
-  }
-});
 
-Object.defineProperty(YDUser.prototype, "stringId", {
-  get: function() {
-    return this.get("stringId");
+Object.defineProperty(YDUser.prototype, "pendingBalance", {
+  get: function () {
+    var result = this.get("pendingBalance")
+    //console.log("In SDK -- pendingBalance: " + result + " type: " + typeof(result))
+    return this.get("pendingBalance");
   },
-  set: function(value) {
-    this.set("stringId", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "emailVerified", {
-  get: function() {
-    return this.get("emailVerified");
-  },
-  set: function(value) {
-    this.set("emailVerified", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "mobileNumber", {
-  get: function() {
-    return this.get("mobileNumber");
-  },
-  set: function(value) {
-    this.set("mobileNumber", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "password", {
-  get: function() {
-    return this.get("password");
-  },
-  set: function(value) {
-    this.set("password", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "profileImage", {
-  get: function() {
-    return this.get("profileImage");
-  },
-  set: function(value) {
-    this.set("profileImage", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "profileName", {
-  get: function() {
-    return this.get("profileName");
-  },
-  set: function(value) {
-    this.set("profileName", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "realName", {
-  get: function() {
-    return this.get("realName");
-  },
-  set: function(value) {
-    this.set("realName", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "reward", {
-  get: function() {
-    return this.get("reward");
-  },
-  set: function(value) {
-    this.set("reward", value);
-  }
-});
-Object.defineProperty(YDUser.prototype, "username", {
-  get: function() {
-    return this.get("username");
-  },
-  set: function(value) {
-    this.set("username", value);
-  }
-});
-
-Object.defineProperty(YDUser.prototype, "balanceInDollar", {
-  get: function() {
-    return (parseInt(this.get("balance"))/ 100).toFixed(2);
-  },
-  set: function(value) {
-    value = parseFloat(value)
-    this.set("balance", (value.toFixed(2))*100);
+  set: function (value) {
+    this.set("pendingBalance", value);
   }
 });
 
 Object.defineProperty(YDUser.prototype, "pendingBalanceInDollar", {
   get: function () {
-    var result = parseFloat((parseInt(this.get("pendingBalance")) / 100).toFixed(2))
+    var result = parseFloat((this.get("pendingBalance") / 100).toFixed(2))
+    //console.log("In SDK -- pendingBalanceInDollar: " +  this.get("pendingBalance") + " | type: " + typeof((this.get("pendingBalance"))))
     return result;
   },
   set: function (value) {
     value = parseFloat(value)
-    this.set("pendingBalance",(value.toFixed(2))*100);
+    this.set("pendingBalance", (parseFloat(value.toFixed(2))) * 100);
   }
 });
+
+Object.defineProperty(YDUser.prototype, "addressId", {
+  get: function () {
+    return this.get("addressId");
+  },
+  set: function (value) {
+    this.set("addressId", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "emailVerified", {
+  get: function () {
+    return this.get("emailVerified");
+  },
+  set: function (value) {
+    this.set("emailVerified", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "mobile", {
+  get: function () {
+    return this.get("mobile");
+  },
+  set: function (value) {
+    this.set("mobile", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "password", {
+  get: function () {
+    return this.get("password");
+  },
+  set: function (value) {
+    this.set("password", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "profileImage", {
+  get: function () {
+    return this.get("profileImage");
+  },
+  set: function (value) {
+    this.set("profileImage", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "profileName", {
+  get: function () {
+    return this.get("profileName");
+  },
+  set: function (value) {
+    this.set("profileName", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "realName", {
+  get: function () {
+    return this.get("realName");
+  },
+  set: function (value) {
+    this.set("realName", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "balance", {
+  get: function () {
+    return this.get("balance");
+  },
+  set: function (value) {
+    this.set("balance", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "balanceInDollar", {
+  get: function () {
+    return parseFloat((parseInt(this.get("balance")) / 100).toFixed(2));
+  },
+  set: function (value) {
+    value = parseFloat(value)
+    this.set("balance", (parseFloat(value.toFixed(2))) * 100);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "totalBalanceInDollar", {
+  get: function () {
+    return parseFloat(((parseInt(this.get("balance")) / 100) + (parseInt(this.get("rewardBalance")) / 100)).toFixed(2));
+  }
+  //,
+  //set: function (value) {
+  //    value = parseFloat(value)
+  //    this.set("balance", (parseFloat(value.toFixed(2))) * 100);
+  //}
+});
+Object.defineProperty(YDUser.prototype, "balanceInYuan", {
+  get: function () {
+    var dollar = this.totalBalanceInDollar;
+    var yuan = parseFloat((dollar * 6.4).toFixed(2));
+    return yuan;
+  }
+});
+Object.defineProperty(YDUser.prototype, "rewardBalance", {
+  get: function () {
+    return this.get("rewardBalance");
+  },
+  set: function (value) {
+    this.set("rewardBalance", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "rewardBalanceInDollar", {
+  get: function () {
+    var rewardDollar = parseFloat(this.get("rewardBalance") / 100);
+    return rewardDollar;
+  },
+  set: function (value) {
+    value = parseFloat(value);
+    this.set("rewardBalance", (parseFloat(value.toFixed(2))) * 100);
+  }
+});
+Object.defineProperty(YDUser.prototype, "accumulatedReward", {
+  get: function () {
+    return this.get("accumulatedReward");
+  },
+  set: function (value) {
+    this.set("accumulatedReward", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "username", {
+  get: function () {
+    return this.get("username");
+  },
+  set: function (value) {
+    this.set("username", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "mobilePhoneNumber", {
+  get: function () {
+    return this.get("mobilePhoneNumber");
+  },
+  set: function (value) {
+    this.set("mobilePhoneNumber", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "contactNumber", {
+  get: function () {
+    return this.get("contactNumber");
+  },
+  set: function (value) {
+    this.set("contactNumber", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "identityFront", {
+  get: function () {
+    return this.get("identityFront");
+  },
+  set: function (value) {
+    this.set("identityFront", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "identityBack", {
+  get: function () {
+    return this.get("identityBack");
+  },
+  set: function (value) {
+    this.set("identityBack", value);
+  }
+});
+Object.defineProperty(YDUser.prototype, "numberId", {
+  get: function () {
+    return this.get("numberId");
+  },
+  set: function (value) {
+    this.set("numberId", value);
+  }
+});
+
+Object.defineProperty(YDUser.prototype, "stringId", {
+  get: function () {
+    return this.get("stringId");
+  },
+  set: function (value) {
+    this.set("stringId", value);
+  }
+});
+
+YDUser.ROLE_ADMIN = 100;
+YDUser.ROLE_USER = 200;
+YDUser.ROLE_DEVELOPER = 190;
+
 
 YDUser.prototype.getAddress = function() {
   var addressId = this.get("addressId");

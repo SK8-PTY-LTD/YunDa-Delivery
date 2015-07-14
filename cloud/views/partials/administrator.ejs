@@ -45,48 +45,139 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-lg-4">
-                    <label for="checking"> 开启小包裹渠道选择： <input class="form-control" type="checkbox" id="checking" ng-model="selected"></label>
+                    <label for="checking"> 开启小包裹渠道选择： <input class="form-control" type="checkbox" id="checking" ng-model="systemSetting.isSmallPackageAllowed"></label>
 
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>加固价格($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="systemSetting.addPackageCharge">
+                </div>
+                <div class="col-lg-6">
+                    <label>分箱价格($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="systemSetting.splitPackageCharge">
                 </div>
             </div>
         </div>
         <div class="form-group">
             <div class="row">
                 <div class="col-lg-6">
-                    <label>小包裹渠道首磅价：</label>
-                    <input class="form-control" type="number" step="any" ng-model="smallPackageInitial">
+                    <label>验货价格($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="systemSetting.checkPackageCharge">
                 </div>
                 <div class="col-lg-6">
-                    <label>小包裹渠道续磅价：</label>
-                    <input class="form-control" type="number" step="any" ng-model="smallPackageContinue">
+                    <label>退货价格($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="systemSetting.returnGoodsCharge">
                 </div>
-            </div>
+            </div><hr>
         </div>
         <div class="form-group">
+            <div class="row bottom-buffer-2" ng-repeat="channel in systemSetting.channelList">
+                <!--<div class="row">-->
+                    <!--<strong ng-bind="channel.name"></strong>-->
+                <!--</div>-->
+                <div class="col-md-4">
+                    <label>渠道名称: </label>
+                    <input class="form-control" type="text" ng-model="channel.name" >
+                </div>
+                <div class="col-lg-2">
+                    <label>首磅价($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="channel.initialPrice">
+                </div>
+                <div class="col-lg-2">
+                    <label>续磅价($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="channel.continuePrice">
+                </div>
+                <div class="col-lg-2">
+                    <label>起运磅数: </label>
+                    <input class="form-control" type="number" step="any" ng-model="channel.startAt">
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-default btn-sm top-buffer-2" ng-click="deleteChannel(channel)">删除</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group" style="border: 1px dashed #ddd; background-color: #eee">
+
+            <div class="row">
+            <div class="col-md-4">
+                <label>新渠道名称: </label>
+                <input class="form-control" type="text" ng-model="newChannel.name" placeholder="新渠道名称">
+            </div>
+            <div class="col-lg-2">
+                <label>首磅价($): </label>
+                <input class="form-control" type="number" step="any" ng-model="newChannel.initialPrice">
+            </div>
+            <div class="col-lg-2">
+                <label>续磅价($): </label>
+                <input class="form-control" type="number" step="any" ng-model="newChannel.continuePrice">
+            </div>
+            <div class="col-lg-2">
+                <label>起运磅数: </label>
+                <input class="form-control" type="number" step="any" ng-model="newChannel.startAt">
+            </div>
+            <div class="col-lg-2 top-buffer-2">
+                <button class="btn btn-default btn-sm" ng-click="addNewChannel()">添加新渠道</button>
+            </div>
+            </div>
+
+        </div>
+        <!--<div class="form-group">-->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-6">-->
+                    <!--<label>普通渠道首磅价($)：</label>-->
+                    <!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageInitial">-->
+                <!--</div>-->
+
+                <!--<div class="col-lg-6">-->
+                    <!--<label>普通渠道续磅价($)：</label>-->
+                    <!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageContinue">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<hr>-->
+        <!--</div>-->
+
+
+        <div class="form-group">
+            <hr>
             <div class="row">
                 <div class="col-lg-6">
-                    <label>普通渠道首磅价：</label>
-                    <input class="form-control" type="number" step="any" ng-model="normalPackageInitial">
+                    <label>美元对人民币汇率：</label>
+                    <input class="form-control" type="number" step="any" ng-model="systemSetting.rate">
                 </div>
 
-                <div class="col-lg-6">
-                    <label>普通渠道续磅价：</label>
-                    <input class="form-control" type="number" step="any" ng-model="normalPackageContinue">
-                </div>
             </div>
+            <hr>
         </div>
         <div class="form-group">
-            <label>仓库地址:</label>
+            <h4>仓库地址:</h4>
         </div>
+        <div ng-repeat="address in systemSetting.addressList">
+       <div class="form-group">
+           <div class="row">
+               [{{$index+1}}]
+           </div>
+           <div class="row">
+               <div class="col-lg-6">
+                   <label>仓库名</label>
+                   <input type="text" class="form-control" ng-model="address.name">
+               </div>
+           </div>
+       </div>
         <div class="form-group">
             <div class="row">
                 <div class="col-lg-6">
                     <label>地址</label>
-                    <input type="text" class="form-control" ng-model="systemStreet">
+                    <input type="text" class="form-control" ng-model="address.street">
                 </div>
                 <div class="col-lg-6">
                     <label>城市</label>
-                    <input type="text" class="form-control" ng-model="systemCity">
+                    <input type="text" class="form-control" ng-model="address.city">
                 </div>
             </div>
         </div>
@@ -94,11 +185,61 @@
             <div class="row">
                 <div class="col-lg-6">
                     <label>州/省</label>
-                    <input type="text" class="form-control" ng-model="systemState">
+                    <input type="text" class="form-control" ng-model="address.state">
                 </div>
                 <div class="col-lg-6">
                     <label>邮编</label>
-                    <input type="text" class="form-control" ng-model="systemZipcode">
+                    <input type="text" class="form-control" ng-model="address.zipCode">
+                </div>
+            </div>
+
+        </div>
+        </div>
+        <div  style="border: 1px dashed #ddd; background-color: #eee">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>仓库名</label>
+                    <input type="text" class="form-control" ng-model="newAddress.name">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>地址</label>
+                    <input type="text" class="form-control" ng-model="newAddress.street">
+                </div>
+                <div class="col-lg-6">
+                    <label>城市</label>
+                    <input type="text" class="form-control" ng-model="newAddress.city">
+                </div>
+            </div>
+        </div>
+        <div class=form-group>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>州/省</label>
+                    <input type="text" class="form-control" ng-model="newAddress.state">
+                </div>
+                <div class="col-lg-6">
+                    <label>邮编</label>
+                    <input type="text" class="form-control" ng-model="newAddress.zipCode">
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-default" ng-click="addNewAddress()">添加</button>
+        </div>
+        <hr>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>联系电话</label>
+                    <input type="text" class="form-control" ng-model="systemSetting.contactNumber">
+                </div>
+                <div class="col-lg-6">
+                    <label>邮箱</label>
+                    <input type="text" class="form-control" ng-model="systemSetting.contactEmail">
                 </div>
             </div>
         </div>
@@ -139,6 +280,8 @@
                 待用户确认入库<span class="badge" style="margin-left:5px;">{{badgeAAdminCount}}</span>
             </tab-heading>
             <!--this is the content for 待确认入库-->
+            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
             <table class="table table-hover" style="font-size: 0.9em">
                 <thead>
                 <th>发件人</th>
@@ -154,11 +297,15 @@
                     <td><span ng-bind="f.weight"></span>Lb</td>
                     <td>
                         <div ng-if="f.status == 100">
+                            <!--到货-->
                             <button class="btn btn-sm btn-default" ng-click="freightInDelivered(f)">已寄到</button>
                             <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
                         </div>
                         <div ng-if="f.status == 210">
-                            <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)">添加验货信息</button>
+                            <!--验货-->
+                            <button class="btn btn-sm btn-default" ng-click="chargingCheck(f)" ng-disabled="f.isCheckingCharged">收钱</button>
+
+                            <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)" ng-disabled="!f.isChecking || !f.isCheckingCharged">确认验货</button>
                         </div>
                         <div ng-if="f.status == 200">
                             <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
@@ -175,15 +322,17 @@
             <table class="table table-hover" style="font-size: 0.9em">
                 <thead>
                 <th>发件人</th>
-                <th>物流号</th>
+                <th>转运号</th>
+                <th>入库号</th>
                 <th>创建时间</th>
                 <th>重量</th>
                 <th>通知</th>
                 </thead>
                 <tr ng-repeat="f in freightIn | orderBy:'-createdAt'">
                     <!--<td ng-bind="f.user.realName"></td>-->
-                    <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
-                    <td ng-bind="f.id"></td>
+                    <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
+                    <td ng-bind="f.trackingNumber"></td>
+                    <td ng-bind="f.RKNumber"></td>
                     <td ng-bind="f.createdAt"></td>
                     <td><span ng-bind="f.weight"></span>Lb</td>
                     <td>
@@ -201,29 +350,90 @@
     <!--<h4>待处理运单</h4>-->
     <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span-->
                 <!--ng-bind="promote"></span></progressbar>-->
-    <table class="table table-hover" style="font-size: 0.9em">
-        <thead>
-        <th width="7%">选择</th>
-        <th width="10%">发件人</th>
-        <th>YD单号</th>
-        <th>更新时间</th>
-        <th>重量</th>
-        <th width="20%">处理信息</th>
-        <th>通知</th>
-        </thead>
-        <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
-            <td><input type="checkbox" ng-model="f.selection"></td>
-            <td><a ng-click="showDetailsWithMerge(f)"><span  ng-bind="f.user.realName"></span></a></td>
-            <td ng-bind="f.id"></td>
-            <td ng-bind="f.updatedAt"></td>
-            <td><span ng-bind="f.weight"></span>Lb</td>
-            <td ng-bind="f.statusToString"></td>
-            <td>
-                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
-            </td>
+    <tabset>
+        <tab heading="合包">
+            <table class="table small-table">
+                <thead>
+                <th>用户名</th>
+                <th>YD运单号</th>
+                <th>时间</th>
+                <th>操作</th>
+                </thead>
+                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | filter: {isMerged: true}">
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td ng-bind="f.updatedAtToString"></td>
+                    <td>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                    </td>
+                </tr>
+            </table>
+        </tab>
+        <tab heading="分包">
 
-        </tr>
-    </table>
+                <table class="table small-table">
+                    <thead>
+                    <th>用户名</th>
+                    <th>YD运单号</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                    </thead>
+                    <tr ng-repeat="f in freight | orderBy:'-updatedAt' | splitPackageFilter ">
+                        <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                        <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                        <td ng-bind="f.updatedAtToString"></td>
+                        <td>
+                            <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
+                            <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                        </td>
+                    </tr>
+                </table>
+        </tab>
+        <tab heading="普通包裹">
+            <table class="table small-table">
+                <thead>
+                <th>用户名</th>
+                <th>YD运单号</th>
+                <th>时间</th>
+                <th>操作</th>
+                </thead>
+                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | normalPackageFilter ">
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td ng-bind="f.updatedAtToString"></td>
+                    <td>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                    </td>
+                </tr>
+            </table>
+        </tab>
+
+    </tabset>
+    <!--<table class="table table-hover" style="font-size: 0.9em">-->
+        <!--<thead>-->
+        <!--<th width="7%">选择</th>-->
+        <!--<th width="10%">发件人</th>-->
+        <!--<th>YD单号</th>-->
+        <!--<th>更新时间</th>-->
+        <!--<th>重量</th>-->
+        <!--<th width="20%">处理信息</th>-->
+        <!--<th>通知</th>-->
+        <!--</thead>-->
+        <!--<tr ng-repeat="f in freight | orderBy:'-updatedAt'">-->
+            <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
+            <!--<td><a ng-click="showDetailsWithMerge(f)"><span  ng-bind="f.user.realName"></span></a></td>-->
+            <!--<td ng-bind="f.id"></td>-->
+            <!--<td ng-bind="f.updatedAt"></td>-->
+            <!--<td><span ng-bind="f.weight"></span>Lb</td>-->
+            <!--<td ng-bind="f.statusToString"></td>-->
+            <!--<td>-->
+                <!--<button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>-->
+            <!--</td>-->
+
+        <!--</tr>-->
+    <!--</table>-->
     <a ng-href="/print">
         <button class="btn btn-info" ng-click="printAll()">批量打印文件</button>
     </a>
@@ -263,17 +473,17 @@
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>选择</th>
-        <th>发件人</th>
         <th>YD单号</th>
-        <th>付款时间</th>
+        <th>发件人</th>
+        <th>发货时间</th>
         <th>重量</th>
         <!--<th>状态</th>-->
         <th>通知</th>
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <td><input type="checkbox" ng-model="f.selection"></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
-            <td ng-bind="f.id"></td>
+            <td ng-bind="f.YDNumber"></td>
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
             <td ng-bind="f.updatedAt"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
             <!--<td>等待付款</td>-->
@@ -295,18 +505,17 @@
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>选择</th>
-        <th>发件人</th>
         <th>YD单号</th>
+
+        <th>发件人</th>
         <th>清关时间</th>
-        <th>重量</th>
         <th>通知</th>
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <td><input type="checkbox" ng-model="f.selection"></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
-            <td ng-bind="f.id"></td>
+            <td ng-bind="f.YDNumber"></td>
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
             <td ng-bind="f.updatedAt"></td>
-            <td><span ng-bind="f.weight"></span>Lb</td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
             </td>
@@ -323,9 +532,10 @@
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>选择</th>
-        <th>发件人</th>
         <th>YD单号</th>
-        <th>接收时间</th>
+
+        <th>发件人</th>
+        <th>出关时间</th>
         <th>重量</th>
         <!--<th>状态</th>-->
         <th>通知</th>
@@ -333,10 +543,10 @@
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <td><input type="checkbox" ng-model="f.selection"></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
-            <td ng-bind="f.id"></td>
+            <td ng-bind="f.YDNumber"></td>
+
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.updatedAt"></td>
-            <td><span ng-bind="f.weight"></span>Lb</td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
             </td>
@@ -360,7 +570,6 @@
         <th>打包时间</th>
         <!--<th>重量</th>-->
         <th>状态</th>
-        <th>中国快递</th>
         <th>中国运单号</th>
         <th>操作</th>
 
@@ -370,7 +579,6 @@
             <td ng-bind="f.id"></td>
             <td ng-bind="f.updatedAt"></td>
             <td>正在运送</td>
-            <td ng-bind="f.chineseCourier"></td>
             <td ng-bind="f.chineseTrackingNumber"></td>
             <td><button class="btn btn-sm btn-default" ng-click="doubleConfirm(f)">已收货</button></td>
 
@@ -421,16 +629,18 @@
     <div class="col-lg-8">
         <table class="table table-hover" style="font-size: 0.9em">
             <thead>
+            <th>登录邮箱</th>
             <th>用户名</th>
             <th>数字ID</th>
-            <th>字母ID</th>
+            <!--<th>字母ID</th>-->
             <th>创建时间</th>
             </thead>
             <div>
                 <tr ng-repeat="user in users" ng-click="showDetails(user)">
-                    <td ng-bind="user.username"></td>
-                    <td ng-bind="user.numberId"></td>
+                    <td ng-bind="user.email"></td>
                     <td ng-bind="user.stringId"></td>
+
+                    <td ng-bind="user.numberId"></td>
                     <td ng-bind="user.createdAt"></td>
                 </tr>
             </div>
@@ -453,7 +663,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">YD币</label>
-                <span class="form-control" ng-bind="newUser.reward"></span>
+                <span class="form-control" ng-bind="newUser.accumulatedReward"></span>
             </div>
         </form>
     </div>
@@ -463,17 +673,18 @@
     <!--<h4>退款处理</h4>-->
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
-        <th>用户名</th>
-        <th>退款号</th>
+        <th>登录邮箱</th>
         <th>创建时间</th>
+        <th>支付宝信息</th>
         <th>金额</th>
         <th>理由</th>
         <th colspan="2">处理</th>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.username"></td>
-            <td ng-bind="t.id"></td>
             <td ng-bind="t.createdAt"></td>
+            <td><a ng-click="zhifubaoDetails(t)" >查看</a></td>
+
             <td ng-bind="t.amount"></td>
             <td ng-bind="t.reason"></td>
             <td>
@@ -489,18 +700,30 @@
 <div ng-show="view_tab=='cc'" ng-controller="AdminReturnGoodsCtrl">
     <!--<h4>退货处理</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
-    <table class="table table-hover" style="font-size: 0.9em">
+    <table class="table table-hover small-table" >
         <thead>
-        <th>用户名</th>
-        <th>YD单号</th>
+        <th>登录邮箱</th>
         <th>创建时间</th>
+        <th>YD单号</th>
+        <th>Label</th>
         <th>理由</th>
         <th colspan="2">处理</th>
         </thead>
         <tr ng-repeat="f in goodsList | orderBy:'-createdAt'">
             <td ng-bind="f.user.username"></td>
-            <td ng-bind="f.id"></td>
             <td ng-bind="f.createdAt"></td>
+            <td>
+                <div ng-show="f.identityFirst">
+                    <a target="_blank" ng-href="{{f.identityFirst._url}}">1</a>|
+                </div>
+                <div ng-show="f.identitySecond">
+                    |<a target="_blank" ng-href="{{f.identitySecond._url}}">2</a>
+
+                </div>
+                <div ng-show="f.identityThird">
+                    |<a target="_blank" ng-href="{{f.identityThird._url}}">3</a>
+                </div>
+            </td>
             <td ng-bind="f.reason"></td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmReturn(f)">同意退货</button>

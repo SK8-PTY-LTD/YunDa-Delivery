@@ -1,14 +1,53 @@
+<div class="modal-header">
+    <h3>是否确认验货?</h3>
+</div>
 
-    <div class="modal-header">
-        <h3>是否确认验货?</h3>
-    </div>
+<div class="modal-body">
+    <form name="checkForm">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>入库单号: </label>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" ng-model="freightIn.trackingNumber" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Email: </label>
+                </div>
+                <div class="col-md-5">
+                    <input type="email" ng-model="checkInfo.email" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>是否拍照: </label>
+                </div>
+                <div class="col-md-2">
+                    <input type="checkbox" class="form-control" ng-model="checkInfo.isTakingPhoto">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>验货要求</label>
+                </div>
+                <div class="col-md-5">
+                    <textarea rows="5" class="form-control" ng-model="checkInfo.notes"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
-    <div class="modal-body">
-        <p><em>验货后将收取手续费(3.5美金/件)</em></p>
-
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-default" ng-click="confirm()">确认</button>
-        <button class="btn btn-default" ng-click="close()">取消</button>
-    </div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="confirm()">确认</button>
+    <button class="btn btn-default" ng-click="close()">取消</button>
+</div>

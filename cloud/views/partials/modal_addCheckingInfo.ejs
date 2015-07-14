@@ -1,22 +1,68 @@
 <div class="modal-header">
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
-    <h4>添加验货信息</h4>
+    <h4>验货信息</h4>
 </div>
 
 <div class="modal-body">
     <form>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>入库单号: </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" ng-model="freightIn.trackingNumber" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Email: </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="email" ng-model="freightIn.checkInfo.email" class="form-control" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>是否拍照: </label>
+                    </div>
+                    <div class="col-md-2">
+                        <div ng-show="freightIn.checkInfo.isTakingPhoto">
+                            拍照
+                        </div>
+                        <div ng-show="!freightIn.checkInfo.isTakingPhoto">
+                            不拍照
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>验货要求</label>
+                    </div>
+                    <div class="col-md-5">
+                        <textarea rows="5" class="form-control" ng-model="freightIn.checkInfo.notes"></textarea>
+                    </div>
+                </div>
+            </div>
+        <hr>
         <div class="form-group">
             <label for="notes">留言：</label>
             <input id="notes" type="text" ng-model="freightIn.notes" class="form-control">
         </div>
-        <div class="form-group">
-            <label for="id-front">上传截图</label>
-            <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFront(this)" />
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label for="id-front">上传截图</label>-->
+            <!--<input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFront(this)" />-->
+        <!--</div>-->
     </form>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-sm btn-info" ng-click="save()"> 上传 </button>
+    <button class="btn btn-sm btn-info" ng-click="save()"> 确认完成 </button>
     <button class="btn btn-sm btn-info" ng-click="close()">关闭</button>
 </div>
