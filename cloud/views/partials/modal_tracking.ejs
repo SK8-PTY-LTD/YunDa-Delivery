@@ -1,37 +1,81 @@
 <div class="modal-body">
     <!--<div ng-show="!resultList">-->
-        <!--请稍候……-->
+    <!--请稍候……-->
     <!--</div>-->
+    <accordion close-others="false">
+        <div ng-repeat="freight in freights">
+            <accordion-group is-open="true">
+                <accordion-heading>
+                    运单号: {{freight.YDNumber}}
+                </accordion-heading>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <th>时间</th>
+                    <th>状态</th>
+                    </thead>
 
-    <table class="table table-hover" style="font-size: 0.9em">
-        <thead>
-        <th>YD运单号</th>
-        <th width="10%">收件人</th>
-        <th>货物描述</th>
-        <th>提交时间</th>
-        <th width="15%">状态</th>
-        <th>分/合包</th>
-        </thead>
-        <tr ng-repeat="freight in freights  | orderBy:'-updatedAt'">
-            <td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>
-            <td ng-bind="freight.address.recipient"></td>
-            <td ng-bind="freight.packageComments"></td>
-            <td><span ng-bind="freight.updatedAtToString"></span></td>
-            <td ng-bind="freight.statusToString"></td>
-            <td>
-                <div ng-show="freight.isMerged">
-                    合包
-                </div>
-                <div ng-show="freight.isSplit || freight.isSplitPremium">
-                    分包
-                </div>
-                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium">
-                    无
-                </div>
-            </td>
+                    <tr ng-show="freight.status == 0">
+                        <td ng-bind="freight.updatedAtToString"></td>
+                        <td ng-bind="'当前状态: ' + freight.statusToString"></td>
+                    </tr>
+                        <tr ng-show="freight.status >= 400">
+                            <td ng-bind="freight.shipping.delivery"></td>
+                            <td>美国仓库发出，送往机场途中</td>
+                        </tr>
+                        <tr ng-show="freight.status >= 500">
+                            <td ng-bind="freight.shipping.delivering"></td>
+                            <td>飞往中国途中</td>
+                        </tr>
+                        <tr ng-show="freight.status >= 600">
+                            <td ng-bind="freight.shipping.clear"></td>
+                            <td>等待清关</td>
+                        </tr>
+                        <tr ng-show="freight.status >= 610">
+                            <td ng-bind="freight.shipping.atChina"></td>
+                            <td>已转入国内{{freight.chineseCourier}}派送</td>
+                        </tr>
+                        <tr ng-show="freight.status >= 610">
+                            <td></td>
+                            <td>运单当前状态：已转入国内{{freight.chineseCourier}}派送</td>
+                        </tr>
+                        <tr ng-show="freight.status >= 610">
+                            <td></td>
+                            <td>转运单号: {{freight.chineseTrackingNumber}}</td>
+                        </tr>
 
-        </tr>
-    </table>
+                </table>
+            </accordion-group>
+        </div>
+    </accordion>
+    <!--<table class="table table-hover" style="font-size: 0.9em">-->
+    <!--<thead>-->
+    <!--<th></th>-->
+    <!--<th width="10%">收件人</th>-->
+    <!--<th>货物描述</th>-->
+    <!--<th>提交时间</th>-->
+    <!--<th width="15%">状态</th>-->
+    <!--<th>分/合包</th>-->
+    <!--</thead>-->
+    <!--<tr ng-repeat="freight in freights  | orderBy:'-updatedAt'">-->
+    <!--<td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>-->
+    <!--<td ng-bind="freight.address.recipient"></td>-->
+    <!--<td ng-bind="freight.packageComments"></td>-->
+    <!--<td><span ng-bind="freight.updatedAtToString"></span></td>-->
+    <!--<td ng-bind="freight.statusToString"></td>-->
+    <!--<td>-->
+    <!--<div ng-show="freight.isMerged">-->
+    <!--合包-->
+    <!--</div>-->
+    <!--<div ng-show="freight.isSplit || freight.isSplitPremium">-->
+    <!--分包-->
+    <!--</div>-->
+    <!--<div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium">-->
+    <!--无-->
+    <!--</div>-->
+    <!--</td>-->
+
+    <!--</tr>-->
+    <!--</table>-->
 </div>
 <div class="modal-footer">
     <button class="btn btn-info" ng-click="close()">关闭</button>

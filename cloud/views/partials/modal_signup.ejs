@@ -8,12 +8,12 @@
 
         <div class="form-group has-feedback">
             <label class="control-label">邮箱(Email):</label>
-            <span ng-show="!loginForm.email.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.email.$valid || emailExist" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="email" name="email" class="form-control" id="email" ng-model="currentUser.email" placeholder="john.smith@gmail.com" ng-focus="emailExist=false" ng-blur="checkExistence('email')" required>
         </div>
         <div ng-show="emailExist" class="form-group">
-            <small>此邮箱已被占用</small>
+            <small class="error-message">此邮箱已被占用</small>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">密码:</label>
@@ -29,15 +29,15 @@
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">用户名:</label>
-            <span ng-show="!loginForm.stringId.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.stringId.$valid || nameExist" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.stringId.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="text" name="stringId" class="form-control" minlength="5" maxlength="8" id="stringId" ng-model="currentUser.stringId" ng-focus="nameExist=false" ng-blur="checkExistence('stringId')" placeholder="英文字母5-8位，一经注册无法修改" required>
+            <input type="text" name="stringId" class="form-control" minlength="5" maxlength="8" id="stringId" ng-model="currentUser.stringId" ng-focus="nameExist=false" ng-blur="checkExistence('stringId')" placeholder="字母5-8位，注册后无法修改" required>
         </div>
         <div ng-show="nameExist" class="form-group">
-            <small>此用户名已被占用</small>
+            <small class="error-message">此用户名已被占用</small>
         </div>
         <div class="form-group has-feedback">
-            <label class="control-label">真实姓名<strong>(拼音,注册后无法修改)</strong>:</label>
+            <label class="control-label">姓名<strong>(注册后无法修改)</strong>:</label>
             <span ng-show="!loginForm.realname.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.realname.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="realname"  class="form-control" id="realName" ng-model="currentUser.realName"  placeholder="Yun Da" required>

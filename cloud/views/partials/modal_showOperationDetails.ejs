@@ -1,0 +1,186 @@
+<div class="modal-header">
+    <h3 class="text-center">运单详情</h3>
+</div>
+
+<div class="modal-body">
+    <div ng-show="freight.isMerged">
+        <div class="modal-header">
+            <div class="row">
+                <h4>合包信息</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label>原包裹转运单号: </label>
+                    <span ng-bind="freight.trackingNumber"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div ng-show="freight.isSplit">
+
+        <div class="modal-header">
+            <div class="row">
+                <h4>普通分包信息</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label>原包裹转运单号: </label>
+                    <span ng-bind="freight.splitReference.trackingNumber"></span>
+                </div>
+                <div class="col-md-5">
+                    <label>原包裹入库号: </label>
+                    <span ng-bind="freight.splitReference.RKNumber"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <label>备注: </label>
+                    <span ng-bind="freight.comments"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div ng-show="freight.isSplitPremium">
+        <div class="modal-header">
+            <div class="row">
+                <h4>精确合包信息</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <label>原包裹转运单号: </label>
+                    <span ng-bind="freight.splitReference.trackingNumber"></span>
+                </div>
+                <div class="col-md-5">
+                    <label>原包裹入库号: </label>
+                    <span ng-bind="freight.splitReference.RKNumber"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <label>备注: </label>
+                    <span ng-bind="freight.comments"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-5">
+                <label>用户名: </label>
+                <span ng-bind="freight.user.username"></span>
+            </div>
+            <div class="col-md-5">
+                <label>数字ID: </label>
+                <span ng-bind="freight.user.numberId"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>物流号: </label>
+                <span ng-bind="freight.trackingNumber"></span>
+            </div>
+            <div class="col-md-4">
+                <label>入库号: </label>
+                <span ng-bind="freight.RKNumber"></span>
+            </div>
+            <div class="col-md-4">
+                <label>YD运单号: </label>
+                <span ng-bind="freight.YDNumber"></span>
+            </div>
+
+            <hr>
+        </div>
+    </div>
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-5">
+                <label>渠道: </label>
+                <span ng-bind="freight.channel.name"></span>
+            </div>
+            <div class="col-md-5">
+                <label>重量: </label>
+                <span ng-bind="freight.weight"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <label>收件人: </label>
+                <span ng-bind="freight.address.recipient"></span>
+            </div>
+            <div class="col-md-5">
+                <label>联系方式: </label>
+                <span ng-bind="freight.address.mobileNumber"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <label>地址: </label>
+            <span ng-bind="freight.address.country + freight.address.state + freight.address.city + freight.address.street1 + ' ' +
+            freight.address.street2"></span>
+            </div>
+
+            <hr>
+        </div>
+    </div>
+    <div class="modal-header">
+        <table class="table table-striped small-table">
+            <thead>
+            <th>类别</th>
+            <th>品名</th>
+            <th>品牌</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>总价</th>
+            </thead>
+            <tr ng-repeat="desc in freight.descriptionList">
+
+                <td ng-bind="desc.kind"></td>
+                <td ng-bind="desc.name"></td>
+                <td ng-bind="desc.brand"></td>
+                <td ng-bind="desc.amount"></td>
+                <td ng-bind="desc.price"></td>
+                <td ng-bind="desc.total"></td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-md-5">
+                <label>货物描述: </label>
+                <span ng-bind="freight.packageComments"></span>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <strong>其他服务:</strong>
+
+                <input type="checkbox" ng-model="freight.isReduceWeight" disabled><span>去除购物收据</span>
+                <input type="checkbox" ng-model="freight.isAddPackage" disabled><span>加固</span>
+                <input type="checkbox" ng-model="freight.isSplit" disabled><span>普通分包</span>
+                <input type="checkbox" ng-model="freight.isSplitPremium" disabled><span>精确分包</span>
+                <input type="checkbox" ng-model="freight.isMerged" disabled><span>合包</span>
+
+            </div>
+
+        </div>
+<br>
+        <div class="row">
+            <div class="col-md-5">
+                <label>保价: </label>
+                <span ng-bind="'$' + freight.insurance"></span>
+            </div>
+            <div class="col-md-5">
+                <label>留言: </label>
+                <span ng-bind="freight.comments"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="close()">关闭</button>
+</div>

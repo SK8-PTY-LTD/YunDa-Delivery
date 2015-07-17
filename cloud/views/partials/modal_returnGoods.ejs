@@ -1,0 +1,49 @@
+<div class="modal-body">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
+    <form>
+        <div class="form-group">
+            <label for="address">YD物流号: </label>
+            <input type="text" class="form-control" ng-model="return.YDNumber" required>
+            <!--<inpu?t type="number" step="any" min="0" class="form-control" ng-model="returnAmount" required>-->
+        </div>
+        <div class="form-group">
+            <label for="address">退货地址（必填）</label>
+            <input type="text" class="form-control" ng-model="return.address" required>
+        </div>
+        <div class="form-group">
+            <label for="reason">退货理由</label>
+            <input type="text" class="form-control" ng-model="return.reason">
+        </div>
+        <div class="form-group">
+            <label>上传购物网站提供退货Label (最多三张)</label>
+            <sm>文件大小限制在1M以下,每次最多上传1个文件,允许的扩展名:.jpg , .jpeg , .gif , .png, .pdf</sm>
+        </div>
+        <div class="form-group">
+            <label for="id-front">上传第一张</label>
+            <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedFirst(this)"/>
+        </div>
+        <div class="form-group">
+            <label for="id-front">上传第二张</label>
+            <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedSecond(this)"/>
+        </div>
+        <div class="form-group">
+            <label for="id-front">上传第三张</label>
+            <input type="file" class="form-control" onchange="angular.element(this).scope().filesChangedThird(this)"/>
+        </div>
+
+        <button class="btn btn-info " ng-click="uploadIdentity()"> 上传Label</button>
+
+    </form>
+    <div class="modal-footer">
+        <button class="btn btn-info" ng-click="applyReturn()"> 确认申请 </button>
+    </div>
+    <pre><em>注意: <br>
+            1.退款需收取退款金额2%手续费。<br>
+            2.退款一经提交，如需取消退款，需联系客服。<br>
+            3.如已有待处理的退款申请，不可再重复申请退款。<br>
+            4.退款2%的手续费由客人承担
+        </em></pre>
+
+
+</div>

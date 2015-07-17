@@ -1,0 +1,19 @@
+<div class="modal-body">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>消费金额</th>
+            <th>消费类型</th>
+            <th>消费时间</th>
+        </thead>
+        <tr ng-repeat="t in transactions">
+            <td ng-bind="t.amount"></td>
+            <td ng-bind="t.notes"></td>
+            <td ng-bind="t.createdAtToString"></td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default">关闭</button>
+</div>

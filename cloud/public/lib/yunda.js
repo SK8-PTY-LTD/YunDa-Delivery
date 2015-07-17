@@ -496,19 +496,26 @@
     YD.Freight.STATUS_SPEED_MANUAL = 110;
     //Pending admin action
     YD.Freight.STATUS_PENDING_SPLIT_PACKAGE = 200;
-    YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_CHARGED = 210;
+    YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_PREMIUM = 210;
     YD.Freight.STATUS_PENDING_REDUCE_WEIGHT = 220;
     YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
     YD.Freight.STATUS_PENDING_CHECK_PACKAGE = 240;
     YD.Freight.STATUS_PENDING_MERGE_PACKAGE = 250;
-    YD.Freight.STATUS_PENDING_PAY_INSURANCE = 260
+    YD.Freight.STATUS_CONFIRMED_PAY_INSURANCE = 260;
+    YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE = 205;
+    YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE_PREMIUM = 215;
+    YD.Freight.STATUS_CONFIRMED_REDUCE_WEIGHT = 225;
+    YD.Freight.STATUS_CONFIRMED_EXTRA_PACKAGING = 235;
+    YD.Freight.STATUS_CONFIRMED_CHECK_PACKAGE = 245;
+    YD.Freight.STATUS_CONFIRMED_MERGE_PACKAGE = 255;
+    YD.Freight.STATUS_CONFIRMED_PAY_INSURANCE = 265;
 
 
     //Pending user action
     YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION = 300;
     //Pending admin action
     YD.Freight.STATUS_PENDING_FINISHED = 400;
-    YD.Freight.STATUS_PENDING_DELIVERY = 500;
+    //YD.Freight.STATUS_PENDING_DELIVERY = 500;
     YD.Freight.STATUS_DELIVERING = 510;
     //Pending chinese admin action
     YD.Freight.STATUS_PASSING_CUSTOM = 600;
@@ -532,6 +539,15 @@
         },
         set: function (value) {
             this.set("address", value);
+        }
+    });
+
+    Object.defineProperty(YD.Freight.prototype, "shipping", {
+        get: function () {
+            return this.get("shipping");
+        },
+        set: function (value) {
+            this.set("shipping", value);
         }
     });
 
@@ -1810,6 +1826,9 @@
     YD.Transaction.STATUS_CONSUME = 300;
     YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE = 310;
     YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE = 320;
+    YD.Transaction.STATUS_CONSUME_YD_REWARD = 330;
+    YD.Transaction.STATUS_CONSUME_RETURN_GOODS = 340;
+
 
     YD.Transaction.STATUS_RECHARGE = 400;
     YD.Transaction.STATUS_PENDING_RETURN_BALANCE = 500;
@@ -1901,6 +1920,32 @@
         }
     });
 
+    Object.defineProperty(YD.Transaction.prototype, "RKNumber", {
+        get: function () {
+            return this.get("RKNumber");
+        },
+        set: function (value) {
+            this.set("RKNumber", value);
+        }
+    });
+    Object.defineProperty(YD.Transaction.prototype, "YDNumber", {
+        get: function () {
+            return this.get("YDNumber");
+        },
+        set: function (value) {
+            this.set("YDNumber", value);
+        }
+    });
+
+    Object.defineProperty(YD.Transaction.prototype, "identityFront", {
+        get: function () {
+            return this.get("identityFront");
+        },
+        set: function (value) {
+            this.set("identityFront", value);
+        }
+    });
+
 
     YD.News = AV.Object.extend("News", {}, {});
 
@@ -1981,6 +2026,48 @@
         },
         set: function (value) {
             this.set("startAt", value);
+        }
+    });
+
+    YD.Shipping = AV.Object.extend("Shipping", {}, {});
+    Object.defineProperty(YD.Shipping.prototype, "delivery", {
+        get: function () {
+            return this.get("delivery");
+        },
+        set: function (value) {
+            this.set("delivery", value);
+        }
+    });
+    Object.defineProperty(YD.Shipping.prototype, "delivering", {
+        get: function () {
+            return this.get("delivery");
+        },
+        set: function (value) {
+            this.set("delivery", value);
+        }
+    });
+    Object.defineProperty(YD.Shipping.prototype, "clear", {
+        get: function () {
+            return this.get("delivery");
+        },
+        set: function (value) {
+            this.set("delivery", value);
+        }
+    });
+    Object.defineProperty(YD.Shipping.prototype, "atChina", {
+        get: function () {
+            return this.get("delivery");
+        },
+        set: function (value) {
+            this.set("delivery", value);
+        }
+    });
+    Object.defineProperty(YD.Shipping.prototype, "YDNumber", {
+        get: function () {
+            return this.get("YDNumber");
+        },
+        set: function (value) {
+            this.set("YDNumber", value);
         }
     });
 }).call(this);

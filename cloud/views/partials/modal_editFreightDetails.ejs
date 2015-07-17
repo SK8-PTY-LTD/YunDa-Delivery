@@ -54,7 +54,7 @@
                 <th>操作</th>
                 </thead>
 
-                <tr ng-repeat="desc in freight.descriptionList">
+                <tr ng-repeat="desc in descriptionList">
                     <td ng-bind="desc.kind"></td>
                     <td ng-bind="desc.name"></td>
                     <td ng-bind="desc.brand"></td>
@@ -80,7 +80,7 @@
         </div>
         <div class="row">
             <label>货物描述</label>
-            <textarea class="form-control" rows="5" ng-model="freight.comments" placeholder="请输入详细货物描述"></textarea>
+            <textarea class="form-control" rows="5" ng-model="freight.packageComments" placeholder="请输入详细货物描述"></textarea>
         </div>
         <hr>
 

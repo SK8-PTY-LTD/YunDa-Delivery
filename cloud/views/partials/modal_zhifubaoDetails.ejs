@@ -4,7 +4,7 @@
             <label>支付宝账号:</label>
         </div>
         <div class="col-md-7">
-            <span ng-bind="zhifubao.account"></span>
+            <span ng-bind="transaction.zhifubao.account"></span>
         </div>
     </div>
     <div class="row">
@@ -12,7 +12,7 @@
             <label>支付宝姓名:</label>
         </div>
         <div class="col-md-7">
-            <span ng-bind="zhifubao.name"></span>
+            <span ng-bind="transaction.zhifubao.name"></span>
 
         </div>
     </div>
@@ -21,8 +21,21 @@
             <label>联系方式:</label>
         </div>
         <div class="col-md-7">
-            <span ng-bind="zhifubao.contact"></span>
+            <span ng-bind="transaction.zhifubao.contact"></span>
 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>身份证</label>
+        </div>
+        <div class="col-md-7">
+            <div ng-show="transaction.identityFront">
+                <a target="_blank" ng-href="{{transaction.identityFront._url}}">点此</a>
+            </div>
+            <div ng-show="!transaction.identityFront">
+                未上传
+            </div>
         </div>
     </div>
 </div>

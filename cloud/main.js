@@ -217,6 +217,50 @@ AV.Cloud.define("chargingUser", function(request, response) {
     });
 });
 
+AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
+    console.log("in ChargeUser");
+    var query = new AV.Query("_User");
+    var id = request.params.userId;
+    var amount = parseFloat(request.params.amount);
+    console.log("getting user now: " + id + " | " + amount);
+    //query.equalTo("objectId", id);
+    query.get(id, {
+        success: function(user) {
+            var balance = parseInt(user.get("balance"))/100;
+            console.log("user's total balance: " + totalBalance);
+            console.log("user's total balance: " + rewardBalance);
+            console.log("user's total balance: " + balance);
+
+            if(balance < amount) {
+                response.error("用户金额不足$" + amount);
+            } else {
+
+                /**
+                 * Make sure user's rewardBalance is charged first.
+                 */
+
+                    balance -= amount;
+
+                user.set("balance", balance*100);
+                console.log("user's total balance: " + balance);
+                user.save(null, {
+                    success: function(u) {
+                        console.log("user saved");
+                        response.success();
+                    },
+                    error: function(u, error) {
+                        response.error(error.message);
+                    }
+                });
+            }
+        },
+        error: function(user, error) {
+            console.log("find user error: " + error.message);
+            response.error(error.message);
+        }
+    });
+});
+
 
 
 /**

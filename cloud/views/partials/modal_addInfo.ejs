@@ -2,6 +2,9 @@
     <form>
         <div class="form-group">
             <label for="name">快递公司</label>
+
+            <select ng-model="freight.chineseCourier"
+                    ng-options="channel.name for channel in channelList"></select>
             <input ng-model="freight.chineseCourier" class="form-control">
         </div>
         <div class="form-group">
@@ -9,7 +12,7 @@
             <input ng-model="freight.chineseTrackingNumber" class="form-control">
         </div>
     </form>
-    </div>
+</div>
 <div class="modal-footer">
     <button class="btn btn-sm btn-default" ng-click="confirmAddInfo()">确定添加</button>
     <button class="btn btn-sm btn-default" ng-click="cancelAddInfo()">取消</button>

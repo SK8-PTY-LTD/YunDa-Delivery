@@ -1,0 +1,30 @@
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>转运号:</label>
+        </div>
+        <div class="col-md-5">
+            <span ng-bind="freight.trackingNumber"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>入库号:</label>
+        </div>
+        <div class="col-md-5">
+            <span ng-bind="freight.RKNumber"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>YD运单号:</label>
+        </div>
+        <div class="col-md-5">
+            <span ng-bind="freight.YDNumber"></span>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="close()">关闭</button>
+</div>

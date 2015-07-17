@@ -117,6 +117,13 @@ span.help-question {
     left: 15%;
     z-index: 10;
     width: 80%;
+
+}
+.error-message {
+    color: red;
+}
+.modal-content {
+    border:6px solid #013086;
 }
 
 .a4-print-page {
