@@ -501,6 +501,8 @@
     YD.Freight.STATUS_PENDING_EXTRA_PACKAGING = 230;
     YD.Freight.STATUS_PENDING_CHECK_PACKAGE = 240;
     YD.Freight.STATUS_PENDING_MERGE_PACKAGE = 250;
+
+    //Completed admin action
     YD.Freight.STATUS_CONFIRMED_PAY_INSURANCE = 260;
     YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE = 205;
     YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE_PREMIUM = 215;
@@ -510,12 +512,9 @@
     YD.Freight.STATUS_CONFIRMED_MERGE_PACKAGE = 255;
     YD.Freight.STATUS_CONFIRMED_PAY_INSURANCE = 265;
 
-
-    //Pending user action
-    YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION = 300;
-    //Pending admin action
-    YD.Freight.STATUS_PENDING_FINISHED = 400;
-    //YD.Freight.STATUS_PENDING_DELIVERY = 500;
+    //Pending admin delivery action
+    YD.Freight.STATUS_REJECTED = 400;
+    YD.Freight.STATUS_PENDING_DELIVERY = 500;
     YD.Freight.STATUS_DELIVERING = 510;
     //Pending chinese admin action
     YD.Freight.STATUS_PASSING_CUSTOM = 600;
@@ -523,6 +522,9 @@
     YD.Freight.STATUS_DELIVERED = 690;
     //return goods; cancel
     YD.Freight.STATUS_CANCELED = 990;
+
+    //Pending user action
+    YD.Freight.STATUS_PENDING_FINAL_CONFIRMATION = 300;
 
     Object.defineProperty(YD.Freight.prototype, "YDNumber", {
         get: function () {
@@ -967,6 +969,7 @@
     YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE = 210
     YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE = 290
     YD.FreightIn.STATUS_CONFIRMED = 300
+    //YD.FreightIn.STATUS_REJECTED = 400;
     YD.FreightIn.STATUS_FINISHED = 900
     YD.FreightIn.STATUS_CANCELED = 990
 
@@ -1234,6 +1237,15 @@
         },
         set: function (value) {
             this.set("isReduceWeight", value);
+        }
+    });
+
+    Object.defineProperty(YD.FreightIn.prototype, "exceedWeight", {
+        get: function () {
+            return this.get("exceedWeight");
+        },
+        set: function (value) {
+            this.set("exceedWeight", value);
         }
     });
     // YD.Transactoin = require('cloud/shelf/objects/YDTransactoin.js')
@@ -1573,9 +1585,33 @@
 
 
 
-    YD.User.ROLE_ADMIN = 100
-    YD.User.ROLE_USER = 200
-    YD.User.ROLE_DEVELOPER = 190
+    YD.User.ROLE_ADMIN = 100;
+    YD.User.ROLE_DEVELOPER = 190;
+
+    YD.User.ROLE_ADMIN_SYSTEM = 110;
+    YD.User.ROLE_ADMIN_SYSTEM_SETTING = 111;
+    YD.User.ROLE_ADMIN_SYSTEM_NEWS = 112;
+
+    YD.User.ROLE_ADMIN_PACKAGE = 120;
+    YD.User.ROLE_ADMIN_PACKAGE_CHECK_PACKAGE = 121;
+    YD.User.ROLE_ADMIN_PACKAGE_FREIGHT = 122;
+    YD.User.ROLE_ADMIN_PACKAGE_PENDING = 123;
+    YD.User.ROLE_ADMIN_PACKAGE_DELIVERY = 124;
+    YD.User.ROLE_ADMIN_PACKAGE_CLEAR = 125;
+    YD.User.ROLE_ADMIN_PACKAGE_RECEIVE = 126;
+
+    YD.User.ROLE_ADMIN_CUSTOMER = 130;
+    YD.User.ROLE_ADMIN_CUSTOMER_INFO = 131;
+    YD.User.ROLE_ADMIN_CUSTOMER_RETURN_BALANCE = 132;
+    YD.User.ROLE_ADMIN_CUSTOMER_RETURN_GOODS = 133;
+
+    YD.User.ROLE_ADMIN_FINANCE = 140;
+    YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO = 141;
+    YD.User.ROLE_ADMIN_FINANCE_RECHARGE = 142;
+    YD.User.ROLE_ADMIN_FINANCE_CONSUME = 143;
+    YD.User.ROLE_ADMIN_FINANCE_YD = 144;
+
+    YD.User.ROLE_USER = 200;
     //var StatusGroup = AV.Object.extend("StatusGroup");
     //Object.defineProperty(StatusGroup.prototype, "url", {
     //  get: function(){

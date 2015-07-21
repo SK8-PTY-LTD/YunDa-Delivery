@@ -28,6 +28,9 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/responsibility', {
           templateUrl: 'partials/responsibility'
       }).
+      when('/forbidden', {
+          templateUrl: 'partials/forbidden'
+      }).
       when('/reperation', {
           templateUrl: 'partials/reperation'
       }).
@@ -40,9 +43,7 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/service', {
           templateUrl: 'partials/service'
       }).
-      //when('/modal', {
-      //    templateUrl: 'partials/modal_login'
-      //}).
+
       when('/dashboard', {
           templateUrl: 'partials/dashboard'
       }).
