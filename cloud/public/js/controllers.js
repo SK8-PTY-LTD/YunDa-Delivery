@@ -5373,8 +5373,8 @@ YundaApp.controller("AdminSystemCtrl", function ($scope, $rootScope) {
         //        alert("系统错误！" + error.message)
         //    }
         //})
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
             alert("您没有权限");
             return;
         }
@@ -5403,8 +5403,8 @@ YundaApp.controller("AdminSystemCtrl", function ($scope, $rootScope) {
     }
 
     $scope.addNewAddress = function () {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
             alert("您没有权限");
             return;
         }
@@ -5431,8 +5431,8 @@ YundaApp.controller("AdminSystemCtrl", function ($scope, $rootScope) {
         //$scope.newAddress = {};
     }
     $scope.saveAddress = function(address) {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
             alert("您没有权限");
             return;
         }
@@ -5477,8 +5477,8 @@ YundaApp.controller("AdminSystemCtrl", function ($scope, $rootScope) {
     }
     $scope.addNewChannel = function () {
         //$rootScope.systemSetting.addUnique("channelList", $scope.newChannel);
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_SETTING) {
             alert("您没有权限");
             return;
         }
@@ -5547,8 +5547,8 @@ YundaApp.controller("AdminNewsCtrl", ["$scope", "$rootScope", "$modal", function
     }
 
     $scope.editNews = function (news) {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_NEWS) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_NEWS) {
             alert("您没有权限");
             return;
         }
@@ -5572,8 +5572,8 @@ YundaApp.controller("AdminNewsCtrl", ["$scope", "$rootScope", "$modal", function
     }
 
     $scope.confirmDeleteNews = function (news) {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM || $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_NEWS) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM && $scope.currentUser.role != YD.User.ROLE_ADMIN_SYSTEM_NEWS) {
             alert("您没有权限");
             return;
         }
@@ -5638,13 +5638,7 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
         })
     }
 
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_FREIGHT) {
-        //alert("您没有权限");
-        return;
-    } else {
-        $scope.reloadFreightIn();
-    }
+
     $scope.reloadFreightIn = function() {
         var query = new AV.Query("FreightIn")
         query.equalTo("status", YD.FreightIn.STATUS_CONFIRMED)
@@ -5671,6 +5665,14 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
             }
         });
     }
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_FREIGHT) {
+        //alert("您没有权限");
+        console.log("In if: " + $scope.currentUser.role + " | " + $scope.currentUser.role == YD.User.ROLE_DEVELOPER);
+        return;
+    } else {
+        $scope.reloadFreightIn();
+    }
     $scope.addNotes = function (freightIn) {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_addNotes',
@@ -5695,6 +5697,12 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
     }
 
     $scope.searching = function() {
+        console.log("role: " + $scope.currentUser.role);
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_FREIGHT) {
+            alert("您没有权限" + $scope.currentUser.role == YD.User.ROLE_DEVELOPER);
+            return;
+        }
         var isEmail = false;
         for(var i = 0; i < $scope.queryString.length; i++) {
             if($scope.queryString[i] == '@') {
@@ -5862,8 +5870,8 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
             }
         })
     };
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_PENDING) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_PENDING) {
         //alert("您没有权限");
         return;
     } else {
@@ -5873,8 +5881,8 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
 
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_PENDING) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_PENDING) {
             alert("您没有权限");
             return;
         }
@@ -6225,8 +6233,8 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
     }
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_DELIVERY) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_DELIVERY) {
             alert("您没有权限");
             return;
         }
@@ -6319,8 +6327,8 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
         })
     }
 
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_DELIVERY) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_DELIVERY) {
         //alert("您没有权限");
         return;
     } else {
@@ -6415,8 +6423,8 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
         })
     }
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CLEAR) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CLEAR) {
             alert("您没有权限");
             return;
         }
@@ -6527,8 +6535,8 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
             console.log("Notes(): user's notes added")
         })
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CLEAR) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CLEAR) {
         //alert("您没有权限");
         return;
     } else {
@@ -6609,16 +6617,16 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
             }
         })
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_RECEIVE) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_RECEIVE) {
         //alert("您没有权限");
         return;
     } else {
         $scope.reloadChineseFreight()
     };
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_RECEIVE) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_RECEIVE) {
             alert("您没有权限");
             return;
         }
@@ -6836,16 +6844,16 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function($scope) {
 
         }
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_RECHARGE) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_RECHARGE) {
         //alert("您没有权限");
         return;
     } else {
         $scope.reloadTransaction()
     };
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_RECHARGE) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_RECHARGE) {
             alert("您没有权限");
             return;
         }
@@ -7021,16 +7029,16 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function($scope) {
             })
         }
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
         //alert("您没有权限");
         return;
     } else {
         $scope.reloadTransaction()
     };
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
             alert("您没有权限");
             return;
         }
@@ -7172,8 +7180,8 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function($scope) {
             }
         })
     };
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
         //alert("您没有权限");
         return;
     } else {
@@ -7181,8 +7189,8 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function($scope) {
     };
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
             alert("您没有权限");
             return;
         }
@@ -7429,8 +7437,8 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
             }
         })
     };
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
         //alert("您没有权限");
         return;
     } else {
@@ -7438,8 +7446,8 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
     };
 
     $scope.searchForUser = function (type) {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
             alert("您没有权限");
             return;
         }
@@ -7618,8 +7626,8 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
     }
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_BALANCE) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_BALANCE) {
             alert("您没有权限");
             return;
         }
@@ -7683,8 +7691,8 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
         })
     };
 
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_BALANCE) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_BALANCE) {
         //alert("您没有权限");
         return;
     } else {
@@ -7892,8 +7900,8 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
         })
 
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_GOODS) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_GOODS) {
         //alert("您没有权限");
         return;
     } else {
@@ -7901,8 +7909,8 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
     };
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER|| $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_GOODS) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER&& $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_RETURN_GOODS) {
             alert("您没有权限");
             return;
         }
@@ -8196,8 +8204,8 @@ YundaApp.controller('AdminZhifubaoCtrl', function ($scope) {
             }
         })
     }
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO) {
         //alert("您没有权限");
         return;
     } else {
@@ -8205,8 +8213,8 @@ YundaApp.controller('AdminZhifubaoCtrl', function ($scope) {
     };
 
     $scope.searching = function() {
-        if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-            || $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO) {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN &&$scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE&& $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO) {
             alert("您没有权限");
             return;
         }
