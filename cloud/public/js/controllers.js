@@ -95,13 +95,16 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
                 //    city: "Clackamas",
                 //    zipCode: "97015"
                 //}
-                //s.addressList.push(obj1);
-                //s.addressList.push(obj2);
+                //s.addUnique("channelList", obj1);
+                //s.addUnique("channelList", obj2);
                 //s.save(null, {
                 //    success: function(s) {
                 //        console.log("saved");
+                //    },
+                //    error: function (f, error) {
+                //        console.log("ERROR: " + error.message);
                 //    }
-                //})
+                //});
                 //var obj = {};
                 //obj.name = "安全座椅童车行李箱渠道";
                 //obj.initialPrice = 5;
