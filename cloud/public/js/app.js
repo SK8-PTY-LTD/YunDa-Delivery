@@ -54,7 +54,9 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/print', {
           templateUrl: 'partials/print'
       }).
-
+      when('/normalGoods', {
+          templateUrl: 'partials/normalGoods'
+      }).
       when('/test', {
           templateUrl: 'partials/print_form'
       }).

@@ -298,7 +298,7 @@ AV.Cloud.afterUpdate('_User', function(request) {
     } else {
         //Generate 8 digits random id
 
-            numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+            numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
             numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
         //Ensure there is no repeat
@@ -335,7 +335,7 @@ AV.Cloud.afterUpdate('_User', function(request) {
                     //Try another time. Maximum try twice
                     console.log("AfterUpdate -- 2nd round success")
 
-                        numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+                        numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
                         numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
                     //Ensure there is no repeat
@@ -418,7 +418,7 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
     } else {
         //Generate 8 digits random id
 
-            numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+            numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
             numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
         //Ensure there is no repeat
@@ -455,7 +455,7 @@ AV.Cloud.beforeSave ('_User', function(request, response) {
                 } else {
                     //Try another time. Maximum try twice
                     console.log("AfterUpdate -- 2nd round success")
-                        numberId = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+                        numberId = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
                         numberId = numberId.toString() // before query, make sure numberId is string (to match the field)
 
                     //Ensure there is no repeat

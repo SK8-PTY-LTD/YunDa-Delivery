@@ -726,7 +726,7 @@ YundaApp.controller('TrackingCtrl', function ($scope, $modal, $modalInstance, re
                 }
 
                 if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                    statusString += "等待减重; "
+                    statusString += "等待去发票; "
                 }
 
                 if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE) {
@@ -742,7 +742,7 @@ YundaApp.controller('TrackingCtrl', function ($scope, $modal, $modalInstance, re
                 }
 
                 if (statusList[j] == YD.Freight.STATUS_CONFIRMED_REDUCE_WEIGHT) {
-                    statusString += "完成减重; "
+                    statusString += "完成去发票; "
                 }
 
                 if (statusList[j] == YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE) {
@@ -829,7 +829,7 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
                                 }
 
                                 if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                                    statusString += "等待减重; "
+                                    statusString += "等待去发票; "
                                 }
 
                                 if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE) {
@@ -845,7 +845,7 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
                                 }
 
                                 if (statusList[j] == YD.Freight.STATUS_CONFIRMED_REDUCE_WEIGHT) {
-                                    statusString += "完成减重; "
+                                    statusString += "完成去发票; "
                                 }
 
                                 if (statusList[j] == YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE) {
@@ -1107,6 +1107,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
         }
         $scope.freightIn.user = $scope.currentUser;
         $scope.freightIn.status = YD.FreightIn.STATUS_SPEED_MANUAL;
+        $scope.freightIn.RKNumber = $scope.freightIn.generateRKNumber();
         $scope.freightIn.save(null, {
             success: function (fIn) {
                 console.log("freightIn saved: " + fIn.id + "  " + fIn.status);
@@ -1156,8 +1157,9 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                         alert("错误!" + reply);
                         return;
                     } else {
+                        console.log("YDNumber Callback: " + reply);
+
                         $scope.freight.YDNumber = reply;
-                        console.log("YDNuimber: " + reply);
                         $scope.freight.save(null, {
                             success: function (f) {
                                 alert("原箱闪运运单提交成功!")
@@ -2906,7 +2908,7 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                        statusString += "等待减重; "
+                        statusString += "等待去发票; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_SPLIT_PACKAGE) {
@@ -2922,7 +2924,7 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_CONFIRMED_REDUCE_WEIGHT) {
-                        statusString += "完成减重; "
+                        statusString += "完成去发票; "
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_CONFIRMED_SPLIT_PACKAGE) {
@@ -2996,8 +2998,32 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
         } else {
             freight.destroy({
                 success: function (f) {
-                    $scope.reloadFreight();
-                    alert("删除成功!");
+                    var rkNumber = f.RKNumber;
+                    var query = new AV.Query(YD.FreightIn);
+                    query.equalTo("RKNumber", rkNumber);
+                    console.log("RKNumber: " + rkNumber);
+                    query.find({
+                        success: function(list) {
+                            console.log("list length: " + list.length);
+                            if(list.length == 1) {
+                                var fIn = list[0];
+                                fIn.status = YD.FreightIn.STATUS_CONFIRMED;
+                                fIn.save(null, {
+                                    success: function(f) {
+                                        $scope.reloadFreight();
+                                        alert("删除成功!");
+                                    },
+                                    error: function (f, error) {
+                                        alert("错误!" + error.message);
+                                    }
+                                });
+
+                            }
+                        },
+                        error: function ( error) {
+                            alert("错误!" + error.message);
+                        }
+                    })
 
                 },
                 error: function (f, error) {
@@ -3485,7 +3511,7 @@ YundaApp.controller('FreightConfirmedCtrl', function ($scope, $rootScope, $modal
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                        statusString += "已减重;\n"
+                        statusString += "已去发票;\n"
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_CHECK_PACKAGE) {
@@ -5820,7 +5846,7 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
                     }
 
                     if (statusList[j] == YD.Freight.STATUS_PENDING_REDUCE_WEIGHT) {
-                        statusString += "等待减重; "
+                        statusString += "等待去发票; "
                         //console.log("FREIGHT_STATUS_TO_STRING: " + statusString)
                     }
 

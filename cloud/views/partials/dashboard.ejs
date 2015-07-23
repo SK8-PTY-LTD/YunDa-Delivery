@@ -90,7 +90,7 @@
             </accordion-heading>
             <p>登陆邮箱: <span ng-bind="currentUser.email"></span></p> <a ng-click="updatePassword()">修改密码</a>
 
-            <p>用户名: <span ng-bind="currentUser.username"></span></p>
+            <p>用户名: <span ng-bind="currentUser.stringId"></span></p>
 
             <p>姓名: <span ng-bind="currentUser.realName"></span></p>
 
@@ -414,7 +414,7 @@
                 <td><input type="number" step="any" class="form-control" ng-model="description.price"></td>
                 <td><input type="number" step="any" class="form-control" ng-model="description.total"></td>
                 <td>
-                    <button class="btn btn-default btn-sm" ng-click="addNewDescription()">添加</button>
+                    <button class="btn btn-default btn-sm" ng-click="addNewDescription()">确认</button>
                 </td>
             </tr>
         </table>
@@ -824,7 +824,7 @@
                 <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.price"></td>
                 <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.total"></td>
                 <td>
-                    <button class="btn btn-default btn-sm" ng-click="addNewDescription(freightIn)">添加</button>
+                    <button class="btn btn-default btn-sm" ng-click="addNewDescription(freightIn)">确认</button>
                 </td>
             </tr>
         </table>
