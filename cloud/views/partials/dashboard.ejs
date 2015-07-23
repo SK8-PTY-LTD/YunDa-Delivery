@@ -346,7 +346,7 @@
                        required>
             </div>
             <div class="col-md-5">
-                <label for="weight">重量*</label>
+                <label for="weight">重量*(Lb)</label>
                 <input type="number" step="any" class="form-control" ng-model="freightIn.weight" placeholder="重量"
                        required>
             </div>
@@ -410,9 +410,9 @@
                 <td><select ng-model="description.kind" ng-options="kind.name for kind in kindList"></select></td>
                 <td><input type="text" class="form-control" ng-model="description.name"></td>
                 <td><input type="text" class="form-control" ng-model="description.brand"></td>
-                <td><input type="text" class="form-control" ng-model="description.amount"></td>
-                <td><input type="text" class="form-control" ng-model="description.price"></td>
-                <td><input type="text" class="form-control" ng-model="description.total"></td>
+                <td><input type="number" class="form-control" ng-model="description.amount"></td>
+                <td><input type="number" step="any" class="form-control" ng-model="description.price"></td>
+                <td><input type="number" step="any" class="form-control" ng-model="description.total"></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription()">添加</button>
                 </td>
@@ -820,9 +820,9 @@
                 </td>
                 <td><input type="text" class="form-control" ng-model="freightIn.description.name"></td>
                 <td><input type="text" class="form-control" ng-model="freightIn.description.brand"></td>
-                <td><input type="text" class="form-control" ng-model="freightIn.description.amount"></td>
-                <td><input type="text" class="form-control" ng-model="freightIn.description.price"></td>
-                <td><input type="text" class="form-control" ng-model="freightIn.description.total"></td>
+                <td><input type="number" class="form-control" ng-model="freightIn.description.amount"></td>
+                <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.price"></td>
+                <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.total"></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription(freightIn)">添加</button>
                 </td>
@@ -977,7 +977,7 @@
             <td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>
             <td ng-bind="freight.address.recipient"></td>
             <td ng-bind="freight.brief"></td>
-            <td><span ng-bind="freight.updatedAt"></span></td>
+            <td><span ng-bind="freight.updatedAtToString"></span></td>
             <td>
                 <div ng-show="freight.status != 400">
                     <span ng-bind="freight.statusToString"></span>

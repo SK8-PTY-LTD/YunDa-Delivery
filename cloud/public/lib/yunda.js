@@ -693,10 +693,10 @@
 
     Object.defineProperty(YD.Freight.prototype, "isAddPackage", {
         get: function () {
-            return this.get("extraStrength");
+            return this.get("isAddPackage");
         },
         set: function (value) {
-            this.set("extraStrength", value);
+            this.set("isAddPackage", value);
         }
     });
 
@@ -1864,6 +1864,7 @@
     YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE = 320;
     YD.Transaction.STATUS_CONSUME_YD_REWARD = 330;
     YD.Transaction.STATUS_CONSUME_RETURN_GOODS = 340;
+    YD.Transaction.STATUS_CONSUME_ADD_PACKAGE = 350;
 
 
     YD.Transaction.STATUS_RECHARGE = 400;
@@ -2076,26 +2077,26 @@
     });
     Object.defineProperty(YD.Shipping.prototype, "delivering", {
         get: function () {
-            return this.get("delivery");
+            return this.get("delivering");
         },
         set: function (value) {
-            this.set("delivery", value);
+            this.set("delivering", value);
         }
     });
     Object.defineProperty(YD.Shipping.prototype, "clear", {
         get: function () {
-            return this.get("delivery");
+            return this.get("clear");
         },
         set: function (value) {
-            this.set("delivery", value);
+            this.set("clear", value);
         }
     });
     Object.defineProperty(YD.Shipping.prototype, "atChina", {
         get: function () {
-            return this.get("delivery");
+            return this.get("atChina");
         },
         set: function (value) {
-            this.set("delivery", value);
+            this.set("atChina", value);
         }
     });
     Object.defineProperty(YD.Shipping.prototype, "YDNumber", {

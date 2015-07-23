@@ -28,7 +28,7 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/responsibility', {
           templateUrl: 'partials/responsibility'
       }).
-      when('/forbidden', {
+      when('/forbid', {
           templateUrl: 'partials/forbidden'
       }).
       when('/reperation', {

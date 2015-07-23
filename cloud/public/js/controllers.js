@@ -509,7 +509,8 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
         }
         var query = new AV.Query("Freight")
         query.containedIn("YDNumber", $scope.trackingList)
-        query.include("address")
+        query.include("address");
+        query.include("shipping");
         query.equalTo("user", $scope.currentUser)
         query.find({
             success: function (list) {
@@ -1097,7 +1098,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
             alert("请添加箱内具体物品描述");
             return;
         }
-        if (!$scope.freight.comments) {
+        if ($scope.freight.packageComments == "") {
             alert("请填写货物描述");
             return;
         }
@@ -1110,6 +1111,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 $scope.freight.status = YD.Freight.STATUS_SPEED_MANUAL;
                 $scope.freight.trackingNumber = $scope.freightIn.trackingNumber;
                 $scope.freight.RKNumber = $scope.freightIn.RKNumber;
+                $scope.freight.exceedWeight = $scope.freightIn.exceedWeight;
 
                 $scope.freight.user = $scope.currentUser;
                 $scope.freight.weight = $scope.freightIn.weight;
@@ -1145,20 +1147,30 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 }
                 $scope.freight.insurance = $scope.insurance.amount + "(保价: " + $scope.insurance.value + ")";
                 $scope.freight.channel = $scope.channelSelection;
-                $scope.freight.save(null, {
-                    success: function (f) {
-                        alert("提交运单成功!")
-                        $scope.freightIn = new YD.FreightIn();
-                        $scope.freight = new YD.Freight();
-                        $scope.freight.descriptionList = [];
-                        $scope.descriptionList = [];
-                    },
-                    error: function (f, error) {
-                        console.log("ERROR: " + error.message);
+
+                $scope.freight.generateYDNumber(function (success, reply) {
+                    if (!success) {
+                        alert("错误!" + reply);
+                        return;
+                    } else {
+                        $scope.freight.YDNumber = reply;
+                        console.log("YDNuimber: " + reply);
+                        $scope.freight.save(null, {
+                            success: function (f) {
+                                alert("原箱闪运运单提交成功!")
+                                $scope.freightIn = new YD.FreightIn();
+                                $scope.freight = new YD.Freight();
+                                $scope.freight.descriptionList = [];
+                                $scope.descriptionList = [];
+                            },
+                            error: function (f, error) {
+                                console.log("ERROR: " + error.message);
+                            }
+                        })
                     }
-                })
+                });
             }
-        })
+        });
 
     }
 
@@ -2676,6 +2688,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             freight.weight = freightIn.weight
             freight.trackingNumber = freightIn.trackingNumber
             freight.RKNumber = freightIn.RKNumber;
+            freight.exceedWeight = freightIn.exceedWeight;
             //freight.estimatedPrice = freightIn.weight * $scope.PRICE
             freight.status = YD.Freight.STATUS_INITIALIZED
             freight.comments = freightIn.comments
@@ -2944,7 +2957,7 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
                         else
                             tmp_date += tmp.getMinutes();
                         _
-                        $scope.freights[i].updatedAt = tmp_date
+                        $scope.freights[i].updatedAtToString = tmp_date
                         //var descList =  $scope.freights[i].descriptionList[0];
                         //
                         //console.log("$scope.freights[i: " + $scope.freights[i].packageComments);
@@ -4039,7 +4052,9 @@ YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
         }
         var query = new AV.Query("Freight")
         query.containedIn("YDNumber", $scope.trackingList)
-        query.include("address")
+        query.include("address");
+        query.include("shipping");
+
         query.equalTo("user", $scope.currentUser)
         query.find({
             success: function (list) {
@@ -4989,14 +5004,19 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $m
     }
 
 
-    if($scope.currentUser.role != YD.User.ROLE_ADMIN ||$scope.currentUser.role != YD.User.ROLE_DEVELOPER
-        || $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE|| $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CHECK_PACKAGE) {
+    if($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
+        &&  $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CHECK_PACKAGE) {
         //alert("您没有权限");
         return;
     } else {
         $scope.reloadFreightIn();
     }
     $scope.searching = function() {
+        if($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            &&  $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_CHECK_PACKAGE) {
+            alert("您没有权限");
+            return;
+        }
         var isEmail = false;
         for(var i = 0; i < $scope.queryString.length; i++) {
             if($scope.queryString[i] == '@') {
@@ -5641,7 +5661,7 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
 
     $scope.reloadFreightIn = function() {
         var query = new AV.Query("FreightIn")
-        query.equalTo("status", YD.FreightIn.STATUS_CONFIRMED)
+        query.equalTo("status", YD.FreightIn.STATUS_ARRIVED)
         query.include("user")
         query.find({
             success: function (list) {
@@ -5712,7 +5732,7 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
 
         var innerQuery = new AV.Query(YD.User);
         var query = new AV.Query(YD.FreightIn);
-        query.equalTo("status", YD.FreightIn.STATUS_CONFIRMED)
+        query.equalTo("status", YD.FreightIn.STATUS_ARRIVED)
         query.include("user");
         if(isEmail) {
             innerQuery.equalTo("email", $scope.queryString);
@@ -6131,11 +6151,12 @@ YundaApp.controller('ShowConsumeDetailsCtrl', ["$scope", "$modalInstance", "frei
     $scope.promote = "正在读取...";
     var query = new AV.Query(YD.Transaction);
     query.equalTo("YDNumber", freight.YDNumber);
-    query.equalTo("user", freight.user);
+    //query.equalTo("user", freight.user);
+    console.log("YDNumber: " + freight.YDNumber);
     query.find({
         success: function(list) {
             $scope.transactions = list;
-            alert("有"+list.length+"个结果");
+            console.log("list length" + list.length);
             query.equalTo("RKNumber", freight.RKNumber);
             query.find({
                 success: function(rest) {
@@ -6145,6 +6166,7 @@ YundaApp.controller('ShowConsumeDetailsCtrl', ["$scope", "$modalInstance", "frei
                         };
                         $scope.isLoading = false;
                         $scope.promote = "";
+                        alert("有"+list.length+"个结果");
                         $scope.$apply();
                     }
                 },
@@ -6219,7 +6241,7 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
                             tmp_date += "0" + tmp.getMinutes()
                         else
                             tmp_date += tmp.getMinutes();
-                        $scope.freight[i].updatedAt = tmp_date
+                        $scope.freight[i].updatedAtToString = tmp_date
                         $scope.freight[i].delivery = tmp_date;
                         $scope.freight[i].selection = false
                     }
@@ -6361,6 +6383,7 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
         ship.delivery = f.delivery; // on the way to airport
         ship.delivering = tmp_date; // to china
         f.shipping = ship;
+        f.shipping.YDNumber = f.YDNumber;
         f.save(null, {
             success: function(f) {
                 alert("发货成功");
@@ -6737,7 +6760,7 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
 
         modalInstance.result.then(function () {
             $scope.reloadChineseFreight()
-            $scope.$apply()
+            //$scope.$apply()
             console.log("AdminChineseFreightCtrl: merge successfully")
         })
     };
@@ -7568,6 +7591,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
 
 YundaApp.controller('AddInfoCtrl', function ($scope, $modalInstance, freight) {
     $scope.freight = freight
+    $scope.chineseCourier;
     $scope.channelList = [
         {name: "韵达快递"},
         {name: "中通快递"},
@@ -7581,6 +7605,7 @@ YundaApp.controller('AddInfoCtrl', function ($scope, $modalInstance, freight) {
     ]
     $scope.confirmAddInfo = function () {
         $scope.freight.status = YD.Freight.STATUS_FINAL_DELIVERY
+        $scope.freight.chineseCourier = $scope.chineseCourier.name;
         $scope.freight.save(null, {
             success: function (result) {
                 $modalInstance.close()
