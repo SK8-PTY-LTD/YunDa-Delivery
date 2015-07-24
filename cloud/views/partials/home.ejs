@@ -84,7 +84,7 @@
                     <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>-->
 
                     <div class="form-group has-feedback">
-                        <label class="control-label">用户名:</label>
+                        <label class="control-label">登录邮箱:</label>
                                     <span ng-show="loginForm.email.$valid"
                                           class="glyphicon glyphicon-ok form-control-feedback"></span>
                         <input type="email" name="email" class="form-control" id="username"
@@ -127,10 +127,10 @@
         <div ng-if="currentUser.id">
             <fieldset style="height: 100%">
                 <h4 class="text-center"><i class="fa fa-user fa-lg home-icon"></i>用户信息</h4>
-                <label for="username">用户名： </label>
+                <label for="username">登录邮箱： </label>
                 <span ng-bind="currentUser.username"></span></br>
-                <label for="username">姓名： </label>
-                <span ng-bind="currentUser.realName"></span>
+                <label for="username">用户名： </label>
+                <span ng-bind="currentUser.stringId"></span>
                 </br>
                 <label for="username">账户余额： </label>
                 $<span ng-bind="currentUser.totalBalanceInDollar"></span></br>

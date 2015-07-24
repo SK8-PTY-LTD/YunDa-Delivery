@@ -72,7 +72,7 @@
                 <li ng-class="{'accordion-focused' : view_tab=='da'}" ng-click="change_tab('da')">退款管理</li>
                 <li ng-class="{'accordion-focused' : view_tab=='db'}" ng-click="change_tab('db')">退货管理</li>
                 <li ng-class="{'accordion-focused' : view_tab=='dc'}" ng-click="change_tab('dc')">联系客服</li>
-                <li ng-class="{'accordion-focused' : view_tab=='dd'}" ng-click="change_tab('dd')">理赔管理</li>
+                <!-- <li ng-class="{'accordion-focused' : view_tab=='dd'}" ng-click="change_tab('dd')">理赔管理</li> -->
 
             </ul>
         </accordion-group>
@@ -88,7 +88,7 @@
             <accordion-heading id="info">
                 会员信息
             </accordion-heading>
-            <p>登陆邮箱: <span ng-bind="currentUser.email"></span></p> <a ng-click="updatePassword()">修改密码</a>
+            <p>登陆邮箱: <span ng-bind="currentUser.email"></span></p> <p><a ng-click="updatePassword()">修改密码</a></p>
 
             <p>用户名: <span ng-bind="currentUser.stringId"></span></p>
 
@@ -223,7 +223,7 @@
 <div ng-show="view_tab=='ab'">
     <div class="row">
         <div class="col-sm-7">
-            收货人：<input type="text" ng-model="recipientLookup"/>
+            收件人：<input type="text" ng-model="recipientLookup"/>
             <button class="btn btn-sm btn-default" ng-click="searchRecipient()">搜索</button>
         </div>
 
@@ -236,7 +236,7 @@
         <thead>
         <tr>
             <th>收件人</th>
-            <th>国家、省份/直辖市</th>
+            <th style="width: 30%">国家、省份/直辖市</th>
             <th>详细地址</th>
             <th>操作</th>
 
@@ -268,18 +268,18 @@
                             <span style="font-weight:bold;color:#013086;">名(First Name): </span><span
                                     ng-bind="currentUser.stringId"></span>
                         </div>
-                        <div class="col-lg-4 col-lg-offset-3">
+                        <div class="col-lg-4">
                             <span style="font-weight:bold">姓(Last Name): Ni</span>
                         </div>
-                        <div class="col-lg-8">
-                            <span style="font-weight:bold"> 地址1(Address): </span><span
+                        <div class="col-lg-5">
+                            <span style="font-weight:bold"> 地址1(Address1): </span><span
                                     ng-bind="address.street"></span>
                         </div>
                         <div class="col-lg-4">
-                            <span style="font-weight:bold">地址2: </span><span
+                            <span style="font-weight:bold">地址2(Address2): </span><span
                                     style="color:#013086; font-weight:bold" ng-bind="currentUser.numberId"></span>
                         </div>
-                        <div class="col-lg-8">
+                        <div class="col-lg-5">
                             <span style="font-weight:bold">城市(City): </span><span ng-bind="address.city"></span>
                         </div>
                         <div class="col-lg-4">
@@ -287,9 +287,13 @@
                                     ng-bind="address.state"></span>
 
                         </div>
-                        <div class="col-lg-9">
+                        <div class="col-lg-5">
                             <span style="font-weight:bold"> 邮编(Zip code): </span><span
                                     ng-bind="address.zipCode"></span>
+                        </div>
+                        <div class="col-lg-4">
+                            <span style="font-weight:bold"> 电话(Tel): </span><span
+                                    ng-bind="address.phone"></span>
                         </div>
 
                     </div>
@@ -1479,7 +1483,7 @@
     <table class="table table-hover small-table">
         <thead>
         <tr>
-            <th>交号</th>
+            <th>交易号</th>
             <th>充值金额(美元)</th>
             <th>充值类型</th>
             <th>充值时间</th>
@@ -1589,7 +1593,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-2">
-                    <label>兑换人民币: </label>
+                    <label>兑换美金: </label>
                 </div>
                 <div class="col-md-3">
                     <input type="number" step="any" min="0" ng-model="amount" class="form-control">
@@ -1752,7 +1756,7 @@
         </th>
 
         <th>
-            操作
+            退货凭证
         </th>
         <th>
             反馈

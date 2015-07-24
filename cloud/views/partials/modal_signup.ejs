@@ -19,7 +19,7 @@
             <label class="control-label">密码:</label>
             <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
             <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
-            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="至少八位，大小写下划线字符不限" ng-minlength="8" required>
+            <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="至少八位，大小写下划线不限" ng-minlength="8" required>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">确认密码:</label>
@@ -28,7 +28,7 @@
             <input type="password" name="password1" class="form-control" id="password1" ng-model="passwordRepeat" placeholder="再次输入密码" ng-minlength="8" required>
         </div>
         <div class="form-group has-feedback">
-            <label class="control-label">用户名:</label>
+            <label class="control-label">用户名<strong>(注册后无法修改)</strong>:</label>
             <span ng-show="!loginForm.stringId.$valid || nameExist" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.stringId.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="stringId" class="form-control" minlength="5" maxlength="8" id="stringId" ng-model="currentUser.stringId" ng-focus="nameExist=false" ng-blur="checkExistence('stringId')" placeholder="字母5-8位，注册后无法修改" required>
@@ -37,7 +37,7 @@
             <small class="error-message">此用户名已被占用</small>
         </div>
         <div class="form-group has-feedback">
-            <label class="control-label">姓名<strong>(注册后无法修改)</strong>:</label>
+            <label class="control-label">姓名:</label>
             <span ng-show="!loginForm.realname.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.realname.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="realname"  class="form-control" id="realName" ng-model="currentUser.realName"  placeholder="Yun Da" required>

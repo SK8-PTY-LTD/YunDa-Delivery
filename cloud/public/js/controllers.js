@@ -4796,6 +4796,9 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
         } else if ($scope.currentUser.accumulatedReward < 500) {
             alert("您的积分未到500，暂时无法兑换");
             return;
+        } else if ($scope.currentUser.accumulatedReward%100 != 0) {
+            alert("积分兑换必须是100的倍数");
+            return;
         } else if ($scope.amount == 0 || typeof($scope.amount) != typeof(0) || $scope.amount < 0) {
             alert("请输入正确的兑换金额")
             return;
