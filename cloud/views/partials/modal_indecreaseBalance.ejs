@@ -1,0 +1,19 @@
+<div class="modal-body">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
+    <div class="form-group">
+        <label>用户名: </label>
+        <span ng-bind="user.stringId" class="form-control"></span>
+    </div>
+    <div class="form-group">
+        <label>当前账户金额: </label>
+        <span ng-bind="user.balanceInDollar" class="form-control"></span>
+    </div>
+    <div class="form-group">
+        <label>金额数: </label>
+        <input type="number" step="any" ng-model="amount" class="form-control">
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="confirm()">确认</button>
+</div>

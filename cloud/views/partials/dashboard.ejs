@@ -268,21 +268,25 @@
                             <span style="font-weight:bold;color:#013086;">名(First Name): </span><span
                                     ng-bind="currentUser.stringId"></span>
                         </div>
-                        <div class="col-lg-4">
+
+                        <div class="col-lg-4 col-lg-offset-2">
                             <span style="font-weight:bold">姓(Last Name): Ni</span>
                         </div>
-                        <div class="col-lg-5">
-                            <span style="font-weight:bold"> 地址1(Address1): </span><span
+                        <div class="col-lg-7">
+                            <span style="font-weight:bold"> 地址1(Address): </span><span
+
                                     ng-bind="address.street"></span>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-5">
                             <span style="font-weight:bold">地址2(Address2): </span><span
                                     style="color:#013086; font-weight:bold" ng-bind="currentUser.numberId"></span>
                         </div>
-                        <div class="col-lg-5">
+
+                        <div class="col-lg-7">
+
                             <span style="font-weight:bold">城市(City): </span><span ng-bind="address.city"></span>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-5">
                             <span style="font-weight:bold"> 州/省(State): </span><span
                                     ng-bind="address.state"></span>
 
@@ -291,14 +295,15 @@
                             <span style="font-weight:bold"> 邮编(Zip code): </span><span
                                     ng-bind="address.zipCode"></span>
                         </div>
-                        <div class="col-lg-4">
+
+              <div class="col-lg-5 col-lg-offset-2">
                             <span style="font-weight:bold"> 电话(Tel): </span><span
-                                    ng-bind="address.phone"></span>
+                                    ng-bind="address.contact"></span>
                         </div>
 
                     </div>
                 </div>
-                <p>备注: 地址1是实际仓库地址，地址2栏是您的昀達物流识别码，请在寄送时务必将这两栏填好</p>
+                <small>备注: 地址1是实际仓库地址，地址2栏是您的昀達物流识别码，请在寄送时务必将这两栏填好</small>
 
             </accordion-group>
         </div>
@@ -416,7 +421,7 @@
                 <td><input type="text" class="form-control" ng-model="description.brand"></td>
                 <td><input type="number" class="form-control" ng-model="description.amount"></td>
                 <td><input type="number" step="any" class="form-control" ng-model="description.price"></td>
-                <td><input type="number" step="any" class="form-control" ng-model="description.total"></td>
+                <td><span type="number" step="any" class="form-control" ng-bind="(description.amount && description.price) ? description.amount*description.price : 0"></span></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription()">确认</button>
                 </td>
@@ -547,7 +552,7 @@
             ((freightIn.weight < channelSelection.startAt) ? channelSelection.initialPrice * 1 + (channelSelection.startAt-1)* channelSelection.continuePrice  + insurance.amount : channelSelection.initialPrice * 1 + (freightIn.weight
             - 1) * channelSelection.continuePrice + (freightIn.exceedWeight > freightIn.weight ?
             freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount +
-            (checkBox.isAddPackage ? systemSetting.addPackageCharge : 0)) : 0}}
+            (checkBox.isAddPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) : 0}}
         </div>
     </div>
 </div>
@@ -582,7 +587,7 @@
 <br>
 
 <tabset>
-<tab ng-controller="freightInArrivedCtrl">
+<tab ng-controller="freightInArrivedCtrl" ng-click="reloadFreightInArrived()">
     <!--this is the content for 待确认入库-->
 
     <tab-heading>
@@ -655,7 +660,7 @@
     </table>
 </tab>
 
-<tab ng-controller="freightInConfirmedCtrl">
+<tab ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
 <tab-heading>
     包裹处理<span class="badge" style="margin-left:5px;">{{freightIns.length}}</span>
 </tab-heading>
@@ -698,77 +703,7 @@
         </div>
     </div>
 </accordion-heading>
-
-<!--<div class="row">-->
-<!--<div class="col-lg-5">-->
-
-<!--<button class="btn btn-xs btn-default" ng-click="openNotes(freightIn)">查看管理员反馈</button>-->
-
-
-<!--<button class="btn btn-xs btn-default" ng-click="openComments(freightIn)">给管理员留言</button>-->
-
-<!--</div>-->
-<!--<div class="col-lg-3">-->
-
-<!--<button class="btn btn-xs btn-default" ng-click="chooseSplitType(freightIn)">-->
-<!--点击选择分包-->
-<!--</button>-->
-<!--</div>ian-->
-
-<!--<div class="col-lg-2 col-lg-offset-2"><a ng-click="generateDeliveryFreight(freightIn)">-->
-<!--<button class="btn btn-xs btn-default">直接生成运单</button>-->
-<!--</a></div>-->
-<!--</div>-->
-
-<!--<div class="row" style="margin: 10px auto; padding: 2px 0;">-->
-
-<!--<div class="col-lg-3">-->
-<!--<span style="font-weight:bolder">我想：</span> <input type="checkbox"-->
-<!--ng-model="freightIn.checkboxModel.addPackage"><span>普通加固</span>-->
-<!--</div>-->
-<!--<div class="col-lg-2">-->
-<!--<input type="checkbox" ng-model="freightIn.checkboxModel.reduceWeight"><span>去除购物收据</span>-->
-<!--</div>-->
-<!--&lt;!&ndash;<div class="col-lg-2">&ndash;&gt;-->
-<!--&lt;!&ndash;<input type="checkbox"&ndash;&gt;-->
-<!--&lt;!&ndash;ng-model="freightIn.checkboxModel.checkPackage"><span>开箱验货</span>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--<div class="col-lg-2">-->
-<!--<span style="font-weight:bolder">选择收件地址:</span>-->
-<!--</div>-->
-<!--<div class="col-lg-2">-->
-<!--<button class="btn btn-xs btn-default" ng-click="chooseAddress(freightIn)">选择已有</button>-->
-<!--</div>-->
-<!--<div class="col-lg-1">-->
-<!--<button class="btn btn-xs btn-default" ng-click="addNewAddress()">新添</button>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-lg-5 col-lg-offset-7">-->
-<!--<div ng-show="freightIn.address"><label>已选: <span ng-bind="freightIn.address.recipient"></span>-->
-<!--- <span-->
-<!--ng-bind="freightIn.address.country"></span><span-->
-<!--ng-bind="freightIn.address.state"></span><span-->
-<!--ng-bind="freightIn.address.city"></span><span-->
-<!--ng-bind="freightIn.address.suburb"></span></span><span-->
-<!--ng-bind="freightIn.address.street1"></span><span-->
-<!--ng-bind="freightIn.address.street2"></span></label>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row" style="margin: 5px auto; padding: 2px 0;">-->
-
-<!--<div class="col-lg-2  col-lg-offset-10" style="margin-right:0; padding-right:0">-->
-<!--<button class="btn btn-default" ng-click="generateFreight(freightIn)">生成运单</button>-->
-<!--</div>-->
-<!--</div>-->
-
 <form>
-    <!--<div class="form-group">-->
-    <!--<label for="weight">重量</label>-->
-    <!--<input type="number" step="any" min="0" class="form-control" ng-model="freightIn.weight" placeholder="货物重量">-->
-    <!--</div>-->
-
     <div class="row">
         <div class="col-md-5">
             <label>选择渠道: </label>
@@ -790,9 +725,7 @@
         </div>
     </div>
     <hr>
-    <!--<div class="row">-->
-    <!---->
-    <!--</div>-->
+
     <div class="row">
         <small>温馨提示：近期渠道商对清关文件要求很严，必须写明货品品牌 品名 数量 规格 重量等信息。</small>
 
@@ -826,7 +759,7 @@
                 <td><input type="text" class="form-control" ng-model="freightIn.description.brand"></td>
                 <td><input type="number" class="form-control" ng-model="freightIn.description.amount"></td>
                 <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.price"></td>
-                <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.total"></td>
+                <td><span type="number" step="any" class="form-control" ng-bind="(freightIn.description.amount && freightIn.description.price) ? freightIn.description.amount*freightIn.description.price : 0"></span></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription(freightIn)">确认</button>
                 </td>
@@ -941,7 +874,7 @@
              + (freightIn.weight
             - 1) * freightIn.channelSelection.continuePrice +(freightIn.exceedWeight >
             freightIn.weight ? freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount
-            + (freightIn.checkboxModel.addPackage ? 2.5 : 0)) : 0}}
+            + (freightIn.checkboxModel.addPackage ? 2.5 : 0)).toFixed(2) : 0}}
         </div>
     </div>
     <div class="col-md-2 ">
@@ -963,7 +896,7 @@
 </button>
 </tab>
 
-<tab ng-controller="FreightPendingCtrl">
+<tab ng-controller="FreightPendingCtrl" ng-click="reloadFreight()">
     <tab-heading>
         等待包裹处理<span class="badge" style="margin-left:5px;">{{freights.length}}</span>
     </tab-heading>
@@ -1017,226 +950,7 @@
 </tab>
 
 
-<!--<tab ng-controller="FreightConfirmedCtrl" ng-click="reloadFreightConfirmed()">-->
-<!--&lt;!&ndash;this is the content for 已生成运单&ndash;&gt;-->
-<!--<tab-heading>-->
-<!--已生成运单<span class="badge" style="margin-left:5px;">{{badgeCCount}}</span>-->
-<!--</tab-heading>-->
-
-<!--<table class="table table-hover" style="font-size: 0.9em">-->
-<!--<thead>-->
-<!--<tr>-->
-<!--<th width="7%">选择</th>-->
-<!--<th>YD单号</th>-->
-<!--<th>入库时间</th>-->
-<!--<th>状态</th>-->
-<!--<th>重量</th>-->
-<!--<th>留言</th>-->
-<!--<th>管理员反馈</th>-->
-<!--</tr>-->
-<!--</thead>-->
-<!--<tr ng-repeat="freight in freights  | orderBy:'-createdAt'">-->
-<!--<td><input type="checkbox" ng-model="freight.selection" ng-click="selecting(freight)"></td>-->
-<!--<td ng-bind="freight.id"></td>-->
-<!--<td ng-bind="freight.createdAt"></td>-->
-<!--<td ng-bind="freight.statusToString"></td>-->
-<!--<td ng-bind="freight.weight +'Lb'"></td>-->
-<!--<td><a ng-click="openComments(freight)">留言</a></td>-->
-<!--<td><a ng-click="openNotes(freight)">查看</a></td>-->
-<!--</tr>-->
-<!--</table>-->
-<!--</p>-->
-<!--&lt;!&ndash;<p>&ndash;&gt;-->
-<!--&lt;!&ndash;</p>&ndash;&gt;-->
-<!--<div class="row">-->
-<!--<col-md-12>-->
-<!--<hr>-->
-<!--</col-md-12>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-lg-2">-->
-<!--<input type="checkbox" ng-model="confirmTC">-->
-<!--<a ng-href="/service" target="_blank"><label>同意条款</label></a>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-lg-12">-->
-<!--<label>选择运输渠道：<select ng-model="selectedMethod"-->
-<!--ng-options="method.name for method in options"></select></label>-->
-<!--</div>-->
-<!--&lt;!&ndash;<button class="btn" ng-click="output()">output</button>&ndash;&gt;-->
-
-<!--</div>-->
-
-<!--<div class="row">-->
-<!--<div class="col-lg-3">-->
-<!--<input type="checkbox" min="0" ng-model="confirmReward">-->
-<!--<label>使用YD币<i tooltip="（100YD币可抵$1）"-->
-<!--tooltip-placement="top"-->
-<!--tooltip-trigger="mouseenter"-->
-<!--tooltip-enable="true"-->
-<!--class="fa fa-question-circle"></i></label>-->
-
-<!--</div>-->
-<!--<div class="col-lg-3" min="0">-->
-<!--<input type="checkbox" ng-model="confirmInsurance">-->
-<!--<label>加保金<i tooltip="请根据实际购物小票显示的价值填写申报价值和保价。保价：申报的价格与保价的价格必须一致，保价费按价格的2%收取。我们依据顾客填写的情况扣取关税。"-->
-<!--tooltip-placement="top"-->
-<!--tooltip-trigger="mouseenter"-->
-<!--tooltip-enable="true"-->
-<!--class="fa fa-question-circle"></i></label>-->
-
-<!--</div>-->
-<!--<div class="col-lg-3" min="0">-->
-<!--<input type="checkbox" ng-model="confirmTaxInsurance">-->
-<!--<label>加保税金 <i tooltip="保税金至少为物品总价值 x 5%,请输入需要的保税金"-->
-<!--tooltip-placement="top"-->
-<!--tooltip-trigger="mouseenter"-->
-<!--tooltip-enable="true"-->
-<!--class="fa fa-question-circle"></i><a ng-href="/service" target="_blank">详情</a></label>-->
-
-<!--</div>-->
-
-<!--</div>-->
-<!--<div ng-if="confirmInsurance">-->
-<!--<div class="row">-->
-
-<!--<div class="col-lg-4">-->
-<!--输入总申报价值（保价）：-->
-<!--<form class="form-inline">-->
-<!--<div class="form-group">-->
-<!--<div class="input-group">-->
-<!--<div class="input-group-addon">$</div>-->
-
-<!--<input type="number" step="any" class="form-control" ng-model="insurance.value"-->
-<!--id="insuranceValue">-->
-
-<!--</div>-->
-<!--</div>-->
-<!--</form>-->
-
-<!--</div>-->
-<!--<div class="col-lg-4">-->
-<!--<div ng-if="insurance.value < 0">-->
-<!--<em class="validation-error">请输入正确金额</em>-->
-<!--</div>-->
-<!--<div ng-if="insurance.value >= 0">-->
-<!--需付保金(自动计算):<span ng-bind="'$' + insurance.amount"></span>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</div>-->
-<!--<div ng-if="confirmReward">-->
-<!--<div class="row">-->
-
-<!--<div class="col-lg-4 ">-->
-<!--使用YD币(现有YD币: <span style="color:#013086; font-weight: bold;" ng-bind="currentUser.accumulatedReward"></span>):-->
-<!--<form class="form-inline">-->
-<!--<div class="form-group">-->
-<!--<div class="input-group">-->
-
-<!--<input type="number" step="any" class="form-control" ng-model="reward.amount"-->
-<!--id="rewardAmount">-->
-
-<!--<div class="input-group-addon">分</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</form>-->
-<!--</div>-->
-<!--<div class="col-lg-4">-->
-<!--<div ng-if="reward.amount < 0 || reward.amount > currentUser.accumulatedReward">-->
-<!--<em class="validation-error">请输入正确金额</em>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</div>-->
-<!--<div ng-if="confirmTaxInsurance">-->
-<!--<div class="row">-->
-
-<!--<div class="col-lg-4">-->
-<!--输入总保税金比例：-->
-<!--<form class="form-inline">-->
-<!--<div class="form-group">-->
-<!--<div class="input-group">-->
-<!--<input type="number" step="any" class="form-control" ng-model="taxInsurance.amount"-->
-<!--id="taxInsuranceAmount">-->
-
-<!--<div class="input-group-addon">%</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--</form>-->
-<!--</div>-->
-<!--<div class="col-lg-4">-->
-<!--<div ng-if="taxInsurance.amount < 0">-->
-<!--<em class="validation-error">请输入正确金额</em>-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</div>-->
-<!--&lt;!&ndash;<p>&ndash;&gt;-->
-<!--&lt;!&ndash;总金额：${{confirmInsurance ? confirmTaxInsurance ? total + total*0.02 + total*0.05 : total +&ndash;&gt;-->
-<!--&lt;!&ndash;total*0.02 : total}}&ndash;&gt;-->
-<!--&lt;!&ndash;</p>&ndash;&gt;-->
-<!--<br>-->
-
-<!--<div class="row">-->
-<!--<div class="col-lg-12">-->
-<!--<hr>-->
-<!--</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="col-lg-offset-9 col-lg-3 text-right">-->
-<!--<div style="font-size:1.5em; color: red; font-weight:bold;">-->
-<!--<p> 实付金额: <span-->
-<!--ng-show="(selectedMethod != undefined) && ((confirmReward && ((reward.amount <= currentUser.reward) && (reward.amount >= 0))) || !confirmReward) && ((confirmInsurance && (insurance.value >= 0)) || !confirmInsurance) && ((confirmTaxInsurance && (taxInsurance.amount >=0)) || !confirmTaxInsurance)">${{(selectedMethod.name == "小包裹渠道") ? (confirmInsurance && confirmTaxInsurance && confirmReward) ?-->
-<!--(totalWeight > 2) ? (smallPackageInitial + smallPackageContinue *(totalWeight - 1) + insurance.value * 0.02 + (taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*(totalWeight-1)) - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1) +-->
-<!--insurance.value * 0.02 + (taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*1) - reward.amount/100 + exceedWeight.amount) : 0 : confirmInsurance &&-->
-<!--confirmTaxInsurance ? (totalWeight > 2) ? (smallPackageInitial + smallPackageContinue *(totalWeight - 1) + insurance.value * 0.02 +-->
-<!--(taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*(totalWeight-1)) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1) + insurance.value * 0.02 +-->
-<!--(taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*1) + exceedWeight.amount) : 0 : confirmInsurance && confirmReward ? (totalWeight > 2) ? (smallPackageInitial-->
-<!--+ smallPackageContinue *(totalWeight - 1) + insurance.value * 0.02 - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1) +-->
-<!--insurance.value * 0.02 - reward.amount/100 + exceedWeight.amount) : 0 : confirmTaxInsurance && confirmReward ? (totalWeight > 2) ? (smallPackageInitial-->
-<!--+ smallPackageContinue *(totalWeight - 1) + (taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*(totalWeight-1)) - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1) + (taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*1) - reward.amount/100 + exceedWeight.amount) : 0 : confirmInsurance ?-->
-<!--(totalWeight > 2) ? (smallPackageInitial + smallPackageContinue *(totalWeight - 1) + insurance.value * 0.02 + exceedWeight.amount)  : ((smallPackageInitial + smallPackageContinue * 1) +-->
-<!--insurance.value * 0.02 + exceedWeight.amount) : confirmTaxInsurance ? (totalWeight > 2) ? (smallPackageInitial + smallPackageContinue *(totalWeight - 1) +-->
-<!--(taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*(totalWeight-1)) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1) +-->
-<!--(taxInsurance.amount/100)*(smallPackageInitial+smallPackageContinue*1) + exceedWeight.amount) : 0 : confirmReward ? (totalWeight > 2) ? (smallPackageInitial + smallPackageContinue-->
-<!--*(totalWeight - 1) - reward.amount/100 + exceedWeight.amount) : ((smallPackageInitial + smallPackageContinue * 1) - reward.amount/100 + exceedWeight.amount) : (totalWeight > 2) ?-->
-<!--(smallPackageInitial + smallPackageContinue *(totalWeight - 1) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((smallPackageInitial + smallPackageContinue * 1)- reward.amount/100 + exceedWeight.amount) : 0 : (confirmInsurance &&-->
-<!--confirmTaxInsurance && confirmReward) ? (totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) +-->
-<!--insurance.value * 0.02 + (taxInsurance.amount/100)*(normalPackageInitial+normalPackageContinue*(totalWeight-1)) - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ?  ((normalPackageInitial + normalPackageContinue *-->
-<!--1) + insurance.value * 0.02 + (taxInsurance.amount/100)*(normalPackageInitial + normalPackageContinue * 1) - reward.amount/100 + exceedWeight.amount) : 0 :-->
-<!--confirmInsurance && confirmTaxInsurance ? (totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) +-->
-<!--insurance.value * 0.02 + (taxInsurance.amount/100)*(normalPackageInitial + normalPackageContinue *(totalWeight - 1)) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1) +-->
-<!--insurance.value * 0.02 + (taxInsurance.amount/100)*(normalPackageInitial + normalPackageContinue * 1) + exceedWeight.amount) : 0 : confirmInsurance && confirmReward ?-->
-<!--(totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) + insurance.value * 0.02 - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1)-->
-<!--+ insurance.value * 0.02 - reward.amount/100 + exceedWeight.amount) : 0 : confirmTaxInsurance && confirmReward ? (totalWeight > 2) ? (normalPackageInitial-->
-<!--+ normalPackageContinue *(totalWeight - 1) + (taxInsurance.amount/100)*(normalPackageInitial+normalPackageContinue*(totalWeight-1)) - reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ?  ((normalPackageInitial-->
-<!--+ normalPackageContinue * 1) + (taxInsurance.amount/100)*(normalPackageInitial+normalPackageContinue*1) - reward.amount/100 + exceedWeight.amount) : 0 : confirmInsurance ? (totalWeight-->
-<!-- +2-->
-
-<!--)? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) + insurance.value * 0.02 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1) + insurance.value * 0.02 + exceedWeight.amount) : 0 :-->
-<!--confirmTaxInsurance ? (totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) +-->
-<!--(taxInsurance.amount/100)*(normalPackageInitial+normalPackageContinue*(totalWeight-1)) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1) +-->
-<!--(taxInsurance.amount/100)*(normalPackageInitial+normalPackageContinue*1) + exceedWeight.amount) : 0 : confirmReward ? (totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight - 1) --->
-<!--reward.amount/100 + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1) - reward.amount/100 + exceedWeight.amount) : 0 : (totalWeight > 2) ? (normalPackageInitial + normalPackageContinue *(totalWeight --->
-<!--1) + exceedWeight.amount) : (totalWeight > 0 && totalWeight <= 2) ? ((normalPackageInitial + normalPackageContinue * 1)- reward.amount/100 + exceedWeight.amount) : 0 }}</span>-->
-<!--</p>-->
-
-<!--</div>-->
-<!--</div>-->
-<!--<div class="col-lg-offset-10 col-lg-2 ">-->
-<!--<button type="button" class="btn btn-success" ng-click="payment()">-->
-<!--确认付款-->
-<!--</button>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</tab>-->
-<tab ng-controller="FreightDeliveryCtrl">
+<tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight()">
     <!--this is the content for 已发货-->
     <tab-heading>
         已发货<span class="badge" style="margin-left:5px;">{{freights.length}}</span>
@@ -1251,8 +965,8 @@
             <th>中国快递单号</th>
         </tr>
         </thead>
-        <tr ng-repeat="freight in freights">
-            <td ng-bind="freight.shipDate"></td>
+        <tr ng-repeat="freight in freights | orderBy: '-shipping.delivery'">
+            <td ng-bind="freight.shipping.delivery"></td>
             <td ng-bind="freight.RKNumber"></td>
             <td ng-bind="freight.YDNumber"></td>
             <td ng-bind="freight.statusToString"></td>
@@ -1647,15 +1361,31 @@
             <th>YD单号</th>
             <th>消费金额</th>
             <th>消费类型</th>
+            <th>+/-</th>
             <th>消费时间</th>
             <!--<th>备注</th>-->
         </tr>
         </thead>
         <tr ng-repeat="t in transactions | orderBy: '-createdAt'">
-            <td ng-bind="t.id"></td>
+            <td>
+                <div ng-show="!t.YDNumber">
+                    <span ng-bind="t.id"></span>
+                </div>
+                <div ng-show="t.YDNumber">
+                    <span ng-bind="t.YDNumber"></span>
+                </div>
+            </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td>
+                <div ng-show="t.status === 600">
+                    +
+                </div>
+                <div ng-show="t.status !== 600">
+                    -
+                </div>
+            </td>
+            <td ng-bind="t.createdAtToString"></td>
 
         </tr>
     </table>
@@ -1704,12 +1434,12 @@
         <th>反馈</th>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy: '-createdAt'">
-            <td ng-bind="t.id"></td>
+            <td ng-bind="t.TKNumber"></td>
             <td ng-bind="t.amount"></td>
             <td ng-bind="t.amount*0.02"></td>
-            <td>{{t.amount*0.98*systemSetting.rate}}</td>
+            <td>{{(t.amount*0.98*systemSetting.rate).toFixed(2)}}</td>
             <td ng-bind="t.status"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
 
             <td>
                 <div ng-show="t.status == 590">
@@ -1746,7 +1476,7 @@
     <table class="table table-striped" style="font-size: 0.9em">
         <thead>
         <th>
-            YD运单号
+            YD入库号
         </th>
         <th>
             更新时间
@@ -1763,7 +1493,7 @@
         </th>
         </thead>
         <tr ng-repeat="freight in returnList | orderBy: '-createdAt'">
-            <td ng-bind="freight.YDNumber"></td>
+            <td ng-bind="freight.RKNumber"></td>
             <td ng-bind="freight.createdAt"></td>
             <td ng-bind="freight.status"></td>
             <td><a target="_blank" ng-href="{{freight.adminEvidence}}">点此下载</a></td>

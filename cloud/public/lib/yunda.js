@@ -286,6 +286,14 @@
         }
     });
 
+    Object.defineProperty(YD.FreightReturn.prototype, "RKNumber", {
+        get: function () {
+            return this.get("RKNumber");
+        },
+        set: function (value) {
+            this.set("RKNumber", value);
+        }
+    });
     Object.defineProperty(YD.FreightReturn.prototype, "reason", {
         get: function () {
             return this.get("reason");
@@ -1872,6 +1880,9 @@
     YD.Transaction.STATUS_REFUSED_RETURN_BALANCE = 580;
     YD.Transaction.STATUS_CLAIM_REWARD = 600;
 
+    YD.Transaction.STATUS_CREDIT_USER = 700;
+    YD.Transaction.STATUS_DEBIT_USER = 710;
+
     YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
 
 
@@ -1970,6 +1981,15 @@
         },
         set: function (value) {
             this.set("YDNumber", value);
+        }
+    });
+
+    Object.defineProperty(YD.Transaction.prototype, "TKNumber", {
+        get: function () {
+            return this.get("TKNumber");
+        },
+        set: function (value) {
+            this.set("TKNumber", value);
         }
     });
 

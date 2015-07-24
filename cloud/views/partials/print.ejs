@@ -101,11 +101,22 @@
         <table class="table table-bordered">
             <tr>
                 <td ng-bind="'运单号:'+freight.YDNumber"></td>
-                <td>  <div barcode-api="freight.YDNumber" id="freight.YDNumber"></div>
+                <td>  <div barcode-generator="freight.YDNumber" style="height:50px;"></div>
                 </td>
             </tr>
         </table>
-        <div ng-show="package.details">
+        <div ng-show="package.identity">
+        <div class="row">
+            <h4>身份证: </h4>
+            <div class="col-sm-5">
+                <img src="{{freight.address.identity.identityFront._url}}" alt="front" width="400px" height="auto">
+            </div>
+            <div class="col-sm-5 col-sm-offset-1">
+                <img src="{{freight.address.identity.identityBack._url}}" alt="back" width="400px" height="auto">
+
+            </div>
+        </div>
+        </div>
             <table class="table table-bordered">
                 <thead>
                 <th colspan="9">
@@ -135,7 +146,7 @@
                     <td ng-bind="desc.total"></td>
                 </tr>
             </table>
-        </div>
+
     </div>
 
 </div>

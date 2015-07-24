@@ -39,6 +39,15 @@ Object.defineProperty(YDTransaction.prototype, "status", {
     }
 });
 
+Object.defineProperty(YDTransaction.prototype, "notes", {
+    get: function() {
+        return this.get("notes");
+    },
+    set: function(value) {
+        this.set("notes", value);
+    }
+});
+
 Object.defineProperty(YDTransaction.prototype, "zhifubao", {
     get: function() {
         return this.get("zhifubao");
