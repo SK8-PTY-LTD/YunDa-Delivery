@@ -283,6 +283,8 @@ angular.module('barcodeGenerator', []).directive('barcodeGenerator', [function()
     return {
         link: function(scope, element, attrs) {
             attrs.$observe('barcodeGenerator', function(value){
+                console.log(":value");
+                console.log("value: " + value + "  | type: " + typeof value);
                 var code = Barcode(value, "code128",{barWidth:2}),
                     code_wrapper = angular.element("<div class='barcode code128'></div>")
 

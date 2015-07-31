@@ -76,11 +76,15 @@
 				<label for="InputEmail1">电子邮箱地址</label>
 				<input type="email" class="form-control" id="inputEmail" ng-model="enquiry.email" placeholder="请输入电子邮箱地址 *" required>
 			</div>
-
+			<div class="form-group">
+				<label for="InputContent">主题</label>
+				<input type="text" class="form-control" id="inputSubject" ng-model="enquiry.subject" placeholder="请输入主题 *" required>
+			</div>
 			<div class="form-group">
 				<label for="InputContent">联系我们</label>
 				<textarea class="form-control" rows="5" id="inputContent" ng-model="enquiry.message" placeholder="请输入您的问题和需求 *" required></textarea>
 			</div>
+
 			<div id="success">
 				<button type="submit" class="btn btn-default" ng-click="submitEnquiryForm()" ng-disabled="!contactForm.$valid">提交</button>
 

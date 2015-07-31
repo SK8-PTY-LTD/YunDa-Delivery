@@ -101,7 +101,7 @@
         <table class="table table-bordered">
             <tr>
                 <td ng-bind="'运单号:'+freight.YDNumber"></td>
-                <td>  <div barcode-generator="freight.YDNumber" style="height:50px;"></div>
+                <td>  <div barcode-generator="{{freight.YDNumber}}" style="height:50px;"></div>
                 </td>
             </tr>
         </table>

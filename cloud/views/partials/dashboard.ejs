@@ -965,7 +965,7 @@
             <th>中国快递单号</th>
         </tr>
         </thead>
-        <tr ng-repeat="freight in freights | orderBy: '-shipping.delivery'">
+        <tr ng-repeat="freight in freights | orderBy: '-updatedAt'">
             <td ng-bind="freight.shipping.delivery"></td>
             <td ng-bind="freight.RKNumber"></td>
             <td ng-bind="freight.YDNumber"></td>
@@ -1073,14 +1073,14 @@
             <!--<p></p>-->
             <p><strong>支付宝账号：2973508779@qq.com</strong></p>
 
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="zhifubao">*支付宝交易号: </label>
-                    <input type="text" id="zhifubao" class="form-control" ng-model="record">
-                    <span><em style="color:red;">请务必输入正确的支付宝交易号，金额即可到账！</em></span>
-                </div>
-            </form>
-            <form class="form-inline">
+            <!--<form class="form-inline">-->
+                <!--<div class="form-group">-->
+                    <!--<label for="zhifubao">*支付宝交易号: </label>-->
+                    <!--<input type="text" id="zhifubao" class="form-control" ng-model="record">-->
+                    <!--<span><em style="color:red;">请务必输入正确的支付宝交易号，金额即可到账！</em></span>-->
+                <!--</div>-->
+            <!--</form>-->
+            <form class="form-inline" ng-submit="submitAlipay()">
                 <div class="form-group">
                     <label for="exampleInputAmount">*充值数额 (￥): </label>
 
@@ -1096,16 +1096,17 @@
 
                     <div class="input-group">
                         <div class="input-group-addon">$</div>
-                        <input type="text" class="form-control" ng-model="rechargeAmountDollar"
-                               id="exampleInputAmount" placeholder="美元金额" disabled>
+                        <input class="form-control" ng-model="rechargeAmountDollar"
+                               id="total_fee" name="total_fee" placeholder="美元金额" disabled>
 
                         <div class="input-group-addon">.00</div>
                     </div>
                 </div>
+            <div class="form-group">
+                <button class="btn btn-default form-control" type="submit" ng-disabled="isPaying">确认支付</button>
+            </div>
+
             </form>
-
-            <button class="btn btn-default" ng-click="zhifubaoPayment()" ng-disabled="isPaying">确认支付</button>
-
             <!--<button type="submit" class="btn btn-primary">Transfer cash</button>-->
 
         </tab>

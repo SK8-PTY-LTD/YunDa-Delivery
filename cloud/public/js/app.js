@@ -9,7 +9,8 @@ var YundaApp = angular.module('YundaApp', ['ngRoute',
     'ui.bootstrap',
     'uiGmapgoogle-maps',
     'stripe',
-    'barcodeGenerator']);
+    'barcodeGenerator',
+    'ngSanitize']);
 
 
 YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
@@ -60,6 +61,9 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       }).
       when('/test', {
           templateUrl: 'partials/print_form'
+      }).
+      when('/pay', {
+          templateUrl: 'partials/pay'
       }).
       otherwise({
         redirectTo: '/'

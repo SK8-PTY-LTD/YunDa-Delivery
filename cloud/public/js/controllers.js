@@ -117,7 +117,8 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
                 //        console.log("s saved: " + s.channelList.length);
                 //    }
                 //})
-                $scope.$apply()
+                $scope.$apply();
+                console.log("setting: " + $rootScope.systemSetting.rate);
             },
             error: function (s, error) {
 
@@ -2859,7 +2860,7 @@ YundaApp.controller('ChooseSplitTypeCtrl', function ($scope, $modalInstance) {
     $scope.close = function () {
         $modalInstance.dismiss()
     }
-})
+});
 
 YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, $filter) {
 
@@ -4319,8 +4320,8 @@ YundaApp.controller('UpdatePasswordCtrl', function ($scope, $modalInstance) {
         //$scope.currentUser.password = $scope.newPassword;
         $scope.currentUser.setPassword($scope.newPassword);
         $scope.currentUser.save().then(function (user) {
-            $modalInstance.close(user)
-        })
+            $modalInstance.close(user);
+        });
     }
 })
 
@@ -4331,7 +4332,7 @@ YundaApp.controller('RechargeCtrl', function ($scope, $rootScope, $modal) {
             $scope.USD = ((newVal / $scope.FIXED_RATE) * (1 + 0.29) + 0.3).toFixed(2)
             $scope.USD = parseFloat($scope.USD)
         }
-    }, true)
+    }, true);
 
 
     $scope.stripePayment = function () {
@@ -4346,13 +4347,14 @@ YundaApp.controller('RechargeCtrl', function ($scope, $rootScope, $modal) {
                 }
             },
             windowClass: 'center-modal'
-        })
+        });
 
         modalInstance.result.then(function () {
-            alert("充值成功!")
+            alert("充值成功!");
+        });
+    };
 
-        })
-    }
+
 })
 
 
@@ -4410,10 +4412,11 @@ YundaApp.controller('StripeCtrl', function ($scope, $rootScope, $modalInstance, 
                 }
             })
     }
-})
+});
 
-YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope) {
-    $scope.FIXED_RATE = $rootScope.rate;
+YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $location) {
+    //$scope.FIXED_RATE = parseFloat($scope.systemSetting.get("rate"));
+    $scope.FIXED_RATE = 6.4;
     $scope.rechargeAmount = 0
     $scope.rechargeAmountDollar = 0
     $scope.record = ''
@@ -4443,73 +4446,98 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope) {
             }
         })
     }
-    $scope.reloadZhifubao()
+    $scope.reloadZhifubao();
 
     $scope.$watch('rechargeAmount', function (newVal) {
         if (newVal != 0 || newVal != undefined) {
-            $scope.rechargeAmountDollar = (parseInt(newVal) / $scope.FIXED_RATE).toFixed(2)
+            console.log( $scope.rechargeAmount + " | " + newVal + typeof newVal + " | " + $scope.FIXED_RATE + typeof $scope.FIXED_RATE + newVal / $scope.FIXED_RATE + " | " + (parseInt(newVal) / $scope.FIXED_RATE).toFixed(2) + " | "
+            + parseFloat((parseInt(newVal) / $scope.FIXED_RATE).toFixed(2)));
+            $scope.rechargeAmountDollar = parseFloat((newVal / $scope.FIXED_RATE).toFixed(2));
             //$scope.rechargeAmountDollar = parseFloat($scope.rechargeAmountDollar)
+            console.log("changed; " + $scope.rechargeAmountDollar);
         }
-    }, true)
+    }, true);
 
-    $scope.zhifubaoPayment = function () {
-        $scope.isPaying = true;
-        $scope.isLoading = true;
-        $scope.promote = "正在提交，请稍候..."
-        if ($scope.rechargeAmount <= 0 || typeof($scope.rechargeAmount) != typeof(1)) {
-            alert("请输入正确充值金额！")
-            $scope.isPaying = false;
-            $scope.isLoading = false;
-            $scope.promote = "";
-            return
+    $scope.submitAlipay = function() {
+        if($scope.rechargeAmountDollar != NaN || $scope.rechargeAmountDollar == "") {
+            // call alipay web api
+            console.log("call post now");
+            //var tabWindowId = window.open('about:blank', '_blank');
+            $http.post('/pay', {total_fee: $scope.rechargeAmount}).success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+               // when the response is available
+
+                console.log(data + status + headers + config);
+                //tabWindowId.location.href = headers('Location');
+                $rootScope.alipayData = data;
+                $location.path('/pay');
+            });
+        } else {
+            console.log("no");
         }
-        if ($scope.record == undefined || $scope.record == '') {
-            alert("请先输入支付宝交易号！")
-            $scope.isPaying = false;
-            $scope.isLoading = false;
-            $scope.promote = "";
-            return
-        }
-        else {
-            var transaction = new YD.Transaction()
-            transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
-            transaction.amount = parseFloat($scope.rechargeAmountDollar)
-            transaction.user = $scope.currentUser
-            transaction.record = $scope.record
-            console.log("In Zhifubao Ctrl -- rechargeAmount: " + $scope.rechargeAmount + " | type: " + typeof($scope.rechargeAmount))
-            console.log("In Zhifubao Ctrl -- rechargeAmountDollar: " + $scope.rechargeAmountDollar + " | type: " + typeof($scope.rechargeAmountDollar))
-            $scope.currentUser.pendingBalanceInDollar = parseFloat(($scope.currentUser.pendingBalanceInDollar + (parseInt($scope.rechargeAmount) / $scope.FIXED_RATE)).toFixed(2))
-            console.log("user pendingBalance: " + $scope.currentUser.pendingBalance)
-            console.log("user pendingBalanceInDollar: " + $scope.currentUser.pendingBalanceInDollar)
-            if ($scope.currentUser == undefined) {
-                alert('系统错误，请重新登陆！')
-                return
-            }
-            transaction.save(null, {
-                success: function (t) {
-                    console.log("transaction saved")
-                    $scope.currentUser.save(null, {
-                        success: function (u) {
-                            console.log("user pendingbalance: " + u.pendingBalance)
-                            alert("提交成功！待处理账户金额为: $" + u.pendingBalanceInDollar + ",请等待管理员处理 ")
-                            $scope.reloadZhifubao()
-                            $scope.isPaying = false;
-                            $scope.isLoading = false;
-                            $scope.promote = "";
-                        }
-                    })
-                },
-                error: function (t, error) {
-                    console.log("transaction not saved " + error.id + ' - ' + error.message);
-                    $scope.reloadZhifubao()
-                    $scope.isPaying = false;
-                    $scope.isLoading = false;
-                    $scope.promote = "";
-                }
-            })
-        }
-    }
-})
+    };
+    //$scope.zhifubaoPayment = function () {
+    //    $scope.isPaying = true;
+    //    $scope.isLoading = true;
+    //    $scope.promote = "正在提交，请稍候..."
+    //    if ($scope.rechargeAmount <= 0 || typeof($scope.rechargeAmount) != typeof(1)) {
+    //        alert("请输入正确充值金额！")
+    //        $scope.isPaying = false;
+    //        $scope.isLoading = false;
+    //        $scope.promote = "";
+    //        return
+    //    }
+    //    if ($scope.record == undefined || $scope.record == '') {
+    //        alert("请先输入支付宝交易号！")
+    //        $scope.isPaying = false;
+    //        $scope.isLoading = false;
+    //        $scope.promote = "";
+    //        return
+    //    }
+    //    else {
+    //        var transaction = new YD.Transaction()
+    //        transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
+    //        transaction.amount = parseFloat($scope.rechargeAmountDollar)
+    //        transaction.user = $scope.currentUser
+    //        transaction.record = $scope.record
+    //        console.log("In Zhifubao Ctrl -- rechargeAmount: " + $scope.rechargeAmount + " | type: " + typeof($scope.rechargeAmount))
+    //        console.log("In Zhifubao Ctrl -- rechargeAmountDollar: " + $scope.rechargeAmountDollar + " | type: " + typeof($scope.rechargeAmountDollar))
+    //        $scope.currentUser.pendingBalanceInDollar = parseFloat(($scope.currentUser.pendingBalanceInDollar + (parseInt($scope.rechargeAmount) / $scope.FIXED_RATE)).toFixed(2))
+    //        console.log("user pendingBalance: " + $scope.currentUser.pendingBalance)
+    //        console.log("user pendingBalanceInDollar: " + $scope.currentUser.pendingBalanceInDollar)
+    //        if ($scope.currentUser == undefined) {
+    //            alert('系统错误，请重新登陆！')
+    //            return
+    //        }
+    //        transaction.save(null, {
+    //            success: function (t) {
+    //                console.log("transaction saved")
+    //                $scope.currentUser.save(null, {
+    //                    success: function (u) {
+    //                        console.log("user pendingbalance: " + u.pendingBalance)
+    //                        alert("提交成功！待处理账户金额为: $" + u.pendingBalanceInDollar + ",请等待管理员处理 ")
+    //                        $scope.reloadZhifubao()
+    //                        $scope.isPaying = false;
+    //                        $scope.isLoading = false;
+    //                        $scope.promote = "";
+    //                    }
+    //                })
+    //            },
+    //            error: function (t, error) {
+    //                console.log("transaction not saved " + error.id + ' - ' + error.message);
+    //                $scope.reloadZhifubao()
+    //                $scope.isPaying = false;
+    //                $scope.isLoading = false;
+    //                $scope.promote = "";
+    //            }
+    //        })
+    //    }
+    //}
+});
+
+YundaApp.controller('AlipayCtrl', ["$scope", "$rootScope", "$sce", function($scope, $rootScope, $sce) {
+    $scope.data = $sce.trustAsHtml($rootScope.alipayData);
+}]);
 
 YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
 
@@ -6420,24 +6448,28 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
 
     $scope.confirmDelivery = function (f) {
         f.status = YD.Freight.STATUS_DELIVERING;
-        var ship = new YD.Shipping();
+        f.shipping = new YD.Shipping();
         var tmp = new Date();
-        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth())) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
         if (tmp.getMinutes() < 10)
             tmp_date += "0" + tmp.getMinutes()
         else
             tmp_date += tmp.getMinutes();
-        ship.delivery = f.delivery; // on the way to airport
-        ship.delivering = tmp_date; // to china
-        f.shipping = ship;
+        f.shipping.delivery = f.delivery; // on the way to airport
+        f.shipping.delivering = tmp_date; // to china
+        //f.shipping = ship;
         f.shipping.YDNumber = f.YDNumber;
-        f.save(null, {
-            success: function (f) {
-                alert("发货成功");
-                $scope.reloadPaidFreight();
-            },
-            error: function (f, error) {
-                alert("错误" + error.message);
+        f.shipping.save(null, {
+            success: function() {
+                f.save(null, {
+                    success: function (f) {
+                        alert("发货成功");
+                        $scope.reloadPaidFreight();
+                    },
+                    error: function (f, error) {
+                        alert("错误" + error.message);
+                    }
+                });
             }
         });
     }
@@ -6564,7 +6596,7 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
     $scope.confirmClear = function (f) {
         f.status = YD.Freight.STATUS_PASSING_CUSTOM;
         var tmp = new Date();
-        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth())) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
         if (tmp.getMinutes() < 10)
             tmp_date += "0" + tmp.getMinutes()
         else
@@ -6820,7 +6852,7 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
     $scope.confirmOut = function (f) {
         f.status = YD.Freight.STATUS_FINAL_DELIVERY;
         var tmp = new Date();
-        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth())) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
         if (tmp.getMinutes() < 10)
             tmp_date += "0" + tmp.getMinutes()
         else
@@ -7984,7 +8016,7 @@ YundaApp.controller('AddInfoCtrl', function ($scope, $modalInstance, freight) {
         {name: "圆通快递"}
     ]
     $scope.confirmAddInfo = function () {
-        $scope.freight.status = YD.Freight.STATUS_FINAL_DELIVERY
+        //$scope.freight.status = YD.Freight.STATUS_FINAL_DELIVERY
         $scope.freight.chineseCourier = $scope.chineseCourier.name;
         $scope.freight.save(null, {
             success: function (result) {
@@ -8739,7 +8771,11 @@ YundaApp.controller('PrintController', ["$scope", "$rootScope", function ($scope
         identity: false
     };
     $scope.freight = $rootScope.printFreight;
-
+    console.log("descriptionList");
+    console.log($scope.freight.descriptionList);
+    for (var i = 0; i < $scope.freight.descriptionList.length; i++) {
+        console.log(i + ": " + $scope.freight.descriptionList[i].name);
+    }
     var r = confirm("是否打印身份证?");
     if (!r) {
 

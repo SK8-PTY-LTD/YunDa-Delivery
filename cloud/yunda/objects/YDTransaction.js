@@ -1,14 +1,16 @@
-YDTransaction = AV.Object.extend("Transaction", {},{
+var YDTransaction = AV.Object.extend("Transaction", {
 
+    },
+    {
 });
-
-YDTransaction.STATUS_ZHIFUBAO = 100;
-YDTransaction.STATUS_STRIPE = 200;
-YDTransaction.STATUS_CONSUME = 300;
-YDTransaction.STATUS_RECHARGE = 400;
-YDTransaction.STATUS_PENDING_RETURN_BALANCE = 500;
-YDTransaction.STATUS_CONFIRMED_RETURN_BALANCE = 590;
-YDTransaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
+//
+//STATUS_ZHIFUBAO = 100,
+//    STATUS_STRIPE = 200,
+//    STATUS_CONSUME = 300,
+//    STATUS_RECHARGE = 400,
+//    STATUS_PENDING_RETURN_BALANCE = 500,
+//    STATUS_CONFIRMED_RETURN_BALANCE = 590,
+//    STATUS_ZHIFUBAO_CONFIRMED = 190
 
 
 
