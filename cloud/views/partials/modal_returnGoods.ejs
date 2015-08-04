@@ -4,15 +4,16 @@
     <form>
         <div class="form-group">
             <label for="address">YD入库号: </label>
-            <input type="text" class="form-control" ng-model="return.RKNumber" required>
+            <input type="text" class="form-control" ng-model="return.RKNumber" ng-focus="TNExist=false" ng-blur="checkExistence()" required>
             <!--<inpu?t type="number" step="any" min="0" class="form-control" ng-model="returnAmount" required>-->
         </div>
+        <small style="color:red;" ng-bind="existPromote"></small>
         <div class="form-group">
             <label for="address">退货地址（必填）</label>
             <input type="text" class="form-control" ng-model="return.address" required>
         </div>
         <div class="form-group">
-            <label for="reason">退货理由</label>
+            <label for="reason">退货备注</label>
             <input type="text" class="form-control" ng-model="return.reason">
         </div>
         <div class="form-group">

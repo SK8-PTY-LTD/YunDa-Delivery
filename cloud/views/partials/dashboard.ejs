@@ -273,7 +273,7 @@
                             <span style="font-weight:bold">姓(Last Name): Ni</span>
                         </div>
                         <div class="col-lg-7">
-                            <span style="font-weight:bold"> 地址1(Address): </span><span
+                            <span > 地址1(Address): </span><span
 
                                     ng-bind="address.street"></span>
                         </div>
@@ -284,20 +284,20 @@
 
                         <div class="col-lg-7">
 
-                            <span style="font-weight:bold">城市(City): </span><span ng-bind="address.city"></span>
+                            <span >城市(City): </span><span ng-bind="address.city"></span>
                         </div>
                         <div class="col-lg-5">
-                            <span style="font-weight:bold"> 州/省(State): </span><span
+                            <span> 州/省(State): </span><span
                                     ng-bind="address.state"></span>
 
                         </div>
                         <div class="col-lg-5">
-                            <span style="font-weight:bold"> 邮编(Zip code): </span><span
+                            <span> 邮编(Zip code): </span><span
                                     ng-bind="address.zipCode"></span>
                         </div>
 
               <div class="col-lg-5 col-lg-offset-2">
-                            <span style="font-weight:bold"> 电话(Tel): </span><span
+                            <span> 电话(Tel): </span><span
                                     ng-bind="address.contact"></span>
                         </div>
 
@@ -313,6 +313,7 @@
 
 <div ng-show="view_tab=='ba'" ng-controller="ManualCtrl" id="myfreight">
     <!--this is the content for 自助入库-->
+
     <table class="table table-striped small-table">
         <thead>
         <th>物流单号</th>
@@ -343,6 +344,23 @@
 
 <div ng-show="view_tab=='be'" ng-controller="SpeedManualCtrl">
 <!--原箱闪运-->
+
+
+<table class="table table-striped small-table">
+    <thead>
+    <th>物流单号</th>
+    <th>创建时间</th>
+    <th>状态</th>
+    </thead>
+    <tr ng-repeat="f in freights">
+        <td ng-bind="f.trackingNumber"></td>
+        <td ng-bind="f.createdAt"></td>
+        <td>暂未到货</td>
+    </tr>
+</table>
+<br>
+<hr><br>
+<h2>生成原箱闪运运单</h2>
 <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
             ng-bind="promote"></span></progressbar>
 
@@ -548,18 +566,19 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-8">
         <div style="font-size:1.5em; color: red; font-weight:bold;">
-            预估价: {{(freightIn.trackingNumber && freightIn.weight && channelSelection && freightIn.address) ?
+            预估价:$ {{(freightIn.trackingNumber && freightIn.weight && channelSelection && freightIn.address) ?
             ((freightIn.weight < channelSelection.startAt) ? channelSelection.initialPrice * 1 + (channelSelection.startAt-1)* channelSelection.continuePrice  + insurance.amount : channelSelection.initialPrice * 1 + (freightIn.weight
             - 1) * channelSelection.continuePrice + (freightIn.exceedWeight > freightIn.weight ?
             freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount +
             (checkBox.isAddPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) : 0}}
         </div>
+        <small style="color:red">注意：请确认账户内金额是否足够，否则影响出库</small>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-4 col-md-offset-8">
-        <button class=btn btn-default btn-lg ng-click="generateFreight()">生成运单</button>
+        <button class="btn btn-default" ng-click="generateFreight()">生成运单</button>
     </div>
 </div>
 </div>
@@ -867,7 +886,7 @@
     </div>
     <div class="col-md-3 top-buffer-1">
         <div style="font-size:1.5em; color: red; font-weight:bold;">
-            预估价: {{(freightIn.channelSelection && freightIn.address) ?
+            预估价: $ {{(freightIn.channelSelection && freightIn.address) ?
             ((freightIn.weight < freightIn.channelSelection.startAt) ? (freightIn.channelSelection.initialPrice +
             (freightIn.channelSelection.startAt - 1)*freightIn.channelSelection.continuePrice + insurance.amount) :
             freightIn.channelSelection.initialPrice
@@ -876,6 +895,8 @@
             freightIn.weight ? freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount
             + (freightIn.checkboxModel.addPackage ? 2.5 : 0)).toFixed(2) : 0}}
         </div>
+        <small style="color:red">注意：请确认账户内金额是否足够，否则影响出库</small>
+
     </div>
     <div class="col-md-2 ">
         <button class="btn btn-default" ng-click="generateFreight(freightIn)">生成运单</button>
@@ -1047,7 +1068,7 @@
 <div ng-show="view_tab=='ca'" id="recharge">
 
     <tabset>
-        <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl">
+        <tab heading="支付宝充值" ng-controller="ZhifubaoCtrl" ng-click="reloadZhifubao()">
             <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                         ng-bind="promote"></span></progressbar>
 
@@ -1362,7 +1383,7 @@
             <th>YD单号</th>
             <th>消费金额</th>
             <th>消费类型</th>
-            <th>+/-</th>
+            <th>YD币(+/-)</th>
             <th>消费时间</th>
             <!--<th>备注</th>-->
         </tr>
@@ -1458,7 +1479,7 @@
     <!--this is the content for 退货管理-->
     <div class="form-group">
         <div class="col-md-2">
-            <label>申请单号: </label>
+            <label>入库号: </label>
         </div>
         <div class="col-lg-6">
             <div class="input-group">

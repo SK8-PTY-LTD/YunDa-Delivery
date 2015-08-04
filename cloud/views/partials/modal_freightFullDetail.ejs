@@ -1,4 +1,6 @@
 <div class="modal-body">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
     <table class="table table-bordered small-table">
         <tr>
             <td ng-bind="'入库单号: ' + freight.RKNumber"></td>
@@ -31,10 +33,11 @@
         <tr>
             <td colspan="2" ng-bind="'物品详情: ' + freight.packageComments"></td>
         </tr>
-        <tr>
-            <td colspan="2" ng-repeat="t in transactions">
+        <tr ng-repeat="t in transactions">
+            <td >
                 <span ng-bind="t.notes"></span>
             </td>
+            <td ng-bind="'$' + t.amount"></td>
         </tr>
         <tr>
             <td>保价</td>
