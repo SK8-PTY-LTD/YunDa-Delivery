@@ -1,3 +1,4 @@
+
 /*
  * Serve JSON to our AngularJS client
  */
@@ -11,8 +12,8 @@ var config = {
   "https_verify_url": "https://mapi.alipay.com/gateway.do?service=notify_verify&",
   "partner": "2088021259932744",
   "key": "kngmwv7crl2c6zyhrooihpzjkrkd62ym",
-  "notify_url": "http://yunda.avosapps.com/pay/notify",
-  "return_url": "http://yunda.avosapps.com/pay/return"
+  "notify_url": "http://yunda.avosapps.com/notify",
+  "return_url": "http://yunda.avosapps.com/return"
 };
 
 var PID = config.partner;
@@ -36,7 +37,7 @@ exports.name = function (req, res) {
 
 exports.requestAlipay = function (req, res) {
   debug('now in requestAlipay');
-  var transId = "thisisrandomId3";
+  var transId = req.body.tranId;
   var finalParams = JSON.parse(JSON.stringify(defaultParams));
   finalParams['out_trade_no'] = transId;
   finalParams['subject'] = 'YD Recharge';

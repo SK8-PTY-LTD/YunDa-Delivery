@@ -38,15 +38,16 @@ app.use(express.errorHandler());
 // serve index and view partials
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
-
+app.get('/verifyEmail', routes.verify);
 // JSON API
 app.get('/api/name', api.name);
 
 // Alipay
 app.post('/pay', api.requestAlipay);
 
-//app.get('pay/return', api);
-//app.post('pay/notify', api);
+app.get('/return', routes.alipayReturn);
+app.post('notify', routes.alipayNotify);
+
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

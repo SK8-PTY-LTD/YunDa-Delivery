@@ -15,37 +15,39 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
             $scope.name = 'Error!'
         })
     $scope.printPage = $location.path() == '/print'
+
     $scope.$on('$routeChangeSuccess', function () {
-        $scope.printPage = $location.path() == '/print'
+        $scope.printPage = $location.path() == '/print';
     });
     $rootScope.view_tab = "aa"
     $rootScope.change_tab = function (tab) {
         if (tab == "aa" || tab == "ab" || tab == "ac") {
-            $rootScope.openTab.setA = true
-            $rootScope.openTab.setB = false
-            $rootScope.openTab.setC = false
-            $rootScope.openTab.setD = false
+            $rootScope.openTab.setA = true;
+            $rootScope.openTab.setB = false;
+            $rootScope.openTab.setC = false;
+            $rootScope.openTab.setD = false;
 
         } else if (tab == "ba" || tab == "bb" || tab == "bc" || tab == "bd") {
-            $rootScope.openTab.setA = false
-            $rootScope.openTab.setB = true
-            $rootScope.openTab.setC = false
-            $rootScope.openTab.setD = false
+            $rootScope.openTab.setA = false;
+
+            $rootScope.openTab.setB = true;
+            $rootScope.openTab.setC = false;
+            $rootScope.openTab.setD = false;
 
         } else if (tab == "ca" || tab == "cb" || tab == "cc") {
-            $rootScope.openTab.setA = false
-            $rootScope.openTab.setB = false
-            $rootScope.openTab.setC = true
-            $rootScope.openTab.setD = false
+            $rootScope.openTab.setA = false;
+            $rootScope.openTab.setB = false;
+            $rootScope.openTab.setC = true;
+            $rootScope.openTab.setD = false;
 
         } else if (tab == "da" || tab == "db" || tab == "dc") {
-            $rootScope.openTab.setA = false
-            $rootScope.openTab.setB = false
-            $rootScope.openTab.setC = false
-            $rootScope.openTab.setD = true
+            $rootScope.openTab.setA = false;
+            $rootScope.openTab.setB = false;
+            $rootScope.openTab.setC = false;
+            $rootScope.openTab.setD = true;
 
         }
-        $rootScope.view_tab = tab
+        $rootScope.view_tab = tab;
     }
     $rootScope.openTab = {
         setA: false,
@@ -58,9 +60,9 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
     $rootScope.$watch("currentUser", function () {
         if ($rootScope.currentUser != undefined) {
             if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
-                $rootScope.isAdmin = false
+                $rootScope.isAdmin = false;
             } else {
-                $rootScope.isAdmin = true
+                $rootScope.isAdmin = true;
             }
         }
 
@@ -79,7 +81,7 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
         //query.include(channelList.channel)
         query.get(SYSTEM_SETTING_ID, {
             success: function (s) {
-                $rootScope.systemSetting = s
+                $rootScope.systemSetting = s;
                 //s.addressList = []
                 //var obj1 = {
                 //    name: "免税州(OR)收货地址",
@@ -128,19 +130,19 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
     $rootScope.reloadSystemSetting()
 
     $rootScope.reloadNews = function () {
-        var query = new AV.Query(YD.News)
+        var query = new AV.Query(YD.News);
         query.find({
             success: function (list) {
                 $rootScope.newsList = list
                 for (var i = 0; i < list.length; i++) {
-                    var tmp = $scope.newsList[i].createdAt
+                    var tmp = $scope.newsList[i].createdAt;
                     var tmp_date = "(" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + ")";
                     $scope.newsList[i].dateToString = tmp_date;
                 }
-                $scope.$apply()
+                $scope.$apply();
             },
             error: function (error) {
-                alert("找新闻出错")
+                alert("找新闻出错");
             }
         })
     }
@@ -203,9 +205,10 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
 YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window) {
     //$scope.loginDisabled = false;
     if (YD.User.current() != undefined) {
-        $rootScope.currentUser = YD.User.current()
+        $rootScope.currentUser = YD.User.current();
     } else {
-        $rootScope.currentUser = new YD.User()
+
+        $rootScope.currentUser = new YD.User();
     }
     $scope.open = function () {
         //$scope.loginDisabled = true;
@@ -217,21 +220,21 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
             backdrop: 'static',
             windowClass: 'center-modal'
 
-        })
+        });
         modalInstance.result.then(function (user) {
             //console.log("modal is closed. ")
             if (user != undefined) {
-                $rootScope.currentUser = user
+                $rootScope.currentUser = user;
                 if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
-                    $rootScope.isAdmin = false
+                    $rootScope.isAdmin = false;
                 } else {
-                    $rootScope.isAdmin = true
+                    $rootScope.isAdmin = true;
                 }
                 console.log("$rootScope.isAdmin: " + $rootScope.isAdmin)
                 var address = new YD.Address()
-                address.id = $rootScope.currentUser.addressId
+                address.id = $rootScope.currentUser.addressId;
                 address.fetch().then(function (address) {
-                    $rootScope.currentUser.address = address
+                    $rootScope.currentUser.address = address;
                 })
 
             } else {
@@ -242,9 +245,9 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
     $scope.logOut = function () {
         YD.User.logOut()
         // Do stuff after successful login.
-        $rootScope.currentUser = new YD.User()
+        $rootScope.currentUser = new YD.User();
 
-        $window.location.href = '/'
+        $window.location.href = '/';
     }
 
     $scope.isActive = function () {
@@ -310,7 +313,7 @@ YundaApp.controller('LoginCtrl', function ($scope, $rootScope, $modalInstance, $
             $scope.currentUser.balance = 0
             $scope.currentUser.pendingBalance = 0
             $scope.currentUser.rewardBalance = 0
-            $scope.currentUser.accumulatedReward = 0;
+            $scope.currentUser.accumulatedReward = 500;
 
             $scope.currentUser.signUp(null, {
                 success: function (user) {
@@ -603,7 +606,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
 
     $scope.signup = function () {
         $scope.isLoading = true;
-        $scope.promote = "Signing up";
+        $scope.promote = "登陆...";
 
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_signup',
@@ -620,7 +623,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
             $scope.currentUser.balance = 0
             $scope.currentUser.pendingBalance = 0
             $scope.currentUser.rewardBalance = 0
-            $scope.currentUser.accumulatedReward = 0
+            $scope.currentUser.accumulatedReward = 500;
             $scope.currentUser.signUp(null, {
                 success: function (user) {
                     // Hooray! Let them use the app now.
@@ -4462,16 +4465,33 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
         if($scope.rechargeAmountDollar != NaN || $scope.rechargeAmountDollar == "") {
             // call alipay web api
             console.log("call post now");
-            //var tabWindowId = window.open('about:blank', '_blank');
-            $http.post('/pay', {total_fee: $scope.rechargeAmount}).success(function(data, status, headers, config) {
-                // this callback will be called asynchronously
-               // when the response is available
+            var transaction = new YD.Transaction();
+            //not yet
+            //transaction.status = YD.Transaction.STATUS_ZHIFUBAO;
+            var userPt = new YD.User();
+            userPt.id = $scope.currentUser.id;
+            transaction.user = userPt;
+            transaction.amount = $scope.rechargeAmountDollar;
+            transaction.save(null, {
+                success: function(t) {
+                    console.log("t saved id: " + t.id);
+                    $http.post('/pay', {total_fee: $scope.rechargeAmount, tranId: t.id}).success(function(data, status, headers, config) {
+                        // this callback will be called asynchronously
+                        // when the response is available
 
-                console.log(data + status + headers + config);
-                //tabWindowId.location.href = headers('Location');
-                $rootScope.alipayData = data;
-                $location.path('/pay');
+                        console.log(data + status + headers + config);
+                        //tabWindowId.location.href = headers('Location');
+
+                        $rootScope.alipayData = data;
+                        $location.path('/pay');
+                    });
+                },
+                error: function(t, error) {
+                    alert("错误!" + error.message);
+                }
             });
+            //var tabWindowId = window.open('about:blank', '_blank');
+
         } else {
             console.log("no");
         }

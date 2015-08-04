@@ -115,7 +115,7 @@ span.help-question {
     position: fixed;
     top: 15%;
     left: 15%;
-    z-index: 10;
+    /*z-index: 10;*/
     width: 80%;
 
 }

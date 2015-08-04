@@ -65,6 +65,15 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
       when('/pay', {
           templateUrl: 'partials/pay'
       }).
+      when('/payReturn', {
+          templateUrl: 'partials/payReturn'
+      }).
+      when('/payReturnFail', {
+          templateUrl: 'partials/payReturnFail'
+      }).
+      when('/verifyEmail', {
+          templateUrl: 'partials/verify'
+      }).
       otherwise({
         redirectTo: '/'
       });
