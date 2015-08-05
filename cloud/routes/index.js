@@ -30,7 +30,8 @@ exports.alipayReturn = function(req, res) {
     transaction = new Transaction();
     transaction.set('id', transId);
     transaction.set('status', 100);
-    transaction.set('notes', "支付宝充值,流水号为:" + alipayId);
+    transaction.set('record',alipayId);
+    transaction.set('notes', "支付宝充值");
     transaction.save(null, {
       success: function(t) {
         res.render('partials/payReturn');
@@ -43,9 +44,13 @@ exports.alipayReturn = function(req, res) {
 
 exports.alipayNotify = function(req, res) {
   var transId = req.query.out_trade_no;
+  var alipayId = req.query.trade_no;
+
   var Transaction = AV.Object.extend("Transaction");
   transaction = new Transaction();
   transaction.set('id', transId);
   transaction.set('status', 100);
+  transaction.set('record',alipayId);
+  transaction.set('notes', "支付宝充值");
   transaction.save(null, {});
 };

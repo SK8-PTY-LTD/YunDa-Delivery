@@ -1143,8 +1143,9 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
 
         } else
             console.log("In watch: newVal == 0")
-    })
+    });
 
+    $scope.isClicked = false;
     $scope.generateFreight = function () {
         if (!$scope.freightIn.trackingNumber) {
             alert("请填写运单号");
@@ -1186,6 +1187,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 return;
             }
         }
+        $scope.isClicked = true;
         $scope.freightIn.user = $scope.currentUser;
         $scope.freightIn.status = YD.FreightIn.STATUS_SPEED_MANUAL;
         $scope.freightIn.RKNumber = $scope.freightIn.generateRKNumber();
@@ -1236,6 +1238,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 $scope.freight.generateYDNumber(function (success, reply) {
                     if (!success) {
                         alert("错误!" + reply);
+                        $scope.isClicked = false;
                         return;
                     } else {
                         console.log("YDNumber Callback: " + reply);
@@ -1243,17 +1246,21 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                         $scope.freight.YDNumber = reply;
                         $scope.freight.save(null, {
                             success: function (f) {
-                                alert("原箱闪运运单提交成功!")
+                                alert("原箱闪运运单提交成功!");
+                                $scope.isClicked = false;
                                 $scope.freightIn = new YD.FreightIn();
                                 $scope.freight = new YD.Freight();
                                 $scope.freight.packageComments = "";
                                 $scope.freight.descriptionList = [];
                                 $scope.descriptionList = [];
+                                $scope.$apply();
                             },
                             error: function (f, error) {
+                                $scope.isClicked = false;
+
                                 console.log("ERROR: " + error.message);
                             }
-                        })
+                        });
                     }
                 });
             }
@@ -2755,6 +2762,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
 
     }
     $scope.confirmTC = false;
+    $scope.isClicked = false;
     $scope.generateFreight = function (freightIn) {
         if (!freightIn.address) {
             alert("请先选择地址");
@@ -2777,7 +2785,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
 
         }
         if (!$scope.confirmTC) {
-            alert("请先同意条款: " + $scope.confirmTC)
+            alert("请先同意条款: ");
             return;
         }
         if ($scope.insurance.value > $scope.insurance.total) {
@@ -2797,11 +2805,11 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             }
         }
 
-        console.log("now generating");
+        $scope.isClicked = true;
         var freight = new YD.Freight();
         //freight.address = null
         //freight.freightIn = freightIn
-        freight.address = freightIn.address
+        freight.address = freightIn.address;
         //freight.estimatedPrice = freightIn.weight * $scope.PRICE
 
         //console.log("est price: " + freight.estimatedPrice)
@@ -2821,14 +2829,14 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             }
 
         }
-        freight.user = $scope.currentUser
-        freight.weight = freightIn.weight
-        freight.trackingNumber = freightIn.trackingNumber
+        freight.user = $scope.currentUser;
+        freight.weight = freightIn.weight;
+        freight.trackingNumber = freightIn.trackingNumber;
         freight.RKNumber = freightIn.RKNumber;
         freight.exceedWeight = freightIn.exceedWeight;
         //freight.estimatedPrice = freightIn.weight * $scope.PRICE
-        freight.status = YD.Freight.STATUS_INITIALIZED
-        freight.comments = freightIn.comments
+        freight.status = YD.Freight.STATUS_INITIALIZED;
+        freight.comments = freightIn.comments;
         freight.packageComments = freightIn.packageComments;
         freight.descriptionList = [];
         for (var i = 0; i < freightIn.descriptionList.length; i++) {
@@ -2869,26 +2877,28 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         freight.generateYDNumber(function (success, reply) {
             if (!success) {
                 alert("错误!" + reply);
+                $scope.isClicked = false;
                 return;
             } else {
                 freight.YDNumber = reply;
                 freight.save(null, {
                     success: function (freight) {
-                        console.log("freight has been saved: " + freight.id)
-                        freightIn.status = YD.FreightIn.STATUS_FINISHED
+                        freightIn.status = YD.FreightIn.STATUS_FINISHED;
                         freightIn.save(null, {
                             success: function (freightIn) {
-                                console.log("freightIn has been saved: " + freightIn.id)
-                                alert("生成运单成功!")
-                                $scope.reloadFreightInConfirmed()
+                                alert("生成运单成功!");
+                                $scope.isClicked = false;
+                                $scope.reloadFreightInConfirmed();
                             },
                             error: function (freightIn, error) {
-                                console.log("ERROR: freightIn not save: " + error.code + " - " + error.message)
+                                $scope.isClicked = false;
+                                console.log("ERROR: freightIn not save: " + error.code + " - " + error.message);
                             }
                         })
                     },
                     error: function (freight, error) {
-                        console.log("ERROR: freight not save: " + error.code + " - " + error.message)
+                        $scope.isClicked = false;
+                        console.log("ERROR: freight not save: " + error.code + " - " + error.message);
                     }
                 });
             }
@@ -4387,7 +4397,7 @@ YundaApp.controller('SplitPackageCtrl', function ($scope, $modalInstance, freigh
 
             //"普通分箱" + index + "/" + $scope.amount + ", 原单号为: " + freightIn.trackingNumber
             $scope.freightList[i].isSplit = true
-            $scope.freightList[i].trackingNumber = freightIn.trackingNumber + "[分包:" + index + "/" + $scope.amount + "]";
+            $scope.freightList[i].trackingNumber = freightIn.trackingNumber + "[分包:" + index + "/" + $scope.package.amount + "]";
             $scope.freightList[i].weight = freightIn.weight / $scope.package.amount;
 
 

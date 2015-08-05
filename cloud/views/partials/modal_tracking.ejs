@@ -14,11 +14,11 @@
                     <th>状态</th>
                     </thead>
 
-                    <tr ng-show="freight.status == 0">
+                    <tr ng-show="freight.status <= 400">
                         <td ng-bind="freight.updatedAtToString"></td>
                         <td ng-bind="'当前状态: ' + freight.statusToString"></td>
                     </tr>
-                        <tr ng-show="freight.status >= 400">
+                        <tr ng-show="freight.status > 400">
                             <td ng-bind="freight.shipping.delivery"></td>
                             <td>美国仓库发出，送往机场途中</td>
                         </tr>
