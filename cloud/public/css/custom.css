@@ -206,10 +206,6 @@ padding-left: 25px
 .info-area {
     background: #afd9ee;
     border: 5px solid #6eb6f9;
-    border-radius: 2;
-    -webkit-border-radius: 2;
-    -moz-border-radius: 2;
-    -o-border-radius: 2;
 }
 
 .strike-thru {
@@ -413,10 +409,6 @@ ul.social-list li:last-child a i {
     background: #ffffff;
     border-top: 3px solid #013086;
     border-bottom: 3px solid #013086;
-    border-radius: 2;
-    -webkit-border-radius: 2;
-    -moz-border-radius: 2;
-    -o-border-radius: 2;
     z-index: 1030;
 }
 
@@ -466,7 +458,6 @@ ul.social-list li:last-child a i {
     -moz-transition: all 0.3s ease-in-out;
     -webkit-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
-    font-weight: 400;
 }
 
 .navbar-default .navbar-nav > li > a.active, .navbar-default .navbar-nav > li:hover > a {
@@ -493,7 +484,6 @@ ul.social-list li:last-child a i {
     -ms-transform: rotate(45deg);
     -o-transform: rotate(45deg);
     transform: rotate(45deg);
-    position: absolute;
 
 }
 

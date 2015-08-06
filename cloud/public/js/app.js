@@ -8,7 +8,7 @@ var AV_APP_KEY = "svsw3nybfcax9ssw7czti2fk86ak9gp6ekrb00essagscyrg";
 var YundaApp = angular.module('YundaApp', ['ngRoute',
     'ui.bootstrap',
     'uiGmapgoogle-maps',
-    'stripe',
+    //'stripe',
     'barcodeGenerator',
     'ngSanitize']);
 
@@ -89,8 +89,8 @@ YundaApp.config(function($routeProvider, $locationProvider, $httpProvider) {
     //'Authorization': 'Bearer ' + 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
 }
 //Stripe
-    var STRIPE_KEY = "pk_test_6pRNASCoBOKtIshFeQd4XMUh";
-    Stripe.setPublishableKey(STRIPE_KEY);
+//    var STRIPE_KEY = "pk_test_6pRNASCoBOKtIshFeQd4XMUh";
+//    Stripe.setPublishableKey(STRIPE_KEY);
 
 });
 
