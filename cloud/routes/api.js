@@ -4,8 +4,7 @@
  */
 
 var crypto = require('crypto');
-var debug = require('debug')('AV:alipay');
-
+var debug = require('debug')('api');
 
 var config = {
   "sign_type": "MD5",

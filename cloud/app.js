@@ -12,7 +12,9 @@ var express = require('express'),
   api = require('cloud/routes/api'),
   http = require('http'),
   path = require('path'),
-  avosExpressHttpsRedirect = require('avos-express-https-redirect');
+  debug = require('debug')('app:*');
+
+avosExpressHttpsRedirect = require('avos-express-https-redirect');
 
 var app = module.exports = express();
 
@@ -46,7 +48,7 @@ app.get('/api/name', api.name);
 app.post('/pay', api.requestAlipay);
 
 app.get('/return', routes.alipayReturn);
-app.post('notify', routes.alipayNotify);
+app.post('/notify', routes.alipayNotify);
 
 
 // redirect all others to the index (HTML5 history)
