@@ -6,6 +6,7 @@
 var crypto = require('crypto');
 var debug = require('debug')('AV:alipay');
 
+
 var config = {
   "sign_type": "MD5",
   "alipay_gateway": "https://mapi.alipay.com/gateway.do?",
@@ -38,12 +39,17 @@ exports.name = function (req, res) {
 exports.requestAlipay = function (req, res) {
   debug('now in requestAlipay');
   var transId = req.body.tranId;
+  var userId = req.body.userId;
+  var total = req.body.total_fee;
+  var body = userId;
   var finalParams = JSON.parse(JSON.stringify(defaultParams));
   finalParams['out_trade_no'] = transId;
-  finalParams['subject'] = 'YD Recharge';
+  finalParams['subject'] = 'YD Recharge ';
   finalParams['seller_id'] = PID;
-  finalParams['total_fee'] = req.body.total_fee;
+  finalParams['total_fee'] = total;
+  finalParams['body'] = body;
   debug('params: %j', finalParams);
+  console.log(finalParams);
 
   var result = '<form id="alipaysubmit" name="alipaysubmit"' +
       ' action="' + config.alipay_gateway + '"' +
@@ -54,6 +60,7 @@ exports.requestAlipay = function (req, res) {
   }
   result += '<script>document.forms["alipaysubmit"].submit();</script>';
   debug('generate request html:', result);
+  console.log("result: " + result);
   res.send(result);
 };
 

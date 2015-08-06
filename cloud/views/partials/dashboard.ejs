@@ -265,8 +265,8 @@
                     <!--<br>{{currentUser.stringId}}-->
                     <div class="row">
                         <div class="col-lg-5">
-                            <span style="font-weight:bold;color:#013086;">名(First Name): </span><span
-                                    ng-bind="currentUser.stringId"></span>
+                            <span style="font-weight:bold;">名(First Name): </span><span
+                                    style="color:#013086; font-weight:bold" ng-bind="currentUser.stringId"></span>
                         </div>
 
                         <div class="col-lg-4 col-lg-offset-2">
@@ -437,8 +437,8 @@
                 <td><select ng-model="description.kind" ng-options="kind.name for kind in kindList"></select></td>
                 <td><input type="text" class="form-control" ng-model="description.name"></td>
                 <td><input type="text" class="form-control" ng-model="description.brand"></td>
-                <td><input type="number" class="form-control" ng-model="description.amount"></td>
-                <td><input type="number" step="any" class="form-control" ng-model="description.price"></td>
+                <td><input type="number" min="0" class="form-control" ng-model="description.amount"></td>
+                <td><input type="number"  min="0" step="any" class="form-control" ng-model="description.price"></td>
                 <td><span type="number" step="any" class="form-control" ng-bind="(description.amount && description.price) ? description.amount*description.price : 0"></span></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription()">确认</button>
@@ -567,7 +567,7 @@
     <div class="col-md-4 col-md-offset-8">
         <div style="font-size:1.5em; color: red; font-weight:bold;">
             预估价:$ {{(freightIn.trackingNumber && freightIn.weight && channelSelection && freightIn.address) ?
-            ((freightIn.weight < channelSelection.startAt) ? channelSelection.initialPrice * 1 + (channelSelection.startAt-1)* channelSelection.continuePrice  + insurance.amount : channelSelection.initialPrice * 1 + (freightIn.weight
+            ((freightIn.weight < channelSelection.startAt) ? channelSelection.initialPrice * 1 + (channelSelection.startAt-1)* channelSelection.continuePrice  + insurance.amount+(checkBox.isAddPackage ? systemSetting.addPackageCharge : 0) : channelSelection.initialPrice * 1 + (freightIn.weight
             - 1) * channelSelection.continuePrice + (freightIn.exceedWeight > freightIn.weight ?
             freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount +
             (checkBox.isAddPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) : 0}}
@@ -595,7 +595,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="query.number" placeholder="输入物流号" required>
+            <input type="text" class="form-control" ng-model="query.number" placeholder="输入转运号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchPackage()">搜索</button>
@@ -779,8 +779,8 @@
                 </td>
                 <td><input type="text" class="form-control" ng-model="freightIn.description.name"></td>
                 <td><input type="text" class="form-control" ng-model="freightIn.description.brand"></td>
-                <td><input type="number" class="form-control" ng-model="freightIn.description.amount"></td>
-                <td><input type="number" step="any" class="form-control" ng-model="freightIn.description.price"></td>
+                <td><input type="number"  min="0" class="form-control" ng-model="freightIn.description.amount"></td>
+                <td><input type="number"  min="0" step="any" class="form-control" ng-model="freightIn.description.price"></td>
                 <td><span type="number" step="any" class="form-control" ng-bind="(freightIn.description.amount && freightIn.description.price) ? freightIn.description.amount*freightIn.description.price : 0"></span></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="addNewDescription(freightIn)">确认</button>
@@ -890,13 +890,13 @@
     <div class="col-md-3 top-buffer-1">
         <div style="font-size:1.5em; color: red; font-weight:bold;">
             预估价: $ {{(freightIn.channelSelection && freightIn.address) ?
-            ((freightIn.weight < freightIn.channelSelection.startAt) ? (freightIn.channelSelection.initialPrice +
-            (freightIn.channelSelection.startAt - 1)*freightIn.channelSelection.continuePrice + insurance.amount) :
+            ((freightIn.weight < freightIn.channelSelection.startAt) ? freightIn.channelSelection.initialPrice +
+            (freightIn.channelSelection.startAt - 1) * freightIn.channelSelection.continuePrice + insurance.amount + (freightIn.checkboxModel.addPackage ? systemSetting.addPackageCharge : 0) :
             freightIn.channelSelection.initialPrice
              + (freightIn.weight
             - 1) * freightIn.channelSelection.continuePrice +(freightIn.exceedWeight >
             freightIn.weight ? freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount
-            + (freightIn.checkboxModel.addPackage ? 2.5 : 0)).toFixed(2) : 0}}
+            + (freightIn.checkboxModel.addPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) : 0}}
         </div>
         <small style="color:red">注意：请确认账户内金额是否足够，否则影响出库</small>
 
@@ -1234,12 +1234,12 @@
             <!--<th>备注</th>-->
         </tr>
         </thead>
-        <tr ng-repeat="t in transactionList">
+        <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.id"></td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>
 
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
             <td ng-bind="t.status"></td>
 
             <!--<td>pending</td>-->
@@ -1408,10 +1408,10 @@
             <td ng-bind="t.notes"></td>
             <td>
                 <div ng-show="t.status === 600">
-                    +
+                    -
                 </div>
                 <div ng-show="t.status !== 600">
-                    -
+                    +
                 </div>
             </td>
             <td ng-bind="t.createdAtToString"></td>

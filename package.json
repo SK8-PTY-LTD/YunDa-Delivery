@@ -12,6 +12,7 @@
         "mailgun-js": "0.5",
         "method-override": "^1.0.0",
         "morgan": "^1.0.0",
-        "ng-route-it": "0.3.2"
+        "ng-route-it": "0.3.2",
+        "leanengine": "^0.1.4"
     }
 }

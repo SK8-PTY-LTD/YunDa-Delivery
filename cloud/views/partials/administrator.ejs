@@ -31,12 +31,12 @@
         </accordion-group>
         <accordion-group heading="用户财务管理" is-open="openTab.setH">
             <ul>
-                <li ng-class="{'accordion-focused' : view_tab=='da'}" ng-click="change_tab('da')">支付宝充值<span class="badge pull-right">{{adminBadge.I}}</span></li>
+                <!--<li ng-class="{'accordion-focused' : view_tab=='da'}" ng-click="change_tab('da')">支付宝充值<span class="badge pull-right">{{adminBadge.I}}</span></li>-->
                 <li ng-class="{'accordion-focused' : view_tab=='db'}" ng-click="change_tab('db')">充值记录</li>
                 <li ng-class="{'accordion-focused' : view_tab=='dc'}" ng-click="change_tab('dc')">消费记录</li>
                 <li ng-class="{'accordion-focused' : view_tab=='dd'}" ng-click="change_tab('dd')">YD币记录</li>
                 <li ng-class="{'accordion-focused' : view_tab=='de'}" ng-click="change_tab('de')">增/扣金额</li>
-                <li ng-class="{'accordion-focused' : view_tab=='df'}" ng-click="change_tab('df')">已删除包裹</li>
+                <li ng-class="{'accordion-focused' : view_tab=='df'}" ng-click="change_tab('df')">未认领包裹</li>
             </ul>
         </accordion-group>
 
@@ -726,7 +726,10 @@
             <td ng-bind="f.updatedAt"></td>
 
             <td>
-                <button class="btn btn-sm btn-info" ng-click="addInfo(f)">添加</button>
+                <button class="btn btn-sm btn-info" ng-click="addInfo(f)">
+                <div ng-if="!f.isAdded">添加</div>
+                    <div ng-if="f.isAdded">已添加</div>
+                </button>
             </td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认出关</button>
@@ -981,7 +984,20 @@
 
 <div ng-show="view_tab=='cd'" ng-controller="AdminManageFreightCtrl">
     <!--<h4>包裹管理</h4>-->
-   <table class="table table-striped small-table">
+    <div class="col-md-4">
+
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
+
+    <table class="table table-striped small-table">
        <thead>
        <th>用户名</th>
        <th>YD运单号</th>
@@ -1219,10 +1235,10 @@
             <td ng-bind="t.notes"></td>
             <td>
                 <div ng-show="t.status === 600">
-                    +
+                    -
                 </div>
                 <div ng-show="t.status !== 600">
-                    -
+                    +
                 </div>
             </td>
             <td ng-bind="t.createdAt"></td>
@@ -1294,15 +1310,32 @@
         </table>
 </div>
 <div ng-show="view_tab=='df'" ng-controller="AdminDeletePackageCtrl">
+    <div class="col-md-4">
+
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
+    <br>
     <table class="table table-striped small-table">
         <thead>
         <th>用户名</th>
+        <th>转运号</th>
         <th>YD入库号</th>
+        <th>入库时间</th>
         <th>删除时间</th>
         </thead>
         <tr ng-repeat="f in freights | orderBy: '-updatedAt'">
             <td ng-bind="f.user.stringId"></td>
+            <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.RKNumber"></td>
+            <td ng-bind="f.createdAtToString"></td>
             <td ng-bind="f.updatedAtToString"></td>
         </tr>
     </table>
