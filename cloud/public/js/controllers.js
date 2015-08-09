@@ -208,8 +208,8 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
     //$scope.loginDisabled = false;
     if (YD.User.current() != undefined) {
         $rootScope.currentUser = YD.User.current();
+        $rootScope.currentUser.fetch();
     } else {
-
         $rootScope.currentUser = new YD.User();
     }
     $scope.open = function () {
