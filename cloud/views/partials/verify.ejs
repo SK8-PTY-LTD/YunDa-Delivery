@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
     <title>LeanCloud</title>
     <link href="https://dn-avoscloud.qbox.me/statics/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        h3 {
-            text-align: center;
-            margin-top: 50px;
-            font-weight: normal;
-        }
+    h3 {
+      text-align: center;
+      margin-top: 50px;
+      font-weight: normal;
+    }
     </style>
-</head>
-<body>
+  </head>
+  <body>
 
-<div class="container">
-    <h3 id="tip">邮箱验证成功,恭喜成为YD会员！请先登陆YD网站完善个人信息</h3>
-     <!--<h3 id="tip">Test</h3> -->
+<div class=" container">
+   <h3 id="tip" style="display:none"></h3>
+   <!-- <h3 id="tip">Test</h3> -->
 
 
 
@@ -28,7 +28,7 @@
 <script type="text/javascript">
   var url = "/1/verifyEmail/";//如果页面运行在自己的服务器，需要写定一个绝对 URL,类似 "https://api.leancloud.cn/1.1/verifyEmail/"
   var tip_err ="邮箱验证出错"; //邮箱验证出错提示
-  var tip_success ="邮箱验证成功";//邮箱验证成功提示
+  var tip_success ="邮箱验证成功,恭喜成为YD会员！请登陆YD网站完善个人信息";//邮箱验证成功提示
   function getParam() {
     var prmstr = window.location.search.substr(1);
     var prmarr = prmstr.split("&");
@@ -74,5 +74,5 @@
 
 </script>
 
-</body>
-</html>
+  </body>
+  </html>

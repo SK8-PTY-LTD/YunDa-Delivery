@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-md-5">
                 <label>选择渠道: </label>
-                <select ng-model="freight.channel" ng-options="channel.name for channel in systemSetting.channelList"></select></br>
+                <select ng-model="freight.channel" ng-options="channel.name for channel in systemSetting.channelList track by channel.name"></select></br>
 
             </div>
             <div class="col-md-5">
@@ -54,7 +54,7 @@
                 <th>操作</th>
                 </thead>
 
-                <tr ng-repeat="desc in descriptionList">
+                <tr ng-repeat="desc in descriptionList track by desc.name">
                     <td ng-bind="desc.kind"></td>
                     <td ng-bind="desc.name"></td>
                     <td ng-bind="desc.brand"></td>
@@ -71,9 +71,11 @@
                     <td><input type="text" class="form-control" ng-model="description.brand"></td>
                     <td><input type="number" class="form-control" ng-model="description.amount"></td>
                     <td><input type="number" step="any" class="form-control" ng-model="description.price"></td>
-                    <td><input type="number" step="any" class="form-control" ng-model="description.total"></td>
                     <td>
-                        <button class="btn btn-default btn-sm" ng-click="addNewDescription()">确认</button>
+                        <span type="number" step="any" class="form-control" ng-bind="(description.amount && description.price) ? description.amount*description.price : 0" disabled></span>
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-sm" ng-click="addNewDescription()"><strong>点击确认</strong></button>
                     </td>
                 </tr>
             </table>

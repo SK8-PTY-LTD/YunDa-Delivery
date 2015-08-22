@@ -1,7 +1,7 @@
 <div class="modal-header" >
     <h2 class="text-center"> 请选择收件人</h2></div>
 <div class="modal-body">
-    选择地址： <span ng-bind="address.recipient"></span> - <span
+    <strong>已选择地址：</strong> <span ng-bind="address.recipient"></span> - <span
             ng-bind="address.country"></span><span
             ng-bind="address.state"></span><span
             ng-bind="address.city"></span><span
@@ -9,17 +9,26 @@
             ng-bind="address.street1"></span><span
             ng-bind="address.street2"></span></span>
     </br>
-    <ul ng-repeat="address in addressList">
-        <li ng-click="chooseRecipient(address)">
-            <button class="btn btn-sm"><span ng-bind="address.recipient"></span> - <span
-                        ng-bind="address.country"></span><span
-                        ng-bind="address.state"></span><span
-                        ng-bind="address.city"></span><span
-                        ng-bind="address.suburb"></span></span><span
-                        ng-bind="address.street1"></span><span
-                        ng-bind="address.street2"></span></button>
-        </li>
-    </ul>
+    <table class="table table-striped">
+        <tr ng-repeat="address in addressList | orderBy: '-createdAt'">
+            <td ng-click="chooseRecipient(address)"><span ng-bind="address.recipient + '-' +
+            address.country + address.state + address.city + address.suburb + address.street1 + address.street2"></span></td>
+        </tr>
+    </table>
+    <div class="btn-group" ng-repeat="btn in recipientCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadAddress($index)">{{$index+1}}</div>
+    </div>
+    <!--<ul ng-repeat="address in addressList | orderBy: '-createdAt'">-->
+        <!--<li ng-click="chooseRecipient(address)">-->
+            <!--<button class="btn btn-sm"><span ng-bind="address.recipient"></span> - <span-->
+                        <!--ng-bind="address.country"></span><span-->
+                        <!--ng-bind="address.state"></span><span-->
+                        <!--ng-bind="address.city"></span><span-->
+                        <!--ng-bind="address.suburb"></span></span><span-->
+                        <!--ng-bind="address.street1"></span><span-->
+                        <!--ng-bind="address.street2"></span></button>-->
+        <!--</li>-->
+    <!--</ul>-->
 
     </br>
 </div>

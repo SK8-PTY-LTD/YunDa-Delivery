@@ -82,7 +82,7 @@
             </div><hr>
         </div>
         <div class="form-group">
-            <div class="row bottom-buffer-2" ng-repeat="channel in systemSetting.channelList">
+            <div class="row bottom-buffer-2" ng-repeat="channel in systemSetting.channelList track by channel.name">
                 <!--<div class="row">-->
                     <!--<strong ng-bind="channel.name"></strong>-->
                 <!--</div>-->
@@ -93,24 +93,27 @@
                 </div>
                 <div class="col-lg-2">
                     <label>首磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.initialPrice" disabled>
+                    <input class="form-control" type="number" step="any" ng-model="channel.initialPrice">
                     <!--<span ng-bind="channel.initialPrice"></span>-->
 
                 </div>
                 <div class="col-lg-2">
                     <label>续磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.continuePrice" disabled>
+                    <input class="form-control" type="number" step="any" ng-model="channel.continuePrice">
                     <!--<span ng-bind="channel.continuePrice"></span>-->
 
                 </div>
                 <div class="col-lg-2">
                     <label>起运磅数: </label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.startAt" disabled>
+                    <input class="form-control" type="number" step="any" ng-model="channel.startAt">
                     <!--<span ng-bind="channel.startAt"></span>-->
 
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-1">
                     <button class="btn btn-default btn-sm top-buffer-2" ng-click="deleteChannel(channel)">删除</button>
+                </div>
+                <div class="col-lg-1">
+                    <button class="btn btn-default btn-sm top-buffer-2" ng-click="confirm()">保存</button>
                 </div>
             </div>
 
@@ -170,7 +173,7 @@
         <div class="form-group">
             <h4>仓库地址:</h4>
         </div>
-        <div ng-repeat="address in systemSetting.addressList">
+        <div ng-repeat="address in systemSetting.addressList track by address.name">
        <div class="form-group">
            <div class="row">
                [{{$index+1}}]
@@ -178,7 +181,7 @@
            <div class="row">
                <div class="col-lg-6">
                    <label>仓库名</label>
-                   <input type="text" class="form-control" ng-model="address.name" >
+                   <input type="text" class="form-control" ng-model="address.name" disabled>
                </div>
                <div class="col-lg-6">
                    <label>电话</label>
@@ -333,8 +336,8 @@
         <th>入库号</th>
         <th>Email</th>
         <th>是否拍照</th>
-        <th>验货要求</th>
-        <!--<th>入库时间</th>-->
+        <th width="15%">验货要求</th>
+        <th>入库时间</th>
         <!--<th>重量</th>-->
         <th>操作</th>
         </thead>
@@ -350,7 +353,7 @@
                 </div>
             </td>
             <td ng-bind="f.checkInfo.notes"></td>
-            <!--<td ng-bind="f.createdAt"></td>-->
+            <td ng-bind="f.createdAtToString"></td>
             <!--<td><span ng-bind="f.weight"></span>Lb</td>-->
             <td>
                 <div ng-if="f.status == 100">
@@ -364,12 +367,16 @@
 
                     <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)" ng-disabled="!f.isChecking || !f.isCheckingCharged">确认验货</button>
                 </div>
-                <div ng-if="f.status == 200">
-                    <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+                <div ng-if="f.status != 100 && f.status != 210">
+                    <!--<button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>-->
+                    已完成验货
                 </div>
             </td>
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadFreightIn($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='ba'" ng-controller="AdminFreightInConfirmCtrl">
@@ -452,9 +459,9 @@
                 <tr ng-repeat="f in freight | orderBy:'-updatedAt' | filter: {isMerged: true}">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
                     <td><a ng-click="showIdentityDetails(f)">查看</a></td>
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                     <td ng-bind="f.updatedAtToString"></td>
                     <td>
                         <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
@@ -480,10 +487,10 @@
                     <tr ng-repeat="f in freight | orderBy:'-updatedAt' | splitPackageFilter ">
                         <td><input type="checkbox" ng-model="f.selection"></td>
 
-                        <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                        <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
                         <td><a ng-click="showIdentityDetails(f)">查看</a></td>
 
-                        <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                        <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                         <td ng-bind="f.updatedAtToString"></td>
                         <td>
                             <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
@@ -508,10 +515,10 @@
                 <tr ng-repeat="f in freight | orderBy:'-updatedAt' | normalPackageFilter ">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
                     <td><a ng-click="showIdentityDetails(f)">查看</a></td>
 
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                     <td ng-bind="f.updatedAtToString"></td>
                     <td>
                         <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
@@ -670,7 +677,7 @@
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
-            <td ng-bind="f.YDNumber"></td>
+            <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
             <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
             <td ng-bind="f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
             <td ng-bind="f.updatedAt"></td>
@@ -718,12 +725,12 @@
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
-            <td ng-bind="f.YDNumber"></td>
+            <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
 
             <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
 
-            <td ng-bind="f.updatedAt"></td>
+            <td ng-bind="f.updatedAtToString"></td>
 
             <td>
                 <button class="btn btn-sm btn-info" ng-click="addInfo(f)">
@@ -817,7 +824,7 @@
             <th>创建时间</th>
             </thead>
             <div>
-                <tr ng-repeat="user in users" ng-click="showDetails(user)">
+                <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
                     <td ng-bind="user.email"></td>
                     <td ng-bind="user.stringId"></td>
 
@@ -826,13 +833,25 @@
                 </tr>
             </div>
         </table>
+        <div class="btn-group" ng-repeat="btn in userCount track by $index">
+            <div class="btn btn-default btn-sm" ng-click="reloadUser($index)">{{$index+1}}</div>
+        </div>
     </div>
     <div class="col-lg-3 info-area">
         <form>
             <legend>详细信息:</legend>
+            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
             <div class="form-group">
-                <label class="control-label">余额</label>
-                <span class="form-control" ng-bind="'$' + newUser.balanceInDollar"></span>
+                <label class="control-label">用户</label>
+                <span class="form-control">{{newUser ? newUser.stringId : ""}}</span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">实际余额</label>
+                <span class="form-control">{{newUser ? '$' + newUser.balance/100 : ""}}</span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">兑换余额</label>
+                <span class="form-control">{{newUser ? '$' + newUser.rewardBalance/100 : ""}}</span>
             </div>
             <div class="form-group">
                 <label class=" control-label">手机号</label>
@@ -907,13 +926,13 @@
         <th width="30%">申请金额</th>
         <th width="15%">手续费</th>
         <th>实退</th>
-        <th>理由</th>
+        <th width="20%">理由</th>
         <th >处理</th>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.stringId"></td>
             <td ng-bind="t.TKNumber"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
             <td><a ng-click="zhifubaoDetails(t)" >查看</a></td>
             <td ng-bind="'$'+t.amount"></td>
             <td ng-bind="'$'+t.amount*0.02"></td>
@@ -921,12 +940,23 @@
             <!--<td ng-bind="t.amount*0.02"></td>-->
             <td ng-bind="t.reason"></td>
             <td>
-                <button class="btn btn-xs btn-default" ng-click="confirmReturn(t)">同意退款</button>
+                <div ng-if="t.status==500">
+                    <button class="btn btn-xs btn-default" ng-click="confirmReturn(t)">同意退款</button>
+                    <button class="btn btn-xs btn-default" ng-click="refuseReturn(t)">拒绝退款</button>
+                </div>
+                <div ng-if="t.status==590">
+                    已退款
+                </div>
+                <div ng-if="t.status ==580">
+                    拒绝退款: {{t.notes}}
+                </div>
 
-                <button class="btn btn-xs btn-default" ng-click="refuseReturn(t)">拒绝退款</button>
             </td>
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadReturnBalance($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='cc'" ng-controller="AdminReturnGoodsCtrl">
@@ -957,7 +987,7 @@
         </thead>
         <tr ng-repeat="f in goodsList | orderBy:'-createdAt'">
             <td ng-bind="f.user.stringId"></td>
-            <td ng-bind="f.createdAt"></td>
+            <td ng-bind="f.createdAtToString"></td>
             <td><a ng-click="showFreightInDetail(f)"><span  ng-bind="f.RKNumber"></span></a></td>
             <td ng-bind="f.address"></td>
             <td>
@@ -974,12 +1004,24 @@
             </td>
             <td ng-bind="f.reason"></td>
             <td>
-                <button class="btn btn-xs btn-default" ng-click="confirmReturn(f)">同意退货</button>
-                <button class="btn btn-xs btn-default" ng-click="refuseReturn(f)">拒绝退货</button>
+                <div ng-if="f.status==100">
+                    <button class="btn btn-xs btn-default" ng-click="confirmReturn(f)">同意退货</button>
+                    <button class="btn btn-xs btn-default" ng-click="refuseReturn(f)">拒绝退货</button>
+                </div>
+                <div ng-if="f.status==990">
+                    已退货
+                </div>
+                <div ng-if="f.status ==900">
+                    拒绝退货: {{f.notes}}
+                </div>
+
             </td>
 
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadReturnGoods($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='cd'" ng-controller="AdminManageFreightCtrl">
@@ -1009,6 +1051,9 @@
            <td><a ng-click="showFreightDetail(freight)">查看</a></td>
        </tr>
    </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='da'" ng-controller="AdminZhifubaoCtrl">
@@ -1037,12 +1082,15 @@
             <td ng-bind="t.user.id"></td>
             <td ng-bind="t.record"></td>
             <td ng-bind="'$'+ t.amount"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmRecharge(t)">确认</button>
             </td>
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadReturnGoods($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='db'" ng-controller="AdminRechargeRecordCtrl">
@@ -1097,22 +1145,22 @@
         <tr>
             <!--<th>交号</th>-->
             <th>用户名</th>
-            <th>交易号</th>
+            <th>流水号</th>
             <th>充值金额(美元)</th>
             <th>充值类型</th>
             <th>充值时间</th>
-            <th>充值状态</th>
-            <th>备注</th>
+            <!--<th>充值状态</th>-->
+            <!--<th>备注</th>-->
         </tr>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy: '-createdAt'">
             <!--<td ng-bind="t.id"></td>-->
             <td ng-bind="t.user.stringId"></td>
-            <td ng-bind="t.id"></td>
+            <td ng-bind="t.record"></td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>
             <td ng-bind="t.createdAt"></td>
-            <td ng-bind="t.status"></td>
+            <!--<td ng-bind="t.status"></td>-->
             <!--<td>pending</td>-->
             <!--<td ng-bind="freightIn.notes"></td>-->
             <!--<td>-->
@@ -1121,8 +1169,23 @@
             <!--</td>-->
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in tCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadTransaction($index)">{{$index+1}}</div>
+    </div>
 </div>
 <div ng-show="view_tab=='dc'" ng-controller="AdminConsumeRecordCtrl">
+    <div class="col-md-4">
+
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="query.string" placeholder="输入用户名或邮箱" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searching()">用户搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
     <div class="col-md-4">
 
         <div class="input-group">
@@ -1130,7 +1193,7 @@
             <input type="text" class="form-control" ng-model="query.number" placeholder="输入入库号" required>
    <span class="input-group-btn">
 
-        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+        <button class="btn btn-default" type="button" ng-click="searchingRK()">入库号搜索</button>
 
       </span>
         </div><!-- /input-group -->
@@ -1185,21 +1248,23 @@
         <tr ng-repeat="t in transactionList | orderBy: '-createdAt'">
             <td ng-bind="t.user.stringId"></td>
             <td>
-                <div ng-show="t.RKNumber && !t.YDNumber">
-                    <span ng-bind="'入库号:' + t.RKNumber"></span>
-                </div>
-                <div ng-show="t.YDNumber || (t.YDNumber && t.RKNumber)">
-                    <span ng-show="t.YDNumber"></span>
-                </div>
+                <!--<div ng-show="t.RKNumber && !t.YDNumber">-->
+                    <!--<span ng-bind="'入库号:' + t.RKNumber"></span>-->
+                <!--</div>-->
+                <!--<div ng-show="t.YDNumber || (t.YDNumber && t.RKNumber)">-->
+                    <!--<span ng-show="t.YDNumber"></span>-->
+                <!--</div>-->
+                {{t.YDNumber ? t.YDNumber : '入库号:' + t.RKNumber }}
             </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.status"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
             <td ng-bind="t.notes"></td>
-
-
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in tCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadTransaction($index)">{{$index+1}}</div>
+    </div>
 </div>
 <div ng-show="view_tab=='dd'" ng-controller="AdminYDRewardRecordCtrl">
     <div class="col-md-4">
@@ -1230,21 +1295,24 @@
         </thead>
         <tr ng-repeat="t in transactions | orderBy: '-createdAt'">
             <td ng-bind="t.user.stringId"></td>
-            <td ng-bind="t.id"></td>
+            <td ng-bind="t.YDNumber"></td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>
             <td>
                 <div ng-show="t.status === 600">
-                    -
+                    <span ng-bind="'-' + t.amount"></span>
                 </div>
                 <div ng-show="t.status !== 600">
-                    +
+                    <span ng-bind="'+' + t.amount"></span>
                 </div>
             </td>
             <td ng-bind="t.createdAt"></td>
 
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in tCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadRewardRecord($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 <div ng-show="view_tab=='de'" ng-controller="AdminCreditUserCtrl">
@@ -1294,7 +1362,7 @@
             <th>操作</th>
             </thead>
             <div>
-                <tr ng-repeat="user in users" ng-click="showDetails(user)">
+                <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
                     <td ng-bind="user.email"></td>
                     <td ng-bind="user.stringId"></td>
 
@@ -1308,6 +1376,9 @@
                 </tr>
             </div>
         </table>
+    <div class="btn-group" ng-repeat="btn in userCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadUser($index)">{{$index+1}}</div>
+    </div>
 </div>
 <div ng-show="view_tab=='df'" ng-controller="AdminDeletePackageCtrl">
     <div class="col-md-4">
@@ -1339,6 +1410,9 @@
             <td ng-bind="f.updatedAtToString"></td>
         </tr>
     </table>
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadDelete($index)">{{$index+1}}</div>
+    </div>
 </div>
 
 </div>

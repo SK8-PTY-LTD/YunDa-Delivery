@@ -542,6 +542,14 @@
             this.set("YDNumber", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "finalWeight", {
+        get: function () {
+            return this.get("finalWeight");
+        },
+        set: function (value) {
+            this.set("finalWeight", value);
+        }
+    });
 
     Object.defineProperty(YD.Freight.prototype, "address", {
         get: function () {
@@ -1045,6 +1053,23 @@
         }
     });
 
+    Object.defineProperty(YD.FreightIn.prototype, "isChargeSplit", {
+        get: function () {
+            return this.get("isChargeSplit");
+        },
+        set: function (value) {
+            this.set("isChargeSplit", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "isOperating", {
+        get: function () {
+            return this.get("isOperating");
+        },
+        set: function (value) {
+            this.set("isOperating", value);
+        }
+    });
+
     Object.defineProperty(YD.FreightIn.prototype, "notes", {
         get: function () {
             return this.get("notes");
@@ -1486,7 +1511,6 @@
             this.set("balance", (parseFloat(value.toFixed(2))) * 100);
         }
     });
-
     Object.defineProperty(YD.User.prototype, "totalBalanceInDollar", {
         get: function () {
             return parseFloat(((parseInt(this.get("balance")) / 100) + (parseInt(this.get("rewardBalance")) / 100)).toFixed(2));
@@ -1515,7 +1539,7 @@
 
     Object.defineProperty(YD.User.prototype, "rewardBalanceInDollar", {
         get: function () {
-            var rewardDollar = this.get("rewardBalance") / 100;
+            var rewardDollar = parseFloat((parseInt(this.get("rewardBalance")) / 100).toFixed(2));
             return rewardDollar;
         },
         set: function (value) {
@@ -1873,6 +1897,7 @@
     YD.Transaction.STATUS_CONSUME_YD_REWARD = 330;
     YD.Transaction.STATUS_CONSUME_RETURN_GOODS = 340;
     YD.Transaction.STATUS_CONSUME_ADD_PACKAGE = 350;
+    YD.Transaction.STATUS_GET_YD_REWARD = 360;
 
     YD.Transaction.STATUS_RECHARGE = 400;
     YD.Transaction.STATUS_PENDING_RETURN_BALANCE = 500;

@@ -8,9 +8,9 @@
             <th>消费时间</th>
         </thead>
         <tr ng-repeat="t in transactions">
-            <td ng-bind="t.amount"></td>
+            <td ng-bind="'$'+t.amount"></td>
             <td ng-bind="t.notes"></td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
         </tr>
     </table>
 </div>

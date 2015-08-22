@@ -8,11 +8,11 @@
         </tr>
         <tr>
             <td ng-bind="'YD运单号: ' + freight.YDNumber"></td>
-            <td></td>
+            <td ng-bind="'渠道: ' + freight.channel.name"></td>
         </tr>
         <tr>
-            <td ng-bind="'用户名: ' + freight.stringId"></td>
-            <td ng-bind="'数字ID: ' + freight.numberId"></td>
+            <td ng-bind="'用户名: ' + freight.user.stringId"></td>
+            <td ng-bind="'数字ID: ' + freight.user.numberId"></td>
         </tr>
         <tr>
             <td ng-bind="'重量: ' + freight.weight"></td>

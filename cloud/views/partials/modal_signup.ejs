@@ -8,7 +8,7 @@
 
         <div class="form-group has-feedback">
             <label class="control-label">邮箱(Email):</label>
-            <span ng-show="!loginForm.email.$valid || emailExist" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.email.$valid || emailExist" style="color:red" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="email" name="email" class="form-control" id="email" ng-model="currentUser.email" placeholder="john.smith@gmail.com" ng-focus="emailExist=false" ng-blur="checkExistence('email')" required>
         </div>
@@ -17,19 +17,19 @@
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">密码:</label>
-            <span ng-show="!loginForm.password.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+            <span ng-show="!loginForm.password.$valid" style="color:red" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
             <span ng-show="loginForm.password.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="password" name="password" class="form-control" id="password" ng-model="currentUser.password" placeholder="至少八位，大小写下划线不限" ng-minlength="8" required>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">确认密码:</label>
-            <span ng-show="!loginForm.password1.$valid" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+            <span ng-show="!loginForm.password1.$valid" style="color:red" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
             <span ng-show="loginForm.password1.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="password" name="password1" class="form-control" id="password1" ng-model="passwordRepeat" placeholder="再次输入密码" ng-minlength="8" required>
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">用户名<strong>(注册后无法修改)</strong>:</label>
-            <span ng-show="!loginForm.stringId.$valid || nameExist" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.stringId.$valid || nameExist" style="color:red" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.stringId.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="stringId" class="form-control" minlength="5" maxlength="8" id="stringId" ng-model="currentUser.stringId" ng-focus="nameExist=false" ng-blur="checkExistence('stringId')" placeholder="字母5-8位，注册后无法修改" required>
         </div>
@@ -38,14 +38,14 @@
         </div>
         <div class="form-group has-feedback">
             <label class="control-label">姓名:</label>
-            <span ng-show="!loginForm.realname.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.realname.$valid" style="color:red" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.realname.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="realname"  class="form-control" id="realName" ng-model="currentUser.realName"  placeholder="Yun Da" required>
         </div>
 
         <div class="form-group has-feedback">
             <label class="control-label">联系电话:</label>
-            <span ng-show="!loginForm.contact.$valid" class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="!loginForm.contact.$valid" style="color:red" class="glyphicon glyphicon-remove form-control-feedback"></span>
             <span ng-show="loginForm.contact.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
             <input type="text" name="contact" pattern="([0-9]+)" class="form-control" id="contact" ng-model="currentUser.contactNumber">
         </div>
@@ -61,8 +61,9 @@
             <button type="submit" class="col-xs-12 btn btn-info" ng-click="signup()" ng-disabled="!loginForm.$valid">注册</button>
         </div>
 
-        <div class="form-group">
-            <label class="control-label"><a href="http://www.sk8.asia">Powered by SK8科技</a></label>
+        <div class="modal-footer">
+            <label class="control-label"><a href="http://www.yundawl.com"></a></label>
+            <label class="control-label hidden"><a href="http://sk8techs.com">SK8 Tech</a></label>
         </div>
     </form>
 </div>

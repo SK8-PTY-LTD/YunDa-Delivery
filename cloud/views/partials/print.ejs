@@ -54,20 +54,20 @@
     <div class="a4-print-page-half">
         <table class="table table-bordered">
             <tr>
-                <td ng-bind="'入库单号:'+freight.RKNumber"></td>
-                <td ng-bind="'转运单号:'+freight.trackingNumber"></td>
+                <td ng-bind="'入库单号: '+freight.RKNumber"></td>
+                <td ng-bind="'转运单号: '+freight.trackingNumber"></td>
             </tr>
             <tr>
-                <td ng-bind="'YD运单号:'+freight.YDNumber"></td>
-                <td></td>
+                <td ng-bind="'YD运单号: '+freight.YDNumber"></td>
+                <td ng-bind="'渠道: ' + freight.channel.name"></td>
             </tr>
             <tr>
                 <td ng-bind="'用户名:'+freight.user.stringId"></td>
                 <td ng-bind="'数字ID:'+freight.user.numberId"></td>
             </tr>
             <tr>
-                <td ng-bind="'重量:'+freight.weight + 'Lb'"></td>
-                <td ng-bind="'最终重量:'+freight.finalWeight"></td>
+                <td>重量: <span ng-bind="freight.weight"></span> Lb</td>
+                <td>最终重量: <span ng-bind="freight.finalWeight"></span> Lb</td>
             </tr>
             <tr>
                 <td colspan="2">

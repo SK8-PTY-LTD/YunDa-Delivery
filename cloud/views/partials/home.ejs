@@ -116,9 +116,9 @@
                         </button>
                     </div>
                     <br>
-                    <p class="control-label text-right" style="font-size: 0.8em; margin-top: 5px;"><a
+                    <!--<p class="control-label text-right" style="font-size: 0.8em; margin-top: 5px;"><a
                                 href="http://www.sk8.asia"><em>Powered by
-                                SK8科技</em></a></p>
+                                SK8科技</em></a></p>-->
                 </fieldset>
             </form>
 
@@ -133,7 +133,9 @@
                 <span ng-bind="currentUser.stringId"></span>
                 </br>
                 <label for="username">账户余额： </label>
-                $<span ng-bind="currentUser.totalBalanceInDollar"></span></br>
+                $<span ng-bind="currentUser.balanceInDollar"></span></br>
+                <label for="username">兑换余额： </label>
+                $<span ng-bind="currentUser.rewardBalanceInDollar"></span></br>
                 <label for="username">YD币： </label>
                 <span ng-bind="currentUser.accumulatedReward"></span></br>
                 <div style="margin-bottom: 25px;"></div>
@@ -141,7 +143,6 @@
 
                 <a style="color:gray; font-weight: bold" ng-click="updatePassword()">修改密码</a></br>
                 <a style="font-weight: bold" ng-click="logOut()">登出账号</a>
-
 
             </fieldset>
         </div>

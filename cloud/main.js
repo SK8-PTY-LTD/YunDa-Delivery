@@ -258,9 +258,24 @@ AV.Cloud.define("increaseUserBalance", function (request, response) {
 
 AV.Cloud.define("chargingUser", function (request, response) {
     console.log("in ChargeUser");
-    var query = new AV.Query("_User");
+    var User = AV.Object.extend("_User");
+    var Transaction = AV.Object.extend("Transaction");
+    var query = new AV.Query(User);
     var id = request.params.userId;
     var amount = parseFloat(request.params.amount);
+    var notes = request.params.notes;
+    var RKNumber = request.params.RKNumber;
+    var YDNumber = request.params.YDNumber;
+    var status = request.params.status;
+    //var tnsSaveStatus = 0;
+    ///**
+    // * 1: balance minus only
+    // * 2: balance and rewardBalance minus
+    // * 3: rewardBalance minus only
+    // */
+    //var balanceTransaction = 0;
+    //var rewardTransaction = 0;
+
     console.log("getting user now: " + id + " | " + amount);
     //query.equalTo("objectId", id);
     query.get(id, {
@@ -275,29 +290,83 @@ AV.Cloud.define("chargingUser", function (request, response) {
             if (totalBalance < amount) {
                 response.error("用户金额不足$" + amount);
             } else {
-
                 /**
                  * Make sure user's rewardBalance is charged first.
                  */
                 console.log("in else");
                 if (rewardBalance == 0) {
                     balance -= amount;
-                } else if (rewardBalance < amount) {
-                    rewardBalance = 0;
+                    //tnsSaveStatus = 1;
+
+                } else if (rewardBalance > 0 && rewardBalance < amount) {
+                    rewardTransaction = rewardBalance;
+                    balanceTransaction = amount - rewardBalance;
                     balance -= (amount - rewardBalance);
+                    rewardBalance = 0;
+                    //tnsSaveStatus = 2;
+
                 } else if (rewardBalance >= amount) {
                     rewardBalance -= amount;
+                    //tnsSaveStatus = 3;
                 } else {
                     balance -= amount;
+                    //tnsSaveStatus = 1;
                 }
                 user.set("balance", balance * 100);
                 user.set("rewardBalance", rewardBalance * 100);
                 console.log("user's total balance: " + rewardBalance);
                 console.log("user's total balance: " + balance);
+                var yd = user.get("accumulatedReward");
+                var finalReward = parseFloat((yd + amount).toFixed(2));
+                user.set("accumulatedReward", finalReward);
                 user.save(null, {
                     success: function (u) {
                         console.log("user saved");
-                        response.success();
+                        var userPT = new User();
+                        userPT.id = u.id;
+                            var transaction = new Transaction();
+                            transaction.set("amount", amount);
+                            transaction.set("notes", notes);
+                            transaction.set("RKNumber", RKNumber);
+                            transaction.set("user", userPT);
+                            if(!YDNumber) {
+
+                            } else {
+                                transaction.set("YDNumber", YDNumber);
+                            }
+                            transaction.set("status", status);
+                            console.log("transaction set finished, ready to save");
+                            transaction.save(null, {
+                                success: function () {
+                                    var tns = new Transaction();
+                                    tns.set("amount", amount);
+                                    tns.set("notes", "YD币赠送: " + notes);
+                                    tns.set("RKNumber", RKNumber);
+                                    tns.set("user", userPT);
+                                    if(!YDNumber) {
+
+                                    } else {
+                                        tns.set("YDNumber", YDNumber);
+                                    }
+                                    tns.set("status", 360); //STATUS  GET YD REWARD = 360
+                                    console.log(" ready to save reward transaction");
+
+                                    tns.save(null, {
+                                        success: function (newT) {
+                                            console.log(" reward transaction saved");
+                                            response.success();
+                                        },
+                                        error: function(t, error) {
+                                            response.error(error.message);
+                                        }
+                                    });
+                                },
+                                error: function(t, error) {
+                                    response.error(error.message);
+
+                                }
+                            });
+
                     },
                     error: function (u, error) {
                         response.error(error.message);
@@ -313,8 +382,101 @@ AV.Cloud.define("chargingUser", function (request, response) {
 });
 
 AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
+    console.log("CC -- in ChargeUserWitoughtReward");
+    var User = AV.Object.extend("_User");
+    var Transaction = AV.Object.extend("Transaction");
+    var query = new AV.Query(User);
+    var id = request.params.userId;
+    var notes = request.params.notes;
+    var RKNumber = request.params.RKNumber;
+    var YDNumber = request.params.YDNumber;
+    var status = request.params.status;
+    console.log("CC -- userid: " + id);
+    var amount = parseFloat(request.params.amount);
+    console.log("getting user now: " + id + " | " + amount);
+    //query.equalTo("objectId", id);
+    query.get(id, {
+        success: function (user) {
+            var balance = parseInt(user.get("balance")) / 100;
+            console.log("user's total balance: " + balance);
+            if (balance < amount) {
+                response.error("用户金额不足$" + amount);
+            } else {
+
+                balance -= amount;
+                user.set("balance", balance * 100);
+                console.log("user's total balance: " + balance);
+                var yd = user.get("accumulatedReward");
+                var finalReward = parseFloat((yd + amount).toFixed(2));
+                user.set("accumulatedReward", finalReward);
+                user.save(null, {
+                    success: function (u) {
+                        console.log("user saved");
+                        var userPT = new User();
+                        userPT.id = u.id;
+                        var transaction = new Transaction();
+                        transaction.set("amount", amount);
+                        transaction.set("notes", notes);
+                        transaction.set("RKNumber", RKNumber);
+                        transaction.set("user", userPT);
+                        if(!YDNumber) {
+
+                        } else {
+                            transaction.set("YDNumber", YDNumber);
+                        }
+                        transaction.set("status", status);
+                        console.log("transaction set finished, ready to save");
+                        transaction.save(null, {
+                            // save this transaction
+                            success: function (t) {
+                                var tns = new Transaction();
+                                tns.set("amount", amount);
+                                tns.set("notes", "YD币赠送: " + notes);
+                                tns.set("RKNumber", RKNumber);
+                                tns.set("user", userPT);
+                                if(!YDNumber) {
+
+                                } else {
+                                    tns.set("YDNumber", YDNumber);
+                                }
+                                tns.set("status", 360); //STATUS  GET YD REWARD = 360
+
+                                tns.save(null, {
+                                    //save YD Reward transaction
+                                    success: function (newT) {
+                                        console.log("YD transaction saved");
+                                        response.success();
+                                    },
+                                    error: function (t, error) {
+                                        console.log("YD Transaction saved ERROR: " + error.message);
+                                        response.error(error.message);
+                                    }
+                                });
+                            },
+                            error: function (t, error) {
+                                console.log("transaction saved ERRORL: " + error.message);
+                                response.error(error.message);
+                            }
+                        });
+                    },
+                    error: function (u, error) {
+                        response.error(error.message);
+                        response.error(error.message);
+                    }
+                });
+            }
+        },
+        error: function (user, error) {
+            console.log("find user error: " + error.message);
+            response.error(error.message);
+        }
+    });
+});
+
+AV.Cloud.define("chargingUserReturn", function (request, response) {
     console.log("in ChargeUser");
-    var query = new AV.Query("_User");
+    var User = AV.Object.extend("_User");
+    var query = new AV.Query(User);
     var id = request.params.userId;
     var amount = parseFloat(request.params.amount);
     console.log("getting user now: " + id + " | " + amount);
@@ -322,20 +484,13 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
     query.get(id, {
         success: function (user) {
             var balance = parseInt(user.get("balance")) / 100;
-            console.log("user's total balance: " + totalBalance);
-            console.log("user's total balance: " + rewardBalance);
-            console.log("user's total balance: " + balance);
 
+            console.log("user's total balance: " + balance);
             if (balance < amount) {
                 response.error("用户金额不足$" + amount);
             } else {
 
-                /**
-                 * Make sure user's rewardBalance is charged first.
-                 */
-
                 balance -= amount;
-
                 user.set("balance", balance * 100);
                 console.log("user's total balance: " + balance);
                 user.save(null, {
@@ -355,7 +510,6 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
         }
     });
 });
-
 
 AV.Cloud.beforeSave("Transaction", function (request, response) {
     //Prototype linking
@@ -416,7 +570,7 @@ AV.Cloud.afterUpdate('_User', function (request) {
         return stringId;
     }
     //Check if user has a Number id and String id
-    if (user.numberId != undefined && user.stringId != undefined) {
+    if (user.get("numberId") != undefined) {
         console.log("user.numberId != undefined && user.stringId != undefined");
 
     } else {
@@ -536,7 +690,7 @@ AV.Cloud.beforeSave('_User', function (request, response) {
         return stringId;
     }
     //Check if user has a Number id and String id
-    if (user.numberId != undefined && user.stringId != undefined) {
+    if (user.get("numberId") != undefined) {
         console.log("user.numberId != undefined && user.stringId != undefined")
 
     } else {
