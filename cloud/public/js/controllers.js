@@ -931,7 +931,7 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
                             } else if ($scope.freights[i].status == YD.Freight.STATUS_PASSING_CUSTOM) {
                                 statusString = "已清关";
                             } else if ($scope.freights[i].status == YD.Freight.STATUS_FINAL_DELIVERY) {
-                                statusString = "国内寄运";
+                                statusString = "发往中国";
                             } else if ($scope.freights[i].status == YD.Freight.STATUS_SPEED_MANUAL) {
                                 statusString = "原箱闪运";
                             }
@@ -4416,7 +4416,7 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
                         else if ($scope.freights[i].status == YD.Freight.STATUS_PASSING_CUSTOM)
                             statusToString = "已清关";
                         else if ($scope.freights[i].status == YD.Freight.STATUS_FINAL_DELIVERY)
-                            statusToString = "国内运寄中";
+                            statusToString = "发往中国";
                         else if ($scope.freights[i].status == YD.Freight.STATUS_DELIVERED)
                             statusToString = "已到达";
                         else {

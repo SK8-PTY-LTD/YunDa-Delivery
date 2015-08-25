@@ -226,6 +226,9 @@ padding-left: 25px
 /**{ margin:0; padding:0; list-style:none;}*/
 /*img{ border:0;}*/
 
+
+
+
 .rides-cs {  font-size: 12px; background:#013086; position: fixed; top: 250px; right: 0px; _position: absolute; z-index: 1500; border-radius:6px 0px 0 6px;}
 .rides-cs a { color: #00A0E9;}
 .rides-cs a:hover { color: #ff8100; text-decoration: none;}
@@ -728,3 +731,12 @@ ul.social-list li a.weixin:hover {
     width: 10px;
 }
 
+@media (max-width: 768px) {
+    ul.nav li a {
+        padding: 0 !important;
+    }
+    body {
+        margin-top: 200px;
+    }
+
+}
