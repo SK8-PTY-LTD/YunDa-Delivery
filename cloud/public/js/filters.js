@@ -45,13 +45,13 @@ YundaApp.filter('packageSearchFilter', function () {
             return list;
         } else {
             for (var i = 0; i < list.length; i++) {
-                if (list[i].trackingNumber == input) {
+                if (list[i].trackingNumber === input) {
                     filtered.push(list[i]);
                 }
             }
             console.log("filtered, list.length: " + filtered.length);
             if(filtered.length == 0) {
-                return list;
+                return [];
             } else {
                 return filtered;
             }

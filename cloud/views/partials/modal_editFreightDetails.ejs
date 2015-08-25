@@ -54,7 +54,7 @@
                 <th>操作</th>
                 </thead>
 
-                <tr ng-repeat="desc in descriptionList track by desc.name">
+                <tr ng-repeat="desc in freight.descriptionList track by desc.name">
                     <td ng-bind="desc.kind"></td>
                     <td ng-bind="desc.name"></td>
                     <td ng-bind="desc.brand"></td>
@@ -112,22 +112,22 @@
 
             </div>
         </div>
-        <!--<div class="row">-->
-            <!--<div class="col-lg-3">-->
-                <!--<label>总申报价值：</label>-->
-                <!--<form class="form-inline">-->
-                    <!--<div class="form-group">-->
-                        <!--<div class="input-group">-->
-                            <!--<div class="input-group-addon">$</div>-->
+        <div class="row">
+            <div class="col-lg-3">
+                <label>总申报价值：</label>
 
-                            <!--<input type="number" step="any" class="form-control" ng-model="insurance.total"-->
-                                   <!--disabled>-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</form>-->
-            <!--</div>-->
-        <!--</div>-->
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">$</div>
+                            <input type="number" step="any" class="form-control"
+                                   ng-model="insurance.total"
+                                   disabled>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-3">
                 <label>输入总保价价值：</label>
@@ -144,26 +144,28 @@
                 </form>
             </div>
             <div class="col-lg-3 col-lg-offset-1">
-                <div ng-if="insurance.value < 0">
+                <div ng-if="insurance.value < 0 || insurance.value > insurance.total || insurance.value < 10 || insurance.value > 1000">
                     <em class="validation-error">请输入正确金额</em>
                 </div>
                 <div ng-if="insurance.value >= 0 || !insurance.value">
                     <!--需付保金(自动计算):<span ng-bind="'$' + insurance.amount"></span>-->
                     <label>需付保金(自动计算):</label>
+
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-
-                            <input type="number" step="any" class="form-control" ng-model="insurance.amount"
-                                   disabled>
-
+                                        <span type="number" step="any" class="form-control"
+                                              ng-bind="(insurance.value *0.02).toFixed(2)"
+                                              disabled></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <small>必须等于或小于发票上的价值，保险率2%；不买保险不用填；保价区间：$10～$1000</small>
+
         <div class="row">
-            <small><span ng-bind="'原保金: ' + freight.insurance"></span></small>
+            <strong><span ng-bind="'原保金: ' + freight.insurance"></span></strong>
         </div>
 
     </form>

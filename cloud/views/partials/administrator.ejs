@@ -88,7 +88,7 @@
                 <!--</div>-->
                 <div class="col-md-4">
                     <label>渠道名称: </label>
-                    <input class="form-control" type="text" ng-model="channel.name" disabled>
+                    <input class="form-control" type="text" ng-model="channel.name">
                     <!--<span ng-bind="channel.name"></span>-->
                 </div>
                 <div class="col-lg-2">
@@ -181,7 +181,7 @@
            <div class="row">
                <div class="col-lg-6">
                    <label>仓库名</label>
-                   <input type="text" class="form-control" ng-model="address.name" disabled>
+                   <input type="text" class="form-control" ng-model="address.name">
                </div>
                <div class="col-lg-6">
                    <label>电话</label>
@@ -215,9 +215,12 @@
         </div>
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-1">
                         <!--<button class="btn btn-default" ng-click="saveAddress(address)">保存修改</button>-->
                         <button class="btn btn-default" ng-click="deleteAddress(address)">删除</button>
+                    </div>
+                    <div class="col-lg-1">
+                        <button class="btn btn-default" ng-click="confirm()">保存</button>
                     </div>
                 </div>
             </div>
@@ -324,6 +327,18 @@
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入入库号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingRK()">入库号搜索</button>
 
       </span>
             </div><!-- /input-group -->
@@ -442,8 +457,20 @@
             </div><!-- /input-group -->
         </div>
 
+        <div class="col-md-4">
 
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
     </div>
+
     <br>
     <tabset>
         <tab heading="合包">
@@ -916,7 +943,18 @@
       </span>
         </div><!-- /input-group -->
     </div>
+    <div class="col-md-4">
 
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="退款号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingTK()">搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th width="6%">用户名</th>
@@ -928,6 +966,7 @@
         <th>实退</th>
         <th width="20%">理由</th>
         <th >处理</th>
+        <th>凭证</th>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.stringId"></td>
@@ -952,6 +991,11 @@
                 </div>
 
             </td>
+            <td>
+                <div ng-show="t.status == 590">
+                    <a target="_blank" ng-href="{{t.adminEvidence.url()}}">下载</a>
+                </div>
+            </td>
         </tr>
     </table>
     <div class="btn-group" ng-repeat="btn in freightCount track by $index">
@@ -975,6 +1019,19 @@
         </div><!-- /input-group -->
     </div>
 
+    <div class="col-md-4">
+
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="入库号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingRK()">搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
+
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
     <table class="table table-hover small-table" >
         <thead>
@@ -985,6 +1042,8 @@
         <th width="10%">Label</th>
         <th>备注</th>
         <th >处理</th>
+        <th>凭证</th>
+
         </thead>
         <tr ng-repeat="f in goodsList | orderBy:'-createdAt'">
             <td ng-bind="f.user.stringId"></td>
@@ -1017,7 +1076,11 @@
                 </div>
 
             </td>
-
+            <td>
+                <div ng-if="f.status == 990">
+                    <a target="_blank" ng-href="{{f.adminEvidence._url}}">点此下载</a>
+                </div>
+            </td>
         </tr>
     </table>
     <div class="btn-group" ng-repeat="btn in freightCount track by $index">
@@ -1028,7 +1091,7 @@
 <div ng-show="view_tab=='cd'" ng-controller="AdminManageFreightCtrl">
     <!--<h4>包裹管理</h4>-->
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
-
+<div class="row">
     <div class="col-md-4">
 
         <div class="input-group">
@@ -1041,7 +1104,19 @@
       </span>
         </div><!-- /input-group -->
     </div>
+    <div class="col-md-4">
 
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
+</div>
     <table class="table table-striped small-table">
        <thead>
        <th>用户名</th>
@@ -1302,7 +1377,9 @@
         </thead>
         <tr ng-repeat="t in transactions | orderBy: '-createdAt'">
             <td ng-bind="t.user.stringId"></td>
-            <td ng-bind="t.YDNumber"></td>
+            <td>
+                {{t.YDNumber ? t.YDNumber : t.RKNumber}}
+            </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>
             <td>
@@ -1313,7 +1390,7 @@
                     <span ng-bind="'+' + t.amount"></span>
                 </div>
             </td>
-            <td ng-bind="t.createdAt"></td>
+            <td ng-bind="t.createdAtToString"></td>
 
         </tr>
     </table>

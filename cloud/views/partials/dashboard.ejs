@@ -509,13 +509,17 @@
             </div>
             <small style="color:red">注意：请确认账户内金额是否足够，否则影响出库</small>
         </div>
-    </div>
+
     <div class="row">
         <div class="col-md-4 col-md-offset-8">
             <button class="btn btn-default" ng-click="generateFreight()" ng-disabled="isClicked">
                 <div ng-if="isClicked">正在生成...</div>
                 <div ng-if="!isClicked">生成运单</div>
             </button>
+        </div>
+    </div>
+        <div class="col-md-2 col-md-offset-10 top-buffer-1">
+            <a ng-click="rewriteFreight()">重新填写</a>
         </div>
     </div>
 </div>
@@ -757,7 +761,7 @@
                             </form>
                         </div>
                         <div class="col-lg-3 col-lg-offset-1">
-                            <div ng-if="freightIn.insurance.value < 0 || freightIn.insurance.value > freightIn.insurance.total">
+                            <div ng-if="freightIn.insurance.value < 0 || freightIn.insurance.value > freightIn.insurance.total || freightIn.insurance.value < 10 || freightIn.insurance.value > 1000">
                                 <em class="validation-error">请输入正确金额</em>
                             </div>
                             <div ng-if="freightIn.insurance.value >= 0 || !freightIn.insurance.value">
@@ -929,8 +933,21 @@
     </form>
 </div>
 <div ng-show="view_tab=='bd'" ng-controller="MyTrackingCtrl">
+
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
+    <div class="col-md-4">
+
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>YD运单号</th>
@@ -1351,8 +1368,13 @@
         <tr ng-repeat="freight in returnList | orderBy: '-createdAt'">
             <td ng-bind="freight.RKNumber"></td>
             <td ng-bind="freight.createdAtToString"></td>
-            <td ng-bind="freight.status"></td>
-            <td><a target="_blank" ng-href="{{freight.adminEvidence}}">点此下载</a></td>
+            <td ng-bind="freight.statusToString"></td>
+            <!--<td><a target="_blank" ng-href="{{freight.adminEvidence}}">点此下载</a></td>-->
+            <td>
+                <div ng-if="freight.status == 990">
+                    <a target="_blank" ng-href="{{freight.adminEvidence._url}}">点此下载</a>
+                </div>
+            </td>
             <td ng-bind="freight.notes"></td>
         </tr>
     </table>

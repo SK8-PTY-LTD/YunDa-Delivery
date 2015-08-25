@@ -124,7 +124,7 @@ AV.Cloud.define("creditUser", function (request, response) {
             user.balanceInDollar = parseFloat(user.balanceInDollar) + amount;
             console.log("user now balance: " + user.balanceInDollar);
             user.save(null, {
-                success: function(u) {
+                success: function (u) {
                     var transaction = new YD.Transaction();
                     var userPointer = new YD.User();
                     userPointer.id = userId;
@@ -144,7 +144,7 @@ AV.Cloud.define("creditUser", function (request, response) {
                         }
                     });
                 },
-                error: function(u, error) {
+                error: function (u, error) {
                     response.error(error.message);
                 }
             });
@@ -167,7 +167,7 @@ AV.Cloud.define("debitUser", function (request, response) {
             user.balanceInDollar = parseFloat(user.balanceInDollar) - amount;
             console.log("user now balance: " + user.balanceInDollar);
             user.save(null, {
-                success: function(u) {
+                success: function (u) {
                     var transaction = new YD.Transaction();
                     var userPointer = new YD.User();
                     userPointer.id = userId;
@@ -187,7 +187,7 @@ AV.Cloud.define("debitUser", function (request, response) {
                         }
                     });
                 },
-                error: function(u, error) {
+                error: function (u, error) {
                     response.error(error.message);
                 }
             });
@@ -276,6 +276,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
     //var balanceTransaction = 0;
     //var rewardTransaction = 0;
 
+    var ydReward = 0;
     console.log("getting user now: " + id + " | " + amount);
     //query.equalTo("objectId", id);
     query.get(id, {
@@ -296,20 +297,25 @@ AV.Cloud.define("chargingUser", function (request, response) {
                 console.log("in else");
                 if (rewardBalance == 0) {
                     balance -= amount;
+                    ydReward = amount;
                     //tnsSaveStatus = 1;
 
                 } else if (rewardBalance > 0 && rewardBalance < amount) {
-                    rewardTransaction = rewardBalance;
-                    balanceTransaction = amount - rewardBalance;
+                    //rewardTransaction = rewardBalance;
+                    //balanceTransaction = amount - rewardBalance;
+                    ydReward = (amount - rewardBalance);
                     balance -= (amount - rewardBalance);
+
                     rewardBalance = 0;
                     //tnsSaveStatus = 2;
 
                 } else if (rewardBalance >= amount) {
                     rewardBalance -= amount;
+                    ydReward = 0;
                     //tnsSaveStatus = 3;
                 } else {
                     balance -= amount;
+                    ydReward = amount;
                     //tnsSaveStatus = 1;
                 }
                 user.set("balance", balance * 100);
@@ -317,33 +323,35 @@ AV.Cloud.define("chargingUser", function (request, response) {
                 console.log("user's total balance: " + rewardBalance);
                 console.log("user's total balance: " + balance);
                 var yd = user.get("accumulatedReward");
-                var finalReward = parseFloat((yd + amount).toFixed(2));
+                var finalReward = parseFloat((yd + ydReward).toFixed(2));
                 user.set("accumulatedReward", finalReward);
                 user.save(null, {
                     success: function (u) {
                         console.log("user saved");
                         var userPT = new User();
                         userPT.id = u.id;
-                            var transaction = new Transaction();
-                            transaction.set("amount", amount);
-                            transaction.set("notes", notes);
-                            transaction.set("RKNumber", RKNumber);
-                            transaction.set("user", userPT);
-                            if(!YDNumber) {
+                        var transaction = new Transaction();
+                        transaction.set("amount", amount);
+                        transaction.set("notes", notes);
+                        transaction.set("RKNumber", RKNumber);
+                        transaction.set("user", userPT);
+                        if (!YDNumber) {
 
-                            } else {
-                                transaction.set("YDNumber", YDNumber);
-                            }
-                            transaction.set("status", status);
-                            console.log("transaction set finished, ready to save");
-                            transaction.save(null, {
-                                success: function () {
+                        } else {
+                            transaction.set("YDNumber", YDNumber);
+                        }
+                        transaction.set("status", status);
+                        console.log("transaction set finished, ready to save");
+                        transaction.save(null, {
+                            success: function () {
+
+                                if (ydReward > 0) {
                                     var tns = new Transaction();
-                                    tns.set("amount", amount);
+                                    tns.set("amount", ydReward);
                                     tns.set("notes", "YD币赠送: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
-                                    if(!YDNumber) {
+                                    if (!YDNumber) {
 
                                     } else {
                                         tns.set("YDNumber", YDNumber);
@@ -356,16 +364,17 @@ AV.Cloud.define("chargingUser", function (request, response) {
                                             console.log(" reward transaction saved");
                                             response.success();
                                         },
-                                        error: function(t, error) {
+                                        error: function (t, error) {
                                             response.error(error.message);
                                         }
                                     });
-                                },
-                                error: function(t, error) {
-                                    response.error(error.message);
-
                                 }
-                            });
+                            },
+                            error: function (t, error) {
+                                response.error(error.message);
+
+                            }
+                        });
 
                     },
                     error: function (u, error) {
@@ -419,7 +428,7 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
                         transaction.set("notes", notes);
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
-                        if(!YDNumber) {
+                        if (!YDNumber) {
 
                         } else {
                             transaction.set("YDNumber", YDNumber);
@@ -434,7 +443,7 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
                                 tns.set("notes", "YD币赠送: " + notes);
                                 tns.set("RKNumber", RKNumber);
                                 tns.set("user", userPT);
-                                if(!YDNumber) {
+                                if (!YDNumber) {
 
                                 } else {
                                     tns.set("YDNumber", YDNumber);
