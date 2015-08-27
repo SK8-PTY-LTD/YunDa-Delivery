@@ -964,6 +964,25 @@
                 });
             }
 
+        },
+        recoverFreightIn: function() {
+            this.address = undefined;
+            this.adminEvidence = undefined;
+            this.checkInfo = undefined;
+            this.comments = "";
+            this.exceedWeight = 0;
+            this.isChargeSplit = false;
+            this.isChecking = false;
+            this.isCheckingCharged = false;
+            this.isMerged = false;
+            this.isOperating = false;
+            this.isSplit = false;
+            this.isSplitPremium = false;
+            this.mergeReference = undefined;
+            this.notes = "";
+            this.packageComments = "";
+            this.splitReference = undefined;
+            this.status = 200;
         }
     }, {
         STATUS_INITIALIZED: 0,
@@ -1523,7 +1542,7 @@
     });
     Object.defineProperty(YD.User.prototype, "balanceInYuan", {
         get: function () {
-            var dollar = this.totalBalanceInDollar;
+            var dollar = this.balanceInDollar;
             var yuan = parseFloat((dollar * 6.4).toFixed(2));
             return yuan;
         }

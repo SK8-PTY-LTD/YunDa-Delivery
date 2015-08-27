@@ -129,6 +129,9 @@
                 兑换余额：$<span
                         ng-bind="currentUser.rewardBalanceInDollar"></span>
             </p>
+            <p>
+                冻结余额: <span ng-bind="'$' + currentUser.pendingBalanceInDollar"></span>
+            </p>
             <!-- <div ng-if="currentUser.pendingBalanceInDollar == undefined || currentUser.pendingBalanceInDollar == 0">
                 <p>账户待处理余额: $0.00</p>
             </div>
@@ -474,7 +477,7 @@
                 </form>
             </div>
             <div class="col-lg-3 col-lg-offset-1">
-                <div ng-if="insurance.value < 0 || insurance.value > insurance.total">
+                <div ng-if="insurance.value < 0 || insurance.value > insurance.total || (insurance.value > 0 && insurance.value < 10) || insurance.value > 1000">
                     <em class="validation-error">请输入正确金额</em>
                 </div>
                 <div ng-if="insurance.value >= 0 || !insurance.value">
@@ -596,9 +599,9 @@
 <table class="table table-striped" style="font-size: 0.9em">
 <thead>
 <th width="2%"> 选择</th>
-<th width="20%">入库单号</th>
-<th width="28%">转运号</th>
-<th width="13%">重量</th>
+<th width="35%">入库单号</th>
+<th width="21%">转运号</th>
+<th width="9%">重量</th>
 <th>入库时间</th>
 </thead>
 <tr ng-repeat="freightIn in freightIns | orderBy:'-updatedAt'" border="2">
@@ -612,15 +615,15 @@
             <accordion-group>
                 <accordion-heading>
                     <div class="row freightIn-table">
-                        <div class="col-lg-2" style="font-size:0.7em"><span ng-bind="freightIn.RKNumber"></span></div>
-                        <div class="col-lg-5" style="font-size:0.7em"><span ng-bind="freightIn.trackingNumber"></span>
+                        <div class="col-lg-4" style="font-size:0.7em"><span ng-bind="freightIn.RKNumber"></span></div>
+                        <div class="col-lg-4" style="font-size:0.7em"><span ng-bind="freightIn.trackingNumber"></span>
                         </div>
                         <div class="col-lg-2" style="margin-left:-40px;"><span
                                     ng-bind="(freightIn.weight).toFixed(2)"></span>Lb
                         </div>
-                        <div class="col-lg-2" style="font-size:0.7em; "><span
+                        <div class="col-lg-1" style="font-size:0.7em; margin-left: -3em;"><span
                                     ng-bind="freightIn.updatedAt"></span></div>
-                        <div class="col-lg-1">
+                        <div class="col-lg-1" style="margin-left: 2em;">
                             <div ng-show="freightIn.isSplit || freightIn.isSplitPremium">
                                 <button class="btn btn-xs btn-default" ng-click="cancelSplit(freightIn)"
                                         style="background-color: green; color: white; font-weight:bold;"
@@ -761,7 +764,7 @@
                             </form>
                         </div>
                         <div class="col-lg-3 col-lg-offset-1">
-                            <div ng-if="freightIn.insurance.value < 0 || freightIn.insurance.value > freightIn.insurance.total || freightIn.insurance.value < 10 || freightIn.insurance.value > 1000">
+                            <div ng-if="freightIn.insurance.value < 0 || freightIn.insurance.value > freightIn.insurance.total || (insurance.value > 0 && insurance.value < 10) || freightIn.insurance.value > 1000">
                                 <em class="validation-error">请输入正确金额</em>
                             </div>
                             <div ng-if="freightIn.insurance.value >= 0 || !freightIn.insurance.value">
@@ -893,7 +896,9 @@
 <tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight(0)">
     <!--this is the content for 已发货-->
     <tab-heading>
-        已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>
+        <!--已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>-->
+        已发货
+
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
@@ -1364,6 +1369,7 @@
         <th>
             反馈
         </th>
+        <th>操作</th>
         </thead>
         <tr ng-repeat="freight in returnList | orderBy: '-createdAt'">
             <td ng-bind="freight.RKNumber"></td>
@@ -1376,6 +1382,12 @@
                 </div>
             </td>
             <td ng-bind="freight.notes"></td>
+            <td>
+                <div ng-if="freight.status == 900">
+                    <button class="btn btn-xs btn-default" ng-click="returnAgain(freight)">重新退货</button>
+                    <button class="btn btn-xs btn-default" ng-click="recoverFreightIn(freight)">重新入库</button>
+                </div>
+            </td>
         </tr>
     </table>
     <div class="btn-group" ng-repeat="btn in freightCount track by $index">

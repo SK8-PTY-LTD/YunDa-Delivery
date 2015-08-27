@@ -56,6 +56,15 @@
   </head>
   <body ng-controller="AppCtrl">
     <!-- Navbar and Styling file -->
+    <!--[if lt IE 9]>
+    <div class="section dashboard-banner for-ie-suckers" style="margin: 0;">
+      <div class="container">
+        <div class="row">
+          <b>YD安全卫士提醒您：</b>您的 IE 浏览器不被支持。试试其他的：<a href="http://www.google.com/chrome">Google 浏览器</a>、<a href="http://www.apple.com/cn/safari/">Safari 浏览器</a>、<a href="http://www.firefox.com/">Firefox 浏览器</a>
+        </div>
+      </div>
+    </div>
+    <![endif]-->
     <div ng-if="!printPage">
     <yunda-navbar></yunda-navbar>
     </div>

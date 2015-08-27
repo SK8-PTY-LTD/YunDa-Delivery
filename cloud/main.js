@@ -520,6 +520,43 @@ AV.Cloud.define("chargingUserReturn", function (request, response) {
     });
 });
 
+AV.Cloud.define("chargingUserReturnBalance", function (request, response) {
+    var User = AV.Object.extend("_User");
+    var query = new AV.Query(User);
+    var id = request.params.userId;
+    var amount = parseFloat(request.params.amount);
+    console.log("getting user now: " + id + " | " + amount);
+    //query.equalTo("objectId", id);
+    query.get(id, {
+        success: function (user) {
+            var balance = parseInt(user.get("pendingBalance")) / 100;
+
+            console.log("user's total balance: " + balance);
+            if (balance < amount) {
+                response.error("用户金额不足$" + amount);
+            } else {
+
+                balance -= amount;
+                user.set("pendingBalance", balance * 100);
+                console.log("user's now pending balance: " + balance);
+                user.save(null, {
+                    success: function (u) {
+                        console.log("user saved");
+                        response.success();
+                    },
+                    error: function (u, error) {
+                        response.error(error.message);
+                    }
+                });
+            }
+        },
+        error: function (user, error) {
+            console.log("find user error: " + error.message);
+            response.error(error.message);
+        }
+    });
+});
+
 AV.Cloud.beforeSave("Transaction", function (request, response) {
     //Prototype linking
     var transaction = request.object;

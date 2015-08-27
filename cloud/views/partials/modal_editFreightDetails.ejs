@@ -144,7 +144,7 @@
                 </form>
             </div>
             <div class="col-lg-3 col-lg-offset-1">
-                <div ng-if="insurance.value < 0 || insurance.value > insurance.total || insurance.value < 10 || insurance.value > 1000">
+                <div ng-if="insurance.value < 0 || insurance.value > insurance.total || (insurance.value > 0 && insurance.value < 10) || insurance.value > 1000">
                     <em class="validation-error">请输入正确金额</em>
                 </div>
                 <div ng-if="insurance.value >= 0 || !insurance.value">
