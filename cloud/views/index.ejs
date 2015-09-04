@@ -1,7 +1,8 @@
-<html lang="cn" ng-app="YundaApp">
+<!DOCTYPE html>
+<html lang="cn" xmlns:ng="http://angularjs.org" id="ng-app" ng-app="YundaApp">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible"content="IE=edge">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
     <title itemprop="name">Yunda - 优质 快捷 实惠 省心</title>
     <meta name="viewport"content="width=device-width, initial-scale=1">
     <meta name="description" content="page description">
@@ -73,9 +74,9 @@
     <div ng-if="false">
       <!-- Scripts -->
       <script src="https://cdn1.lncld.net/static/js/av-mini-0.5.4.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+      <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
       <script src="lib/yunda.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+      <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
 
       <!-- AngularJS -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.9/angular.min.js"></script>
@@ -87,6 +88,11 @@
       <!--stripe payment-->
       <!--<script type="text/javascript" src="https://js.stripe.com/v2/"></script>-->
       <!--<script src="lib/stripe/stripe-angular.js"></script>-->
+
+      <!-- AngularJS Google Maps-->
+
+      <script src="lib/angular-google-maps/angular-google-maps.js"></script>
+      <script src="lib/angular-google-maps/lodash.min.js"></script>
 
       <!--barcode-->
       <script src="lib/barcode/barcodeGenerator.js"></script>
@@ -100,12 +106,6 @@
       <script src="js/filters.js"></script>
       <script src="js/directives.js"></script>
 
-
-
-      <!-- AngularJS Google Maps-->
-
-      <script src="lib/angular-google-maps/angular-google-maps.js"></script>
-      <script src="lib/angular-google-maps/lodash.min.js"></script>
 
     </div>
     <div ng-if="!printPage">

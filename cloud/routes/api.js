@@ -12,8 +12,8 @@ var config = {
   "https_verify_url": "https://mapi.alipay.com/gateway.do?service=notify_verify&",
   "partner": "2088021259932744",
   "key": "kngmwv7crl2c6zyhrooihpzjkrkd62ym",
-  "notify_url": "http://yunda.avosapps.com/notify",
-  "return_url": "http://yunda.avosapps.com/return"
+  "notify_url": "http://www.yundawl.com/notify",
+  "return_url": "http://www.yundawl.com/return"
 };
 
 var PID = config.partner;

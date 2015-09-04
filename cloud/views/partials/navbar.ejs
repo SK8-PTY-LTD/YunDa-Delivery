@@ -49,7 +49,8 @@
         <div class="container">
                 <div class="navbar-header">
                     <!-- Stat Toggle Nav Link For Mobiles -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <button type="button" class="navbar-toggle" ng-init="navCollapsed = true"
+                            ng-click="navCollapsed = !navCollapsed">
                         <i class="fa fa-bars"></i>
                     </button>
                     <!-- End Toggle Nav Link For Mobiles -->
@@ -57,7 +58,7 @@
                         <img alt="Yunda Logistic" src="/image/YUNDA_LOGO_ORIN-03.png" width="180px" height="126px" >
                     </a>
                 </div>
-                <div class=" navbar-collapse collapse">
+                <div class=" navbar-collapse collapse" collapse="navCollapsed">
                     <!-- Start Navigation List -->
                     <ul class="nav navbar-nav navbar-right">
 

@@ -1,33 +1,25 @@
 <div class="container" ng-controller="DashboardCtrl">
 <div id="floatTools" class="rides-cs" ng-style="close" style="height:200px;">
-    <!--<div class="floatL">-->
-    <!--<a id="aFloatTools_Show" class="btnOpen" title="查看在线客服" style="top:20px;display:block"-->
-    <!--href="javascript:void(0);">展开</a>-->
-    <!--<a id="aFloatTools_Hide" class="btnCtn" title="关闭在线客服" style="top:20px;display:none" href="javascript:void(0);">收缩</a>-->
-    <!--</div>-->
-    <!--<div id="divFloatToolsView" class="floatR" style="display:none;height:237px;width: 140px;">-->
     <div id="divFloatToolsView" class="floatR" style="height:200px;width: 140px;">
         <div class="cn">
-            <div class=" titZx" style="position:absolute; right:0; top:0;">
-                <button class="btn btn-xs btn-default" ng-click="close={display: 'none'}">关闭</button>
-            </div>
+            <div class=" titZx" style="position:absolute; right:0; top:0;"><button class="btn btn-xs btn-default" ng-click="close={display: 'none'}">关闭</button></div>
             <h3 class="titZx row">昀達在线客服</h3>
             <ul>
-                <li><span>客服1</span> <a target="_blank"
-                                        href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img
+                <li><span>昀達</span> <a target="_blank"
+                                       href="http://wpa.qq.com/msgrd?v=3&uin=2973508779&site=qq&menu=yes"><img
                                 border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png"
                                 alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
-                <li><span>客服2</span> <a target="_blank"
-                                        href="http://wpa.qq.com/msgrd?v=3&uin=2300145467&site=qq&menu=yes"><img
+                <li><span>小昀</span> <a target="_blank"
+                                       href="http://wpa.qq.com/msgrd?v=3&uin=3327945015&site=qq&menu=yes"><img
                                 border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png"
                                 alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
-                <!--<li>-->
-                <!--<a href="http://www.lanrenzhijia.com/" target="_blank">懒人之家</a>-->
-                <!--<a href="http://www.lanrenzhijia.com/js" target="_blank">懒人之家js</a>-->
-                <!--<div class="div_clear"></div>-->
-                <!--</li>-->
-                <!--<li style="border:none;"><span>电话：+1 (626) 863-5725</span></li>-->
-                <li style="border:none;"></li>
+                <li><span>小達</span> <a target="_blank"
+                                       href="http://wpa.qq.com/msgrd?v=3&uin=3060002587&site=qq&menu=yes"><img
+                                border="0" src="http://demo.lanrenzhijia.com/2014/service1031/images/online.png"
+                                alt="点击这里给我发消息" title="点击这里给我发消息"/></a></li>
+
+                <li style="border:none;"> </li>
+
             </ul>
         </div>
     </div>
@@ -599,7 +591,7 @@
 <table class="table table-striped" style="font-size: 0.9em">
 <thead>
 <th width="2%"> 选择</th>
-<th width="35%">入库单号</th>
+<th width="30%">入库单号</th>
 <th width="21%">转运号</th>
 <th width="9%">重量</th>
 <th>入库时间</th>
@@ -615,10 +607,10 @@
             <accordion-group>
                 <accordion-heading>
                     <div class="row freightIn-table">
-                        <div class="col-lg-4" style="font-size:0.7em"><span ng-bind="freightIn.RKNumber"></span></div>
-                        <div class="col-lg-4" style="font-size:0.7em"><span ng-bind="freightIn.trackingNumber"></span>
+                        <div class="col-lg-4" style="font-size:0.7em;"><p style="padding: 0 5px;  word-wrap: break-word;" ng-bind="freightIn.RKNumber"></p></div>
+                        <div class="col-lg-4" style="font-size:0.7em; margin-left:-40px;"><p style="padding: 0 5px; width: 80%; word-wrap: break-word;" ng-bind="freightIn.trackingNumber"></p>
                         </div>
-                        <div class="col-lg-2" style="margin-left:-40px;"><span
+                        <div class="col-lg-2" style="margin-left:-40px; margin-right: 40px;"><span
                                     ng-bind="(freightIn.weight).toFixed(2)"></span>Lb
                         </div>
                         <div class="col-lg-1" style="font-size:0.7em; margin-left: -3em;"><span
