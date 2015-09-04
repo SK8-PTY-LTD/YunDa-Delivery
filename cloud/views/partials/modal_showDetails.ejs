@@ -3,7 +3,7 @@
     </div>
     <div class="modal-body">
         <p>用户名:<span ng-bind="freight.user.username"></span></p>
-        <p>手机号:<span ng-bind="freight.user.mobilePhoneNumber"></span></p>
+        <p>手机号: {{freight.user.mobile || freight.user.contactNumber}}</p>
         <!--<p>邮件: <span ng-bind="freight.user.email"></span></p>-->
         <p>用户备注: <span ng-bind="freight.comments"></span></p>
     </div>

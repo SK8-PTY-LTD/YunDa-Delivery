@@ -313,13 +313,26 @@
     <table class="table table-striped small-table">
         <thead>
         <th>美国转运号</th>
+        <th>YD运单号</th>
         <th>创建时间</th>
         <th>状态</th>
+        <th>操作</th>
         </thead>
         <tr ng-repeat="f in freights | orderBy: '-createdAt'">
             <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.YDNumber"></td>
             <td ng-bind="f.createdAt"></td>
             <td>暂未到货</td>
+            <td>
+                <div ng-show="f.isOperated === false">
+                    <button class="btn btn-default btn-xs" ng-click="editDetails(f)">修改</button>
+                </div>
+            </td>
+            <td>
+                <div ng-show="f.isOperated === false">
+                    <button class="btn btn-default btn-xs" ng-click="deleteFreight(f)">删除</button>
+                </div>
+            </td>
         </tr>
     </table>
     <br>

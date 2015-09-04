@@ -1231,7 +1231,65 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 alert("闪运读取错误!" + error.message);
             }
         });
+    };
+
+    $scope.editDetails = function (freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_editFreightDetails',
+            controller: 'FreightDetailsCtrl',
+            scope: $scope,
+            size: 'lg',
+            resolve: {
+                freight: function () {
+                    return freight;
+                }
+            },
+            windowClass: 'center-modal'
+        });
+    };
+
+    $scope.deleteFreight = function (freight) {
+        var r = confirm("是否确认删除?");
+        if (!r) {
+            return;
+        } else {
+            var RKNumber = freight.RKNumber;
+            freight.destroy({
+                success: function (f) {
+                    var query = new AV.Query(YD.FreightIn);
+                    query.equalTo("RKNumber", RKNumber);
+                    query.find({
+                        success: function (list) {
+                            if (list.length == 1) {
+                                var fIn = list[0];
+                                fIn.status = YD.FreightIn.STATUS_CONFIRMED;
+                                fIn.save(null, {
+                                    success: function (f) {
+                                        $scope.reloadSpeedManual();
+
+                                        alert("删除运单成功，请重新生成运单");
+
+                                    },
+                                    error: function (f, error) {
+                                        alert("错误!" + error.message);
+                                    }
+                                });
+                            } else {
+                                alert("错误! 查到多个运单");
+
+                            }
+                        }
+                    })
+
+                },
+                error: function (f, error) {
+                    $scope.reloadFreight();
+                    alert("错误!" + error.message);
+                }
+            });
+        }
     }
+
     $scope.reloadSpeedManual();
     $scope.$on('userbe', function (event, data) {
         //console.log("userbe called");
@@ -1470,6 +1528,7 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                         $scope.freight.save(null, {
                             success: function (f) {
                                 alert("原箱闪运运单提交成功!");
+                                $scope.reloadSpeedManual();
                                 $scope.isClicked = false;
                                 $scope.freightIn = new YD.FreightIn();
                                 $scope.freight = new YD.Freight();
@@ -3641,10 +3700,6 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
             },
             windowClass: 'center-modal'
         });
-        //modalInstance.result.then(function (chosenAddress) {
-        //    $scope.chosenAddress = chosenAddress
-        //    alert("已成功选取收件人: " + chosenAddress.recipient)
-        //});
     }
 
 
@@ -5784,8 +5839,8 @@ YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
         setG: false,
         setH: false
     }
-    $scope.view_tab = "ca"
-    $scope.openTab.setG = true
+    $scope.view_tab = "bb";
+    $scope.openTab.setF = true;
     $scope.change_tab = function (tab) {
 
         if (tab == "aa" || tab == "ab" || tab == "ac") {
@@ -5832,7 +5887,8 @@ YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
     $scope.adminBadge.J = 0
     $scope.adminBadge.K = 0
     $scope.adminBadge.L = 0
-    $scope.adminBadge.M = 0
+    $scope.adminBadge.M = 0;
+    $scope.adminBadge.X = 0;
 
 
     $scope.isLoading = false
@@ -7045,6 +7101,9 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
     }
 })
 
+
+
+
 YundaApp.controller('ShowOperationDetailsCtrl', ["$scope", "$modalInstance", "freight", function ($scope, $modalInstance, freight) {
     $scope.freight = freight;
     //console.log("userid: " + freight.user.stringId);
@@ -7193,6 +7252,85 @@ YundaApp.controller('ShowConsumeDetailsCtrl', ["$scope", "$modalInstance", "frei
     }
 }]);
 
+
+YundaApp.controller('AdminSpeedManualCtrl', ["$scope","$modal", function ($scope, $modal) {
+    angular.extend($scope, {
+        reloadSpeedFreight: function () {
+            var query = new AV.Query(YD.Freight);
+            query.equalTo("status", YD.Freight.STATUS_SPEED_MANUAL);
+            query.include("user");
+            query.find({
+                success: function (list) {
+                    $scope.freights = list;
+                    $scope.adminBadge.X = list.length;
+
+                    $scope.$apply();
+                },
+                error: function (error) {
+                    alert("闪运读取错误!" + error.message);
+                }
+            });
+        },
+        showDetails: function (freight) {
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/modal_showDetails',
+                controller: 'ShowDetailsCtrl',
+                scope: $scope,
+                size: 'sm',
+                resolve: {
+                    freight: function () {
+                        return freight
+                    }
+                },
+                windowClass: 'center-modal'
+            });
+        },
+        deleteFreight: function (freight) {
+        var r = confirm("是否确认删除?");
+        if (!r) {
+            return;
+        } else {
+            var RKNumber = freight.RKNumber;
+            freight.destroy({
+                success: function (f) {
+                    var query = new AV.Query(YD.FreightIn);
+                    query.equalTo("RKNumber", RKNumber);
+                    query.find({
+                        success: function (list) {
+                            if (list.length == 1) {
+                                var fIn = list[0];
+                                fIn.status = YD.FreightIn.STATUS_CONFIRMED;
+                                fIn.save(null, {
+                                    success: function (f) {
+                                        $scope.reloadSpeedFreight();
+
+                                        alert("删除运单成功，请重新生成运单");
+
+                                    },
+                                    error: function (f, error) {
+                                        alert("错误!" + error.message);
+                                    }
+                                });
+                            } else {
+                                alert("错误! 查到多个运单");
+
+                            }
+                        }
+                    })
+
+                },
+                error: function (f, error) {
+                    $scope.reloadFreight();
+                    alert("错误!" + error.message);
+                }
+            });
+        }
+    }
+
+    });
+
+    $scope.reloadSpeedFreight();
+}]);
 
 YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal) {
 

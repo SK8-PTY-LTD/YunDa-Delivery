@@ -12,6 +12,8 @@
         <accordion-group heading="物流管理" is-open="openTab.setF">
             <ul>
                 <li ng-class="{'accordion-focused' : view_tab=='bz'}" ng-click="change_tab('bz')">验货<span class="badge pull-right">{{adminBadge.A}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bx'}" ng-click="change_tab('bx')">原箱闪运<span class="badge pull-right">{{adminBadge.X}}</span></li>
+
                 <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">已入库<span class="badge pull-right">{{adminBadge.B}}</span></li>
                 <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">待处理运单<span class="badge pull-right">{{adminBadge.C}}</span></li>
                 <!--<li ng-class="{'accordion-focused' : view_tab=='bc'}" ng-click="change_tab('bc')">等待付款<span class="badge pull-right">{{adminBadge.D}}</span></li>-->
@@ -392,6 +394,29 @@
     <div class="btn-group" ng-repeat="btn in freightCount track by $index">
         <div class="btn btn-default btn-sm" ng-click="reloadFreightIn($index)">{{$index+1}}</div>
     </div>
+</div>
+<div ng-show="view_tab=='bx'" ng-controller="AdminSpeedManualCtrl">
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <th>发件人</th>
+        <th>转运号</th>
+        <th>入库号</th>
+        <th>创建时间</th>
+        <th>重量</th>
+        <th>操作</th>
+        </thead>
+        <tr ng-repeat="f in freights | orderBy:'-createdAt'">
+            <!--<td ng-bind="f.user.realName"></td>-->
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a></td>
+            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.RKNumber"></td>
+            <td ng-bind="f.createdAt"></td>
+            <td><span ng-bind="f.weight"></span>Lb</td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <div ng-show="view_tab=='ba'" ng-controller="AdminFreightInConfirmCtrl">
