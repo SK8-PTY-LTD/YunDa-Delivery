@@ -39,7 +39,7 @@
                 <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">自助入库</li>
                 <li ng-class="{'accordion-focused' : view_tab=='be'}" ng-click="change_tab('be')">原箱闪运</li>
                 <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">包裹管理<span
-                            class="badge pull-right">{{badgeTotalCount}}</span></li>
+                            class="badge pull-right">{{badge.A + badge.B + badge.C + badge.D}}</span></li>
                 <li ng-class="{'accordion-focused' : view_tab=='bc'}" ng-click="change_tab('bc')">快件查询</li>
                 <li ng-class="{'accordion-focused' : view_tab=='bd'}" ng-click="change_tab('bd')">我的运单</li>
             </ul>
@@ -550,7 +550,7 @@
 <tab ng-controller="freightInArrivedCtrl" ng-click="reloadFreightInArrived()">
     <!--this is the content for 待确认入库-->
     <tab-heading>
-        已入库包裹<span class="badge" style="margin-left:5px;">{{freightIns.length}}</span>
+        已入库包裹<span class="badge" style="margin-left:5px;">{{badge.A}}</span>
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
         <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
@@ -599,7 +599,7 @@
 </tab>
 <tab ng-controller="freightInConfirmedCtrl" ng-click="reloadFreightInConfirmed()">
 <tab-heading>
-    包裹处理<span class="badge" style="margin-left:5px;">{{freightIns.length}}</span>
+    包裹处理<span class="badge" style="margin-left:5px;">{{badge.B}}</span>
 </tab-heading>
 <table class="table table-striped" style="font-size: 0.9em">
 <thead>
@@ -846,7 +846,7 @@
 </tab>
 <tab ng-controller="FreightPendingCtrl" ng-click="reloadFreight(0)">
     <tab-heading>
-        等待包裹处理<span class="badge" style="margin-left:5px;">{{badgeECount}}</span>
+        等待包裹处理<span class="badge" style="margin-left:5px;">{{badge.C}}</span>
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
@@ -902,7 +902,7 @@
     <!--this is the content for 已发货-->
     <tab-heading>
         <!--已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>-->
-        已发货
+        已发货<span class="badge" style="margin-left:5px;">{{badge.D}}</span>
 
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
