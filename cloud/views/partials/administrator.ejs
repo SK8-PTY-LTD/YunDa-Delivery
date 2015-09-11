@@ -349,6 +349,7 @@
 
         </div>
     <table class="table table-hover" style="font-size: 0.9em">
+
         <thead>
         <th>入库号</th>
         <th>Email</th>
@@ -396,7 +397,36 @@
     </div>
 </div>
 <div ng-show="view_tab=='bx'" ng-controller="AdminSpeedManualCtrl">
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入转运号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
+
+
+    </div>
     <table class="table table-hover" style="font-size: 0.9em">
+
         <thead>
         <th>发件人</th>
         <th>转运号</th>
@@ -407,10 +437,10 @@
         </thead>
         <tr ng-repeat="f in freights | orderBy:'-createdAt'">
             <!--<td ng-bind="f.user.realName"></td>-->
-            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.RKNumber"></td>
-            <td ng-bind="f.createdAt"></td>
+            <td ng-bind="f.createdAtToString"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>
@@ -449,7 +479,7 @@
                 </thead>
                 <tr ng-repeat="f in freightIn | orderBy:'-createdAt'">
                     <!--<td ng-bind="f.user.realName"></td>-->
-                    <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
+                    <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
                     <td ng-bind="f.trackingNumber"></td>
                     <td ng-bind="f.RKNumber"></td>
                     <td ng-bind="f.createdAt"></td>
@@ -498,6 +528,35 @@
 
     <br>
     <tabset>
+        <tab heading="普通包裹">
+            <table class="table small-table">
+                <thead>
+                <th>选择</th>
+                <th>用户名</th>
+                <th>收件人身份证</th>
+                <th>YD运单号</th>
+                <th>时间</th>
+                <th>操作</th>
+                </thead>
+                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | normalPackageFilter ">
+                    <td><input type="checkbox" ng-model="f.selection"></td>
+
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
+                    <td><a ng-click="showIdentityDetails(f)">查看</a></td>
+
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td ng-bind="f.updatedAtToString"></td>
+                    <td>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                    </td>
+                </tr>
+            </table>
+            <div class="row">
+                <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
+            </div>
+        </tab>
+
         <tab heading="合包">
             <table class="table small-table">
                 <thead>
@@ -511,7 +570,7 @@
                 <tr ng-repeat="f in freight | orderBy:'-updatedAt' | filter: {isMerged: true}">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
                     <td><a ng-click="showIdentityDetails(f)">查看</a></td>
                     <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                     <td ng-bind="f.updatedAtToString"></td>
@@ -539,7 +598,7 @@
                     <tr ng-repeat="f in freight | orderBy:'-updatedAt' | splitPackageFilter ">
                         <td><input type="checkbox" ng-model="f.selection"></td>
 
-                        <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
+                        <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
                         <td><a ng-click="showIdentityDetails(f)">查看</a></td>
 
                         <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
@@ -554,34 +613,7 @@
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
         </tab>
-        <tab heading="普通包裹">
-            <table class="table small-table">
-                <thead>
-                <th>选择</th>
-                <th>用户名</th>
-                <th>收件人身份证</th>
-                <th>YD运单号</th>
-                <th>时间</th>
-                <th>操作</th>
-                </thead>
-                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | normalPackageFilter ">
-                    <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.username"></span></a>  </td>
-                    <td><a ng-click="showIdentityDetails(f)">查看</a></td>
-
-                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
-                    <td ng-bind="f.updatedAtToString"></td>
-                    <td>
-                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
-                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
-                    </td>
-                </tr>
-            </table>
-            <div class="row">
-                <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
-            </div>
-        </tab>
 
     </tabset>
     <!--<table class="table table-hover" style="font-size: 0.9em">-->
@@ -674,7 +706,7 @@
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td ng-bind="f.YDNumber"></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.weight + 'Lb'"></td>
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
             <td ng-bind="f.updatedAtToString"></td>
@@ -730,7 +762,7 @@
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.username"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
             <td ng-bind="f.updatedAt"></td>
             <td>
@@ -815,7 +847,7 @@
 
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.id"></td>
             <td ng-bind="f.updatedAt"></td>
             <td>正在运送</td>

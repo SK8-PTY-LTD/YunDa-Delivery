@@ -39,7 +39,7 @@
                 <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">自助入库</li>
                 <li ng-class="{'accordion-focused' : view_tab=='be'}" ng-click="change_tab('be')">原箱闪运</li>
                 <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">包裹管理<span
-                            class="badge pull-right">{{badge.A + badge.B + badge.C + badge.D}}</span></li>
+                            class="badge pull-right">{{badge.A + badge.B + badge.C }}</span></li>
                 <li ng-class="{'accordion-focused' : view_tab=='bc'}" ng-click="change_tab('bc')">快件查询</li>
                 <li ng-class="{'accordion-focused' : view_tab=='bd'}" ng-click="change_tab('bd')">我的运单</li>
             </ul>
@@ -321,7 +321,7 @@
         <tr ng-repeat="f in freights | orderBy: '-createdAt'">
             <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.YDNumber"></td>
-            <td ng-bind="f.createdAt"></td>
+            <td ng-bind="f.createdAtToString"></td>
             <td>暂未到货</td>
             <td>
                 <div ng-show="f.isOperated === false">
@@ -902,8 +902,7 @@
     <!--this is the content for 已发货-->
     <tab-heading>
         <!--已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>-->
-        已发货<span class="badge" style="margin-left:5px;">{{badge.D}}</span>
-
+        已发货
     </tab-heading>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>

@@ -135,7 +135,7 @@
             <th>单价</th>
             <th>总价</th>
             </thead>
-            <tr ng-repeat="desc in freight.descriptionList">
+            <tr ng-repeat="desc in freight.descriptionList track by desc.name ">
 
                 <td ng-bind="desc.kind"></td>
                 <td ng-bind="desc.name"></td>
