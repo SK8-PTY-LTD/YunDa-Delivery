@@ -482,7 +482,7 @@
                     <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
                     <td ng-bind="f.trackingNumber"></td>
                     <td ng-bind="f.RKNumber"></td>
-                    <td ng-bind="f.createdAt"></td>
+                    <td ng-bind="f.createdAtToString"></td>
                     <td><span ng-bind="f.weight"></span>Lb</td>
                     <td>
                         <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
@@ -491,7 +491,9 @@
                 </tr>
             </table>
 
-
+    <div class="btn-group" ng-repeat="btn in count track by $index">
+        <div class="btn btn-default btn-sm" ng-click="reloadFreightIn($index)">{{$index+1}}</div>
+    </div>
 
 </div>
 <div ng-show="view_tab=='bb'" ng-controller="AdminFreightConfirmCtrl">
@@ -552,6 +554,9 @@
                     </td>
                 </tr>
             </table>
+            <!--<div class="btn-group" ng-repeat="btn in count track by $index">-->
+                <!--<div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>-->
+            <!--</div>-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>

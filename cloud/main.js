@@ -281,6 +281,9 @@ AV.Cloud.define("chargingUser", function (request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
+            if(user.get("role") != 190) {
+                response.error("您没有权限扣款");
+            }
             var rewardBalance = parseInt(user.get("rewardBalance")) / 100;
             var balance = parseInt(user.get("balance")) / 100;
             var totalBalance = rewardBalance + balance;
@@ -406,6 +409,9 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
+            if(user.get("role") != 190) {
+                response.error("您没有权限扣款");
+            }
             var balance = parseInt(user.get("balance")) / 100;
             console.log("user's total balance: " + balance);
             if (balance < amount) {
@@ -492,6 +498,9 @@ AV.Cloud.define("chargingUserReturn", function (request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
+            if(user.get("role") != 190) {
+                response.error("您没有权限扣款");
+            }
             var balance = parseInt(user.get("balance")) / 100;
 
             console.log("user's total balance: " + balance);
@@ -529,6 +538,9 @@ AV.Cloud.define("chargingUserReturnBalance", function (request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
+            if(user.get("role") != 190) {
+                response.error("您没有权限扣款");
+            }
             var balance = parseInt(user.get("pendingBalance")) / 100;
 
             console.log("user's total balance: " + balance);
@@ -566,6 +578,9 @@ AV.Cloud.define("refuseUserReturnBalance", function (request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
+            if(user.get("role") != 190) {
+                response.error("您没有权限操作");
+            }
             var balance = parseInt(user.get("pendingBalance")) / 100;
             console.log("user's total balance: " + balance);
             if (balance < amount) {
