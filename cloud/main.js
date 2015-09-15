@@ -267,22 +267,18 @@ AV.Cloud.define("chargingUser", function (request, response) {
     var RKNumber = request.params.RKNumber;
     var YDNumber = request.params.YDNumber;
     var status = request.params.status;
-    //var tnsSaveStatus = 0;
-    ///**
-    // * 1: balance minus only
-    // * 2: balance and rewardBalance minus
-    // * 3: rewardBalance minus only
-    // */
-    //var balanceTransaction = 0;
-    //var rewardTransaction = 0;
+    var admin = request.user;
 
     var ydReward = 0;
     console.log("getting user now: " + id + " | " + amount);
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
-            if(user.get("role") != 190) {
-                response.error("您没有权限扣款");
+            console.log("admin role SDK: " + admin.role);
+            console.log("admin role: " + admin.get("role"));
+            if(admin.get("role") !== 190) {
+                request.error("ERROR: 没有权限操作");
+                return;
             }
             var rewardBalance = parseInt(user.get("rewardBalance")) / 100;
             var balance = parseInt(user.get("balance")) / 100;
@@ -405,12 +401,17 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
     var status = request.params.status;
     console.log("CC -- userid: " + id);
     var amount = parseFloat(request.params.amount);
+    var admin = request.user;
+
     console.log("getting user now: " + id + " | " + amount);
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
-            if(user.get("role") != 190) {
-                response.error("您没有权限扣款");
+            console.log("admin role SDK: " + admin.role);
+            console.log("admin role: " + admin.get("role"));
+            if(admin.get("role") !== 190) {
+                request.error("ERROR: 没有权限操作");
+                return;
             }
             var balance = parseInt(user.get("balance")) / 100;
             console.log("user's total balance: " + balance);
@@ -496,10 +497,15 @@ AV.Cloud.define("chargingUserReturn", function (request, response) {
     var amount = parseFloat(request.params.amount);
     console.log("getting user now: " + id + " | " + amount);
     //query.equalTo("objectId", id);
+    var admin = request.user;
+
     query.get(id, {
         success: function (user) {
-            if(user.get("role") != 190) {
-                response.error("您没有权限扣款");
+            console.log("admin role SDK: " + admin.role);
+            console.log("admin role: " + admin.get("role"));
+            if(admin.get("role") !== 190) {
+                request.error("ERROR: 没有权限操作");
+                return;
             }
             var balance = parseInt(user.get("balance")) / 100;
 
@@ -535,11 +541,16 @@ AV.Cloud.define("chargingUserReturnBalance", function (request, response) {
     var id = request.params.userId;
     var amount = parseFloat(request.params.amount);
     console.log("getting user now: " + id + " | " + amount);
+    var admin = request.user;
+
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
-            if(user.get("role") != 190) {
-                response.error("您没有权限扣款");
+            console.log("admin role SDK: " + admin.role);
+            console.log("admin role: " + admin.get("role"));
+            if(admin.get("role") !== 190) {
+                request.error("ERROR: 没有权限操作");
+                return;
             }
             var balance = parseInt(user.get("pendingBalance")) / 100;
 
@@ -575,11 +586,16 @@ AV.Cloud.define("refuseUserReturnBalance", function (request, response) {
     var id = request.params.userId;
     var amount = parseFloat(request.params.amount);
     console.log("getting user now: " + id + " | " + amount);
+    var admin = request.user;
+
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function (user) {
-            if(user.get("role") != 190) {
-                response.error("您没有权限操作");
+            console.log("admin role SDK: " + admin.role);
+            console.log("admin role: " + admin.get("role"));
+            if(admin.get("role") !== 190) {
+                request.error("ERROR: 没有权限操作");
+                return;
             }
             var balance = parseInt(user.get("pendingBalance")) / 100;
             console.log("user's total balance: " + balance);

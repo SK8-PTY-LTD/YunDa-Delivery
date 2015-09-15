@@ -81,6 +81,7 @@
             <p>姓名: <span ng-bind="currentUser.realName"></span></p>
 
             <p>会员等级: lv1</p>
+
             <!--<p>数字ID：<span ng-bind="currentUser.numberId"></span></p>-->
             <!--<p>字母ID：<span ng-bind="currentUser.stringId"></span></p>-->
             <!--<div ng-if="currentUser.identityFront && currentUser.identityBack">-->
@@ -228,9 +229,28 @@
             <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in recipientCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadAddress($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="recipientCount" ng-change="reloadAddress(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='ac'">
     <!--this is the content for 仓库地址-->
@@ -904,9 +924,28 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </tab>
 <tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight(0)">
     <!--this is the content for 已发货-->
@@ -932,9 +971,28 @@
             <td ng-bind="freight.chineseTrackingNumber"></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </tab>
 </tabset>
 </div>
@@ -997,9 +1055,29 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadTracking($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadTracking(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
+
 </div>
 <div ng-show="view_tab=='ca'" id="recharge">
     <tabset>
@@ -1138,9 +1216,28 @@
             <!--</td>-->
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in tCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadTransaction($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='cc'" ng-controller="ConsumeRecordCtrl">
     <!--this is the content for 消费记录-->
@@ -1192,9 +1289,28 @@
             <td ng-bind="t.createdAtToString"></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in tCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadTransaction($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='cd'" ng-controller="RewardCtrl">
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
@@ -1284,9 +1400,28 @@
             <td ng-bind="t.createdAtToString"></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in tCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadRewardRecord($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadRewardRecord(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='da'" ng-controller="ReturnBalanceCtrl">
     <!--this is the content for 退款管理-->
@@ -1342,9 +1477,28 @@
             <td ng-bind="t.notes"></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadReturnBalance($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadReturnBalance(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='db'" ng-controller="ReturnGoodsCtrl">
     <!--this is the content for 退货管理-->
@@ -1404,9 +1558,28 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadFreightReturn($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightReturn(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='dc'">
     <p>在线客服</p>

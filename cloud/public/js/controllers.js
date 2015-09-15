@@ -69,14 +69,6 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
         }
 
     })
-    //$rootScope.isSmallPackageAllowed = true
-    //var setting = new YD.SystemSetting()
-    //setting.isSmallPackageAllowed = $rootScope.isSmallPackageAllowed
-    //setting.save(null, {
-    //    success: function(s) {
-    //        //console.log("setting saved")
-    //    }
-    //})
     $rootScope.reloadSystemSetting = function () {
         var SYSTEM_SETTING_ID = "557a8a2fe4b0fe935ead7847"
         var query = new AV.Query(YD.SystemSetting)
@@ -1084,11 +1076,16 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
         query.count({
             success: function (count) {
                 //console.log("mytacing count: " + count);
-                $scope.freightCount = $scope.getButtonArray(count);
+                $scope.freightCount = count;
                 //console.log($scope.freightCount);
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadTracking($scope.currentPage - 1);
+    }
+
     $scope.reloadTrackingCount();
     //$scope.reloadTracking();
     $scope.$on('userbd', function (event, data) {
@@ -1731,10 +1728,15 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
         query.containedIn("status", [YD.FreightReturn.STATUS_PENDING, YD.FreightReturn.STATUS_REFUSED, YD.FreightReturn.STATUS_FINISHED]);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
+                $scope.freightCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadFreightReturn($scope.currentPage - 1);
+    }
+
     $scope.reloadFreightCount();
     //$scope.reloadFreightReturn();
     $scope.$on('userdb', function () {
@@ -2120,10 +2122,14 @@ YundaApp.controller('ReturnBalanceCtrl', function ($scope, $modal) {
             [YD.Transaction.STATUS_PENDING_RETURN_BALANCE, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_REFUSED_RETURN_BALANCE]);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
+                $scope.freightCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadReturnBalance($scope.currentPage - 1);
+    }
     $scope.reloadReturnCount();
 
     $scope.searchForTransaction = function () {
@@ -2401,7 +2407,7 @@ $scope.updateLogin = function() {
                 query.count({
                     success: function (count) {
                         //$scope.recipientAddresses = results;
-                        $scope.recipientCount = $scope.getButtonArray(count);
+                        $scope.recipientCount = count;
                         $scope.$apply();
                     },
                     error: function (error) {
@@ -2411,6 +2417,11 @@ $scope.updateLogin = function() {
             }
         }
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadAddress($scope.currentPage - 1);
+    }
+
     $scope.reloadAddressCount();
     $scope.reloadAddress(0);
     /* search recipients */
@@ -3706,13 +3717,16 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
         query.equalTo("user", $scope.currentUser);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
                 //$rootScope.badgeTotalCount -= $scope.badgeECount;
-                $scope.badge.C = count;
+                $scope.freightCount =  $scope.badge.C = count;
                 //$rootScope.badgeTotalCount += $scope.badgeECount;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadFreight($scope.currentPage - 1);
+    }
     $scope.reloadFreightCount();
     $scope.reloadFreight(0);
     $scope.$watch("query.isSearch", function (newVal) {
@@ -4683,13 +4697,17 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
             [YD.Freight.STATUS_PENDING_DELIVERY, YD.Freight.STATUS_DELIVERING, YD.Freight.STATUS_PASSING_CUSTOM, YD.Freight.STATUS_FINAL_DELIVERY, YD.Freight.STATUS_DELIVERED])
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
                 //$rootScope.badgeTotalCount -= $scope.badgeDCount;
-                $scope.badge.D = count;
+                $scope.freightCount =  $scope.badge.D = count;
                 //$rootScope.badgeTotalCount += $scope.badgeDCount;
             }
         })
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadFreight($scope.currentPage - 1);
+    }
+
     $scope.reloadFreightCount();
     $scope.reloadFreight(0);
     $scope.$watch("query.isSearch", function (newVal) {
@@ -5538,11 +5556,15 @@ YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
 
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
                 //console.log("HERE----- " + count + "| " + $scope.tCount);
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadTransaction($scope.currentPage - 1);
+    }
 
     $scope.reloadTransactionCount();
     //$scope.reloadTransaction();
@@ -5695,10 +5717,15 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
         query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE, YD.Transaction.STATUS_CREDIT_USER, YD.Transaction.STATUS_CLAIM_REWARD]);
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadTransaction($scope.currentPage - 1);
+    }
+
     $scope.reloadTransactionCount();
 
     //$scope.reloadTransaction();
@@ -5861,10 +5888,14 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
         query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadRewardRecord($scope.currentPage - 1);
+    }
     $scope.reloadRewardCount();
     //$scope.reloadRewardRecord();
     $scope.$on('usercd', function () {
@@ -6725,15 +6756,16 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
         query.equalTo("isHidden", false);
         query.count({
             success: function (count) {
-                console.log("$scope.adminBadge.B: " + $scope.adminBadge.B + " | " + count);
 
-                $scope.freightCount = $scope.getButtonArray(count);
-                $scope.adminBadge.B = count;
-
+                $scope.freightCount = $scope.adminBadge.B = count;
                 $scope.$apply();
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadFreightIn($scope.currentPage - 1);
+    }
 
     if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
         && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE && $scope.currentUser.role != YD.User.ROLE_ADMIN_PACKAGE_FREIGHT) {
@@ -8309,12 +8341,16 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
         query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE, YD.Transaction.STATUS_CREDIT_USER, YD.Transaction.STATUS_CLAIM_REWARD]);
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
 
             }
         });
     };
     $scope.reloadTransactionCount();
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadTransaction($scope.currentPage - 1);
+    }
 
     if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
         && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_RECHARGE) {
@@ -8506,12 +8542,15 @@ YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope
         var query = new AV.Query("_User");
         query.count({
             success: function (count) {
-                $scope.userCount = $scope.getButtonArray(count);
+                $scope.userCount = count;
             }
         });
     };
     $scope.reloadCount();
-
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadUser($scope.currentPage - 1);
+    }
     $scope.searchForUser = function (type) {
         if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
             && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
@@ -8814,7 +8853,7 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE, YD.Transaction.STATUS_CONSUME_ADD_PACKAGE, YD.Transaction.STATUS_CONSUME_RETURN_GOODS, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_DEBIT_USER]);
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
             }
         });
     }
@@ -8826,8 +8865,12 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         return;
     } else {
         $scope.reloadTransaction(0);
+    };
+
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadTransaction($scope.currentPage - 1);
     }
-    ;
     $scope.$on('admindc', function () {
         $scope.reloadTransaction(0);
     });
@@ -9030,10 +9073,14 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
         query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
         query.count({
             success: function (count) {
-                $scope.tCount = $scope.getButtonArray(count);
+                $scope.tCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadRewardRecord($scope.currentPage - 1);
+    }
     $scope.reloadRewardCount();
     if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
         && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
@@ -9262,6 +9309,7 @@ YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope, $modal) {
 YundaApp.controller('AdminManageFreightCtrl', ["$scope", "$modal", function ($scope, $modal) {
     $scope.isLoadingTrue = false;
     $scope.promote = "";
+
     $scope.reloadFreight = function (index) {
         var query = new AV.Query(YD.Freight);
         query.include("address");
@@ -9290,10 +9338,16 @@ YundaApp.controller('AdminManageFreightCtrl', ["$scope", "$modal", function ($sc
         var query = new AV.Query(YD.Freight);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
+                $scope.freightCount = count;
+                //$scope.freightCount = $scope.getButtonArray(count);
+                //$scope.$apply();
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadFreight($scope.currentPage - 1);
+    }
 
     $scope.searchingYD = function () {
         var query = new AV.Query(YD.Freight);
@@ -9478,9 +9532,13 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
         query.count({
             success: function (count) {
                 //console.log("HAHA " + count);
-                $scope.userCount = $scope.getButtonArray(count);
+                $scope.userCount = count;
             }
         });
+    }
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadUser($scope.currentPage - 1);
     }
     $scope.reloadUserCount();
     if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
@@ -9690,11 +9748,17 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
             [YD.Transaction.STATUS_PENDING_RETURN_BALANCE, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_REFUSED_RETURN_BALANCE]);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
-                $scope.adminBadge.J = count;
+                //$scope.getButtonArray(count);
+                $scope.freightCount = $scope.adminBadge.J = count;
+
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadReturnBalance($scope.currentPage - 1);
+    }
+    $scope.reloadReturnCount();
     $scope.searchingTK = function () {
         var query = new AV.Query("Transaction");
         query.include("user");
@@ -9724,7 +9788,7 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
             }
         });
     }
-    $scope.reloadReturnCount();
+
 
     $scope.searching = function () {
         if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
@@ -9848,26 +9912,9 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
             alert("用户冻结余额为：" + parseFloat((transaction.user.pendingBalance / 100).toFixed(2)) + ", 请联系用户增加金额");
             return
         } else {
-            var modalInstance = $modal.open({
-                templateUrl: 'partials/modal_adminEvidence',
-                controller: 'AdminAddEvidenceCtrl',
-                scope: $scope,
-                size: 'sm',
-                windowClass: 'center-modal',
-                resolve: {
-                    transaction: function () {
-                        return transaction
-                    }
-                }
-            })
-            modalInstance.result.then(function () {
-                //transaction.user.balance -= transaction.amount
-                //transaction.user.save(null, {
-                //    success: function (user) {
-                //        alert("退款已处理！")
-                //        $scope.reloadReturnBalance()
-                //    }
-                //})
+            var r = confirm("是否上传截图给用户?");
+
+            if (!r) {
                 AV.Cloud.run('chargingUserReturnBalance', {
                         amount: transaction.amount,
                         userId: transaction.user.id
@@ -9898,8 +9945,62 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
 
                         }
                     });
+            } else {
 
-            });
+
+                var modalInstance = $modal.open({
+                    templateUrl: 'partials/modal_adminEvidence',
+                    controller: 'AdminAddEvidenceCtrl',
+                    scope: $scope,
+                    size: 'sm',
+                    windowClass: 'center-modal',
+                    resolve: {
+                        transaction: function () {
+                            return transaction
+                        }
+                    }
+                })
+                modalInstance.result.then(function () {
+                    //transaction.user.balance -= transaction.amount
+                    //transaction.user.save(null, {
+                    //    success: function (user) {
+                    //        alert("退款已处理！")
+                    //        $scope.reloadReturnBalance()
+                    //    }
+                    //})
+                    AV.Cloud.run('chargingUserReturnBalance', {
+                            amount: transaction.amount,
+                            userId: transaction.user.id
+                        },
+                        {
+                            success: function () {
+
+                                //transaction.user = freightIn.user;
+                                //transaction.amount = amount;
+                                transaction.status = YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE;
+                                transaction.notes = "退款";
+                                //transaction.RKNumber = freightIn.RKNumber;
+                                transaction.isCredit = true;
+                                transaction.save(null, {
+                                    success: function (t) {
+                                        $scope.reloadReturnBalance();
+                                        alert("操作成功！")
+                                    },
+                                    error: function (t, error) {
+
+                                        alert("错误! " + error.message);
+                                    }
+                                });
+
+                            },
+                            error: function (error) {
+                                //console.log(" ERROR: " + error.message)
+
+                            }
+                        });
+
+                });
+            }
         }
     }
 })
@@ -10054,14 +10155,19 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
 
     $scope.reloadReturnCount = function () {
         var query = new AV.Query(YD.FreightReturn);
-        query.equalTo("status", YD.FreightReturn.STATUS_PENDING);
+        query.containedIn("status", [YD.FreightReturn.STATUS_PENDING, YD.FreightReturn.STATUS_REFUSED, YD.FreightReturn.STATUS_FINISHED]);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
-                $scope.adminBadge.K = count;
+                //$scope.getButtonArray(count);
+                $scope.freightCount = $scope.adminBadge.K = count;
+
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadReturnGoods($scope.currentPage - 1);
+    }
     $scope.reloadReturnCount();
 
     if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
@@ -10590,10 +10696,14 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
         query.equalTo("status", YD.FreightIn.STATUS_CANCELED);
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.getButtonArray(count);
+                $scope.freightCount = count;
             }
         });
     };
+    $scope.setPage = function() {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadDelete($scope.currentPage - 1);
+    }
     $scope.reloadCount();
     $scope.searching = function () {
         if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
