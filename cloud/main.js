@@ -882,3 +882,32 @@ AV.Cloud.beforeSave('_User', function (request, response) {
         });
     }
 });
+
+AV.Cloud.define('hideExpiredFreight', function(req, res){
+    var query = new AV.Query(YD.FreightIn);
+    query.equalTo("isHidden", false);
+    query.find({
+        success: function (list) {
+            console.log("list is: " + list.length);
+            for(var i = 0; i < list.length; i++) {
+                console.log("i : " + i);
+                var f = list[i];
+                var today = new Date();
+                console.log("today: " + f.id);
+                var update = f.updatedAt;
+                console.log("update: " + update);
+                var timeDiff = Math.abs(today.getTime() - update.getTime());
+                var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                console.log(diffDays + ' days');
+                if(diffDays > 180 || true) {
+                    f.set("isHidden", true);
+                }
+            }
+            AV.Object.saveAll(list, {
+                success: function (list) {
+                    response.success();
+                }
+            });
+        }
+    });
+});

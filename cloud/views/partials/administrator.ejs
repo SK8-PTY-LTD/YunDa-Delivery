@@ -486,12 +486,17 @@
                     <td><span ng-bind="f.weight"></span>Lb</td>
                     <td>
                         <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
-                        <button class="btn btn-sm btn-default" ng-click="deleteFreightIn(f)">删除运单</button>
+                        <div ng-if="f.status >= 300">
+                            <button class="btn btn-sm btn-default" ng-disabled="true">用户已确认</button>
+                        </div>
+                        <div ng-if="f.status < 300">
+                            <button class="btn btn-sm btn-default" ng-click="deleteFreightIn(f)">删除运单</button>
+                        </div>
                     </td>
                 </tr>
             </table>
 
-    <div class="btn-group" ng-repeat="btn in count track by $index">
+    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
         <div class="btn btn-default btn-sm" ng-click="reloadFreightIn($index)">{{$index+1}}</div>
     </div>
 

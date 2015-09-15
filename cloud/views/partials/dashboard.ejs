@@ -72,6 +72,7 @@
                 会员信息
             </accordion-heading>
             <p>登陆邮箱: <span ng-bind="currentUser.email"></span></p>
+            <p><a ng-click="updateLogin()">修改登录邮箱</a></p>
 
             <p><a ng-click="updatePassword()">修改密码</a></p>
 
@@ -601,7 +602,8 @@
 <tab-heading>
     包裹处理<span class="badge" style="margin-left:5px;">{{badge.B}}</span>
 </tab-heading>
-<table class="table table-striped" style="font-size: 0.9em">
+
+<table class="table" style="font-size: 0.9em">
 <thead>
 <th width="2%"> 选择</th>
 <th width="30%">入库单号</th>
@@ -616,7 +618,7 @@
                 "></div>
     </td>
     <td colspan="4">
-        <accordion close-others="false">
+        <accordion close-others="false" id="freightIn">
             <accordion-group>
                 <accordion-heading>
                     <div class="row freightIn-table">
@@ -648,7 +650,15 @@
                         </div>
                     </div>
                 </accordion-heading>
+                <div class="row">
+                    <small class="pull-right" style="color:#013086; margin-top: -10px;" ng-bind="'入库单号: ' + freightIn.RKNumber"></small><br>
+                    <small class="pull-right" style="color:#013086; margin-top: -10px;" ng-bind="'转运号: ' +freightIn.trackingNumber"></small>
+                </div>
+
                 <form>
+
+
+
                     <div class="row">
                         <div class="col-md-5">
                             <label>选择渠道: </label>

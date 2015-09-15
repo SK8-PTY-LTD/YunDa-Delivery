@@ -585,6 +585,14 @@
             this.set("freightIn", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "addressNew", {
+        get: function () {
+            return this.get("addressNew");
+        },
+        set: function (value) {
+            this.set("addressNew", value);
+        }
+    });
     Object.defineProperty(YD.Freight.prototype, "estimatedPrice", {
         get: function () {
             return this.get("estimatedPrice");

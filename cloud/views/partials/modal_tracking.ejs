@@ -16,7 +16,7 @@
 
                     <tr ng-show="freight.status <= 400">
                         <td ng-bind="freight.updatedAtToString"></td>
-                        <td ng-bind="'当前状态: ' + freight.statusToString"></td>
+                        <td>当前状态: 等待发货</td>
                     </tr>
                         <tr ng-show="freight.status > 400">
                             <td ng-bind="freight.shipping.delivery"></td>

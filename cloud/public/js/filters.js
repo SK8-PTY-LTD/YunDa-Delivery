@@ -37,11 +37,8 @@ YundaApp.filter('normalPackageFilter', function () {
 
 YundaApp.filter('packageSearchFilter', function () {
     return function (list, input) {
-        console.log("in packageFilter");
         var filtered = [];
         if (!input || input == '') {
-            console.log("input is not defined");
-
             return list;
         } else {
             for (var i = 0; i < list.length; i++) {
@@ -49,7 +46,6 @@ YundaApp.filter('packageSearchFilter', function () {
                     filtered.push(list[i]);
                 }
             }
-            console.log("filtered, list.length: " + filtered.length);
             if(filtered.length == 0) {
                 return [];
             } else {

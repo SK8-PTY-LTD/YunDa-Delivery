@@ -133,6 +133,25 @@ Object.defineProperty(YDFreightIn.prototype, "status", {
   }
 });
 
+
+Object.defineProperty(YDFreightIn.prototype, "updatedAt", {
+  get: function() {
+    return this.get("updatedAt");
+  },
+  set: function(value) {
+    this.set("updatedAt", value);
+  }
+});
+
+
+Object.defineProperty(YDFreightIn.prototype, "isHidden", {
+  get: function() {
+    return this.get("isHidden");
+  },
+  set: function(value) {
+    this.set("isHidden", value);
+  }
+});
 Object.defineProperty(YDFreightIn.prototype, "trackingId", {
   get: function() {
     return this.get("trackingId");
