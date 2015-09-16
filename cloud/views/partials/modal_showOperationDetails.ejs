@@ -112,14 +112,14 @@
             </div>
             <div class="col-md-5">
                 <label>联系方式: </label>
-                <span ng-bind="freight.address.mobileNumber"></span>
+                <span>联系方式: {{freight.address.contactNumber || freight.address.mobileNumber}}</span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-10">
                 <label>地址: </label>
             <span ng-bind="freight.address.country + freight.address.state + freight.address.city + freight.address.street1 + ' ' +
-            freight.address.street2"></span>
+            freight.address.street2 + ' ' + freight.address.postalCode "></span>
             </div>
 
             <hr>

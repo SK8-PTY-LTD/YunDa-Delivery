@@ -325,7 +325,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -392,9 +392,28 @@
             </td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in freightCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadFreightIn($index)">{{$index+1}}</div>
-    </div>
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightIn(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='bx'" ng-controller="AdminSpeedManualCtrl">
     <div class="row">
@@ -402,7 +421,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -428,7 +447,7 @@
     <table class="table table-hover" style="font-size: 0.9em">
 
         <thead>
-        <th>发件人</th>
+        <th>用户名</th>
         <th>转运号</th>
         <th>入库号</th>
         <th>创建时间</th>
@@ -447,6 +466,27 @@
             </td>
         </tr>
     </table>
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadSpeedFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='ba'" ng-controller="AdminFreightInConfirmCtrl">
@@ -456,7 +496,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -464,13 +504,24 @@
       </span>
             </div><!-- /input-group -->
         </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入转运号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
 
 
     </div>
-    <br>
             <table class="table table-hover" style="font-size: 0.9em">
                 <thead>
-                <th>发件人</th>
+                <th>用户名</th>
                 <th>转运号</th>
                 <th>入库号</th>
                 <th>创建时间</th>
@@ -499,7 +550,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightIn(currentPage-1)"
@@ -529,7 +580,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -564,7 +615,7 @@
                 <th>时间</th>
                 <th>操作</th>
                 </thead>
-                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | normalPackageFilter ">
+                <tr ng-repeat="f in showNormal | orderBy:'-updatedAt'">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
                     <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
@@ -581,6 +632,27 @@
             <!--<div class="btn-group" ng-repeat="btn in count track by $index">-->
                 <!--<div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>-->
             <!--</div>-->
+            <!--pagination-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <pagination ng-model="currentPageNormal" max-size="8" total-items="freightCount" ng-change="reloadNormal(currentPageNormal-1)"
+                                        class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                        last-text="&raquo;"></pagination>
+                        </div>
+                        <div class="col-md-3" style="padding-top:20px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPageNormal()">跳转</button>
+                          </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
@@ -596,7 +668,7 @@
                 <th>时间</th>
                 <th>操作</th>
                 </thead>
-                <tr ng-repeat="f in freight | orderBy:'-updatedAt' | filter: {isMerged: true}">
+                <tr ng-repeat="f in showMerge | orderBy:'-updatedAt'">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
                     <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
@@ -609,6 +681,27 @@
                     </td>
                 </tr>
             </table>
+            <!--pagination-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <pagination ng-model="currentPageMerge" max-size="8" total-items="freightCount" ng-change="reloadMerge(currentPageMerge-1)"
+                                        class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                        last-text="&raquo;"></pagination>
+                        </div>
+                        <div class="col-md-3" style="padding-top:20px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPageMerge()">跳转</button>
+                          </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
@@ -624,7 +717,7 @@
                     <th>时间</th>
                     <th>操作</th>
                     </thead>
-                    <tr ng-repeat="f in freight | orderBy:'-updatedAt' | splitPackageFilter ">
+                    <tr ng-repeat="f in showSplit | orderBy:'-updatedAt'">
                         <td><input type="checkbox" ng-model="f.selection"></td>
 
                         <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
@@ -638,67 +731,34 @@
                         </td>
                     </tr>
                 </table>
+            <!--pagination-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <pagination ng-model="currentPageSplit" max-size="8" total-items="freightCount" ng-change="reloadSplit(currentPageSplit-1)"
+                                        class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                        last-text="&raquo;"></pagination>
+                        </div>
+                        <div class="col-md-3" style="padding-top:20px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPageSplit()">跳转</button>
+                          </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
         </tab>
-
-
     </tabset>
-    <!--<table class="table table-hover" style="font-size: 0.9em">-->
-        <!--<thead>-->
-        <!--<th width="7%">选择</th>-->
-        <!--<th width="10%">发件人</th>-->
-        <!--<th>YD单号</th>-->
-        <!--<th>更新时间</th>-->
-        <!--<th>重量</th>-->
-        <!--<th width="20%">处理信息</th>-->
-        <!--<th>通知</th>-->
-        <!--</thead>-->
-        <!--<tr ng-repeat="f in freight | orderBy:'-updatedAt'">-->
-            <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
-            <!--<td><a ng-click="showDetailsWithMerge(f)"><span  ng-bind="f.user.realName"></span></a></td>-->
-            <!--<td ng-bind="f.id"></td>-->
-            <!--<td ng-bind="f.updatedAt"></td>-->
-            <!--<td><span ng-bind="f.weight"></span>Lb</td>-->
-            <!--<td ng-bind="f.statusToString"></td>-->
-            <!--<td>-->
-                <!--<button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>-->
-            <!--</td>-->
-
-        <!--</tr>-->
-    <!--</table>-->
-    <!--<a ng-href="/print">-->
-        <!--<button class="btn btn-info" ng-click="printAll()">批量打印文件</button>-->
-    <!--</a>-->
-
 </div>
-<!--<div ng-show="view_tab=='bc'" ng-controller="AdminFreightFinishCtrl">-->
-    <!--<!--<h4>等待付款</h4>-->
-    <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span-->
-                <!--ng-bind="promote"></span></progressbar>-->
-    <!--<table class="table table-hover" style="font-size: 0.9em">-->
-        <!--<thead>-->
-        <!--<th>发件人</th>-->
-        <!--<th>YD单号</th>-->
-        <!--<th>打包时间</th>-->
-        <!--<th>重量</th>-->
-        <!--<th>状态</th>-->
-        <!--<th>通知</th>-->
-        <!--</thead>-->
-        <!--<tr ng-repeat="f in freight | orderBy:'-updatedAt'">-->
-            <!--<td><a ng-click="showDetails(f)"><span  ng-bind="f.user.realName"></span></a></td>-->
-            <!--<td ng-bind="f.id"></td>-->
-            <!--<td ng-bind="f.updatedAt"></td>-->
-            <!--<td><span ng-bind="f.weight"></span>Lb</td>-->
-            <!--<td>等待付款</td>-->
-            <!--<td>-->
-                <!--<button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>-->
-            <!--</td>-->
-        <!--</tr>-->
-    <!--</table>-->
 
-<!--</div>-->
 
 <div ng-show="view_tab=='bd'" ng-controller="AdminFreightPaidCtrl">
     <!--<h4>发货</h4>-->
@@ -709,7 +769,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -734,7 +794,7 @@
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
-            <td ng-bind="f.YDNumber"></td>
+            <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
             <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.weight + 'Lb'"></td>
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
@@ -753,10 +813,27 @@
             </td>
         </tr>
     </table>
-
-    <!--<a ng-href="/print">-->
-        <!--<button class="btn btn-info" ng-click="printAll()">批量打印文件</button>-->
-    <!--</a>-->
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadPaidFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='be'" ng-controller="AdminFreightClearCtrl">
@@ -768,7 +845,7 @@
 
             <div class="input-group">
 
-                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -799,7 +876,27 @@
             </td>
         </tr>
     </table>
-
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadDeliveryFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
     <!--<button class="btn btn-info" ng-click="deliver()">确认清关</button>-->
 </div>
 
@@ -856,7 +953,27 @@
             </td>
         </tr>
     </table>
-
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadChineseFreight(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
     <!--<button class="btn btn-info" ng-click="finalDeliver()">已出关</button>-->
 </div>
 
@@ -949,7 +1066,7 @@
 
         <!--pagination-->
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="row">
                     <div class="col-md-9">
                         <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
@@ -1108,7 +1225,7 @@
     </div>
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadReturnBalance(currentPage-1)"
@@ -1214,7 +1331,7 @@
     </div>
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadReturnGoods(currentPage-1)"
@@ -1280,7 +1397,7 @@
    </table>
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreight(currentPage-1)"
@@ -1419,7 +1536,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
@@ -1531,7 +1648,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
@@ -1600,7 +1717,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadRewardRecord(currentPage-1)"
@@ -1686,7 +1803,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
@@ -1739,7 +1856,7 @@
 
     <!--pagination-->
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
                     <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadDelete(currentPage-1)"

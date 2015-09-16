@@ -10,26 +10,32 @@
             ng-bind="address.street2"></span></span>
     </br>
     <table class="table table-striped">
-        <tr ng-repeat="address in addressList | orderBy: '-createdAt'">
+        <tr ng-repeat="address in showAddress | orderBy: '-createdAt'">
             <td ng-click="chooseRecipient(address)"><span ng-bind="address.recipient + '-' +
             address.country + address.state + address.city + address.suburb + address.street1 + address.street2"></span></td>
         </tr>
     </table>
-    <div class="btn-group" ng-repeat="btn in recipientCount track by $index">
-        <div class="btn btn-default btn-sm" ng-click="reloadAddress($index)">{{$index+1}}</div>
-    </div>
-    <!--<ul ng-repeat="address in addressList | orderBy: '-createdAt'">-->
-        <!--<li ng-click="chooseRecipient(address)">-->
-            <!--<button class="btn btn-sm"><span ng-bind="address.recipient"></span> - <span-->
-                        <!--ng-bind="address.country"></span><span-->
-                        <!--ng-bind="address.state"></span><span-->
-                        <!--ng-bind="address.city"></span><span-->
-                        <!--ng-bind="address.suburb"></span></span><span-->
-                        <!--ng-bind="address.street1"></span><span-->
-                        <!--ng-bind="address.street2"></span></button>-->
-        <!--</li>-->
-    <!--</ul>-->
-
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="count" ng-change="reloadAddress(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
     </br>
 </div>
 <div class="modal-footer">
