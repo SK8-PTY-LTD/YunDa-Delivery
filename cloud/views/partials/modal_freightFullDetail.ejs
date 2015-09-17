@@ -28,7 +28,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2">分包要求: {{freight.isSplit || freight.isSplitPremiumt ? freight.comments : ''}}</td>
+            <td colspan="2">{{freight.isSplit || freight.isSplitPremiumt ? '分包要求: ' + freight.comments : ''}}</td>
         </tr>
         <tr>
             <td colspan="2" ng-bind="'物品详情: ' + freight.packageComments"></td>
@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td colspan="2" ng-bind="freight.address.country + freight.address.state + freight.address.city
-            + freight.address.street1 + freight.address.street2 + ' ' + freight.address.postalCode"></td>
+            + freight.address.street1 + freight.address.street2 + ' 邮编:' + freight.address.postalCode"></td>
         </tr>
         <tr>
             <td colspan="2" ng-bind="freight.comments"></td>

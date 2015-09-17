@@ -803,6 +803,14 @@
             this.set("isOperated", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "isSpeedManual", {
+        get: function () {
+            return this.get("isSpeedManual");
+        },
+        set: function (value) {
+            this.set("isSpeedManual", value);
+        }
+    });
 
     Object.defineProperty(YD.Freight.prototype, "packageComments", {
         get: function () {

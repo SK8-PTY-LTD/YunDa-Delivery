@@ -1,0 +1,97 @@
+<div class="container-fluid">
+    <table class="table table-bordered">
+        <tr>
+            <td ng-bind="'入库单号: '+freight.RKNumber"></td>
+            <td ng-bind="'转运单号: '+freight.trackingNumber"></td>
+        </tr>
+        <tr>
+            <td ng-bind="'YD运单号: '+freight.YDNumber"></td>
+            <td ng-bind="'渠道: ' + freight.channel.name"></td>
+        </tr>
+        <tr>
+            <td ng-bind="'用户名:'+freight.user.stringId"></td>
+            <td ng-bind="'数字ID:'+freight.user.numberId"></td>
+        </tr>
+        <tr>
+            <td>重量: <span ng-bind="freight.weight"></span> Lb</td>
+            <td>最终重量: <span ng-bind="freight.finalWeight"></span> Lb</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span>去除购物收据</span> <input type="checkbox" ng-model="freight.isReduceWeight" disabled>
+                <span>加固</span><input type="checkbox" ng-model="freight.isAddPackage" disabled>
+                <span>普通分包</span> <input type="checkbox" ng-model="freight.isSplit" disabled>
+                <span>精确分包</span><input type="checkbox" ng-model="freight.isSplitPremium" disabled>
+                <span>合包</span><input type="checkbox" ng-model="freight.isMerged" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" ng-bind="'备注:'+freight.comments"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+
+            </td>
+        </tr>
+        <tr>
+            <td ng-bind="'收件人:'+freight.address.recipient"></td>
+            <td ng-bind="'联系方式:'+freight.address.mobileNumber"></td>
+        </tr>
+        <tr>
+            <td colspan="2" ng-bind="'地址:'+freight.address.country + freight.address.state + freight.address.city + freight.address.street1 + ' ' +
+            freight.address.street2"></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <h4>运单: </h4>
+    <table class="table table-bordered">
+        <tr>
+            <td ng-bind="'运单号:'+freight.YDNumber"></td>
+            <!--<td barcode-generator="{{freight.YDNumber}}" style="height:50px;">-->
+            <td barcode-api="freight.YDNumber" id="freight.YDNumber"></td>
+            </td>
+        </tr>
+    </table>
+    <div ng-show="package.identity">
+        <div class="row">
+            <h4>身份证: </h4>
+            <div class="col-sm-5">
+                <img src="{{freight.address.identity.identityFront._url}}" alt="front" width="400px" height="auto">
+            </div>
+            <div class="col-sm-5 col-sm-offset-1">
+                <img src="{{freight.address.identity.identityBack._url}}" alt="back" width="400px" height="auto">
+
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <th colspan="9">
+            物品详情
+        </th>
+        </thead>
+        <tr>
+            <td>序号</td>
+            <td>YD运单号</td>
+            <td>收件人</td>
+            <td>类别</td>
+            <td>品名</td>
+            <td>品牌</td>
+            <td>数量</td>
+            <td>单价</td>
+            <td>总价</td>
+        </tr>
+        <tr ng-repeat="desc in freight.descriptionList">
+            <td>{{$index+1}}</td>
+            <td ng-bind="freight.YDNumber"></td>
+            <td ng-bind="freight.address.recipient"></td>
+            <td ng-bind="desc.kind"></td>
+            <td ng-bind="desc.name"></td>
+            <td ng-bind="desc.brand"></td>
+            <td ng-bind="desc.amount"></td>
+            <td ng-bind="desc.price"></td>
+            <td ng-bind="desc.total"></td>
+        </tr>
+    </table>
+</div>

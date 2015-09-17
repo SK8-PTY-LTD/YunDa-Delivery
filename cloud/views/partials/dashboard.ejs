@@ -991,10 +991,13 @@
                 <div ng-show="freight.isMerged">
                     合包
                 </div>
+                <div ng-show="freight.isSpeedManual">
+                    原箱闪运
+                </div>
                 <div ng-show="freight.isSplit || freight.isSplitPremium">
                     分包
                 </div>
-                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium">
+                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium && !freight.isSpeedManual">
                     无
                 </div>
             </td>

@@ -528,7 +528,7 @@
                 <th>重量</th>
                 <th>通知</th>
                 </thead>
-                <tr ng-repeat="f in freightIn | orderBy:'-createdAt'">
+                <tr ng-repeat="f in freightIn | orderBy:'-createdAt' | orderBy: 'status'">
                     <!--<td ng-bind="f.user.realName"></td>-->
                     <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
                     <td ng-bind="f.trackingNumber"></td>
@@ -637,7 +637,7 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageNormal" max-size="8" total-items="freightCount" ng-change="reloadNormal(currentPageNormal-1)"
+                            <pagination ng-model="currentPageNormal" max-size="8" total-items="normalFreights.length" ng-change="reloadNormal(currentPageNormal-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
@@ -686,7 +686,7 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageMerge" max-size="8" total-items="freightCount" ng-change="reloadMerge(currentPageMerge-1)"
+                            <pagination ng-model="currentPageMerge" max-size="8" total-items="mergeFreights.length" ng-change="reloadMerge(currentPageMerge-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
@@ -736,7 +736,7 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageSplit" max-size="8" total-items="freightCount" ng-change="reloadSplit(currentPageSplit-1)"
+                            <pagination ng-model="currentPageSplit" max-size="8" total-items="splitFreights.length" ng-change="reloadSplit(currentPageSplit-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
@@ -773,6 +773,19 @@
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
             </div><!-- /input-group -->
@@ -853,6 +866,18 @@
       </span>
             </div><!-- /input-group -->
         </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
 
 
     </div>
@@ -902,12 +927,12 @@
 
 <div ng-show="view_tab=='bf'" ng-controller="AdminChineseFreightCtrl">
     <!--<h4>国内接收</h4>-->
-
+<div class="row">
     <div class="col-md-4">
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -915,7 +940,19 @@
       </span>
         </div><!-- /input-group -->
     </div>
+    <div class="col-md-4">
 
+        <div class="input-group">
+
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
+
+      </span>
+        </div><!-- /input-group -->
+    </div>
+</div>
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -929,7 +966,7 @@
         <th>清关时间</th>
         <!--<th>重量</th>-->
         <!--<th>状态</th>-->
-        <th>添加国内信息</th>
+        <!--<th>添加国内信息</th>-->
         <th>操作</th>
 
         </thead>
@@ -942,14 +979,15 @@
 
             <td ng-bind="f.updatedAtToString"></td>
 
+
+            <!--<td>-->
+                <!--<button class="btn btn-sm btn-info" ng-click="addInfo(f)">-->
+                <!--<div ng-if="!f.isAdded">添加</div>-->
+                    <!--<div ng-if="f.isAdded">已添加</div>-->
+                <!--</button>-->
+            <!--</td>-->
             <td>
-                <button class="btn btn-sm btn-info" ng-click="addInfo(f)">
-                <div ng-if="!f.isAdded">添加</div>
-                    <div ng-if="f.isAdded">已添加</div>
-                </button>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认出关</button>
+                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认接收</button>
             </td>
         </tr>
     </table>
@@ -1157,7 +1195,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -1360,7 +1398,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -1423,7 +1461,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -1462,7 +1500,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -1561,7 +1599,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="query.string" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">用户搜索</button>
@@ -1573,7 +1611,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="query.number" placeholder="输入入库号" required>
+            <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入入库号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingRK()">入库号搜索</button>
@@ -1673,7 +1711,7 @@
 
         <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
@@ -1823,18 +1861,35 @@
         </div>
     </div><!-- END PAGINATION-->
 </div>
+
+
+
 <div ng-show="view_tab=='df'" ng-controller="AdminDeletePackageCtrl">
-    <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
+            </div><!-- /input-group -->
+        </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="转运号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
     </div>
     <br>
     <table class="table table-striped small-table">
@@ -1876,6 +1931,10 @@
         </div>
     </div><!-- END PAGINATION-->
 </div>
+
+
+
+
 
 </div>
 

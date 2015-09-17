@@ -102,7 +102,7 @@
             </div>
             <div class="col-md-5">
                 <label>重量: </label>
-                <span ng-bind="freight.weight"></span>
+                <span ng-bind="freight.weight + ' Lb'"></span>
             </div>
         </div>
         <div class="row">
@@ -119,7 +119,7 @@
             <div class="col-md-10">
                 <label>地址: </label>
             <span ng-bind="freight.address.country + freight.address.state + freight.address.city + freight.address.street1 + ' ' +
-            freight.address.street2 + ' ' + freight.address.postalCode "></span>
+            freight.address.street2 + ' 邮编:' + freight.address.postalCode "></span>
             </div>
 
             <hr>
