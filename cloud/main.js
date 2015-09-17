@@ -255,7 +255,10 @@ AV.Cloud.define("increaseUserBalance", function (request, response) {
     })
 
 });
-
+/**
+ * @function
+ * This will charge user's both balance and rewardBalance
+ */
 AV.Cloud.define("chargingUser", function (request, response) {
     console.log("in ChargeUser");
     var User = AV.Object.extend("_User");
@@ -389,6 +392,10 @@ AV.Cloud.define("chargingUser", function (request, response) {
     });
 });
 
+/**
+ * @function
+ * This will charge user's balance only(Won't charge rewardBalance)
+ */
 AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
     console.log("CC -- in ChargeUserWitoughtReward");
     var User = AV.Object.extend("_User");

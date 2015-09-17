@@ -1496,59 +1496,60 @@
 <div ng-show="view_tab=='db'" ng-controller="AdminRechargeRecordCtrl">
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
 
-    <div class="col-md-4">
+    <div class="row">
 
-        <div class="input-group">
+        <div class="col-md-4">
+            <h5>起始日期:</h5>
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open1($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h5>截止日期:</h5>
+
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                       date-disabled="disabled(date, mode)" ng-required="true"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open2($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+        <div class="col-md-2" style="margin-top:30px">
+            <button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
+            </div><!-- /input-group -->
+        </div>
     </div>
     <br>
-    <!--<div class="row">-->
-
-        <!--<div class="col-md-4">-->
-            <!--<h5>起始日期:</h5>-->
-
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
-    <!--<span class="input-group-btn">-->
-    <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
-                <!--class="glyphicon glyphicon-calendar"></i></button>-->
-    <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
-
-        <!--<div class="col-md-4">-->
-            <!--<h5>截止日期:</h5>-->
-
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
-    <!--<span class="input-group-btn">-->
-    <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
-                <!--class="glyphicon glyphicon-calendar"></i></button>-->
-    <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
-        <!--<div class="col-md-2">-->
-            <!--<button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>-->
-        <!--</div>-->
-    <!--</div>-->
-
-
     <table class="table table-hover small-table">
         <thead>
         <tr>
             <!--<th>交号</th>-->
             <th>用户名</th>
             <th>流水号</th>
-            <th>充值金额(美元)</th>
+            <th>充值金额</th>
             <th>充值类型</th>
             <th>充值时间</th>
             <!--<th>充值状态</th>-->
@@ -1559,7 +1560,7 @@
             <!--<td ng-bind="t.id"></td>-->
             <td ng-bind="t.user.stringId"></td>
             <td ng-bind="t.record"></td>
-            <td ng-bind="'$ ' + t.amount"></td>
+            <td>{{t.status == 100 ? '$' + (t.amount).toFixed(2) + '(‎¥' + (t.amount*6.4).toFixed(2) + ')' : '$' + (t.amount).toFixed(2)}}</td>
             <td ng-bind="t.notes"></td>
             <td ng-bind="t.createdAtToString"></td>
             <!--<td ng-bind="t.status"></td>-->
@@ -1595,6 +1596,39 @@
     </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='dc'" ng-controller="AdminConsumeRecordCtrl">
+    <div class="row">
+
+        <div class="col-md-4">
+            <h5>起始日期:</h5>
+
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open1($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h5>截止日期:</h5>
+
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                       date-disabled="disabled(date, mode)" ng-required="true"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open2($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+        <div class="col-md-2" style="margin-top:30px">
+            <button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
     <div class="col-md-4">
 
         <div class="input-group">
@@ -1619,39 +1653,18 @@
       </span>
         </div><!-- /input-group -->
     </div>
+
+        <div class="col-md-4">
+            <select ng-model="queryType">
+                <option value="">---消费类型--</option> <!-- not selected / blank option -->
+                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option> <!-- interpolation -->
+            </select>
+            <button class="btn btn-default" type="button" ng-click="searchingType()">类型搜索</button>
+        </div>
+    </div>
     <br>
 
-    <!--<div class="row">-->
 
-        <!--<div class="col-md-4">-->
-            <!--<h5>起始日期:</h5>-->
-
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>-->
-    <!--<span class="input-group-btn">-->
-    <!--<button type="button" class="btn btn-default" ng-click="open1($event)"><i-->
-                <!--class="glyphicon glyphicon-calendar"></i></button>-->
-    <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
-
-        <!--<div class="col-md-4">-->
-            <!--<h5>截止日期:</h5>-->
-
-            <!--<p class="input-group">-->
-                <!--<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"-->
-                       <!--date-disabled="disabled(date, mode)" ng-required="true"/>-->
-    <!--<span class="input-group-btn">-->
-    <!--<button type="button" class="btn btn-default" ng-click="open2($event)"><i-->
-                <!--class="glyphicon glyphicon-calendar"></i></button>-->
-    <!--</span>-->
-            <!--</p>-->
-        <!--</div>-->
-        <!--<div class="col-md-2">-->
-            <!--<button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>-->
-        <!--</div>-->
-    <!--</div>-->
 
 
     <table class="table table-hover" style="font-size: 0.9em">
@@ -1707,6 +1720,39 @@
     </div><!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='dd'" ng-controller="AdminYDRewardRecordCtrl">
+    <div class="row">
+
+        <div class="col-md-4">
+            <h5>起始日期:</h5>
+
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open1($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h5>截止日期:</h5>
+
+            <p class="input-group">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                       date-disabled="disabled(date, mode)" ng-required="true"/>
+    <span class="input-group-btn">
+    <button type="button" class="btn btn-default" ng-click="open2($event)"><i
+                class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+            </p>
+        </div>
+        <div class="col-md-2" style="margin-top:30px">
+            <button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
     <div class="col-md-4">
 
         <div class="input-group">
@@ -1718,6 +1764,7 @@
 
       </span>
         </div><!-- /input-group -->
+    </div>
     </div>
     <br>
 
@@ -1736,7 +1783,7 @@
         <tr ng-repeat="t in transactions | orderBy: '-createdAt'">
             <td ng-bind="t.user.stringId"></td>
             <td>
-                {{t.YDNumber ? t.YDNumber : t.RKNumber}}
+                {{t.YDNumber ? t.YDNumber : t.RKNumber ? '入库号:' + t.RKNumber : ''}}
             </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>

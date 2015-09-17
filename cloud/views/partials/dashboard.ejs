@@ -1285,7 +1285,7 @@
         <thead>
         <tr>
             <th>交易号</th>
-            <th>充值金额(美元)</th>
+            <th>充值金额</th>
             <th>充值类型</th>
             <th>充值时间</th>
             <th>充值状态</th>
@@ -1294,10 +1294,10 @@
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.id"></td>
-            <td ng-bind="'$ ' + t.amount"></td>
+            <td>{{t.status == 100 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.amount*6.4 +')' : '$' + (t.amount).toFixed(2)}}</td>
             <td ng-bind="t.notes"></td>
             <td ng-bind="t.createdAtToString"></td>
-            <td ng-bind="t.status"></td>
+            <td ng-bind="t.statusToString"></td>
             <!--<td>pending</td>-->
             <!--<td ng-bind="freightIn.notes"></td>-->
             <!--<td>-->
@@ -1474,7 +1474,7 @@
         </thead>
         <tr ng-repeat="t in transactions | orderBy: '-createdAt'">
             <td>
-                {{t.YDNumber ? t.YDNumber : '入库号:' + t.RKNumber }}
+                {{t.YDNumber ? t.YDNumber : t.RKNumber ? '入库号:' + t.RKNumber : ''}}
             </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.notes"></td>

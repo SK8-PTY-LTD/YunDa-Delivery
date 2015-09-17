@@ -592,17 +592,17 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
         for (var i = 0; i < $scope.trackingList.length; i++) {
             //console.log("NOW SPLIT: " + i + " - " + $scope.trackingList[i])
         }
-        var query = new AV.Query(YD.Freight)
-        query.containedIn("YDNumber", $scope.trackingList)
-
-        //query.equalTo("user", $scope.currentUser);
-        var newQ = new AV.Query(YD.Freight);
-
-        newQ.containedIn("RKNumber", $scope.trackingList);
-        var query1 = AV.Query.or(query, newQ);
-        query1.include("address");
-        query1.include("shipping");
-        query1.find({
+        var query1 = new AV.Query(YD.Freight);
+        query1.containedIn("trackingNumber", $scope.trackingList);
+        var query2 = new AV.Query(YD.Freight);
+        query2.containedIn("YDNumber", $scope.trackingList);
+        var query3 = new AV.Query(YD.Freight);
+        query3.containedIn("RKNumber", $scope.trackingList);
+        var query = AV.Query.or(query1, query2, query3);
+        query.include("address");
+        query.include("shipping");
+        query.include("user");
+        query.find({
             success: function (list) {
                 //for (var i = 0; i < list.length; i++) {
                 //    list[i].info = "待发货"
@@ -4886,18 +4886,19 @@ YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
         for (var i = 0; i < $scope.trackingList.length; i++) {
             //console.log("NOW SPLIT: " + i + " - " + $scope.trackingList[i])
         }
-        var query = new AV.Query(YD.Freight);
+        var query1 = new AV.Query(YD.Freight);
+        query1.containedIn("trackingNumber", $scope.trackingList);
+        var query2 = new AV.Query(YD.Freight);
+        query2.containedIn("YDNumber", $scope.trackingList);
+        var query3 = new AV.Query(YD.Freight);
+        query3.containedIn("RKNumber", $scope.trackingList);
+        var query = AV.Query.or(query1, query2, query3);
         query.equalTo("user", $scope.currentUser);
-        query.containedIn("YDNumber", $scope.trackingList);
         query.include("address");
         query.include("shipping");
         query.include("user");
-
-        //query.equalTo("user", $scope.currentUser)
         query.find({
             success: function (list) {
-
-
                 if (list.length != 0) {
                     //6917246211814
                     //8498950010019
@@ -5316,7 +5317,7 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
         if (newVal != 0 || newVal != undefined) {
             //console.log($scope.rechargeAmount + " | " + newVal + typeof newVal + " | " + $scope.FIXED_RATE + typeof $scope.FIXED_RATE + newVal / $scope.FIXED_RATE + " | " + (parseInt(newVal) / $scope.FIXED_RATE).toFixed(2) + " | "
             //+ parseFloat((parseInt(newVal) / $scope.FIXED_RATE).toFixed(2)));
-            $scope.rechargeAmountDollar = parseFloat((newVal / $scope.FIXED_RATE).toFixed(2));
+            $scope.rechargeAmountDollar = newVal / $scope.FIXED_RATE;
             //$scope.rechargeAmountDollar = parseFloat($scope.rechargeAmountDollar)
             //console.log("changed; " + $scope.rechargeAmountDollar);
         }
@@ -5332,7 +5333,7 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
             var userPt = new YD.User();
             userPt.id = $scope.currentUser.id;
             transaction.user = userPt;
-            transaction.amount = $scope.rechargeAmountDollar;
+            transaction.amount = $scope.rechargeAmount/$scope.FIXED_RATE;
             transaction.save(null, {
                 success: function (t) {
                     //console.log("t saved id: " + t.id + " | " + $scope.currentUser.id);
@@ -5589,6 +5590,7 @@ YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
 
 
 YundaApp.controller('RechargeRecordCtrl', function ($scope) {
+    $scope.Math = Math;
     $scope.open1 = function ($event) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -5621,18 +5623,18 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
                     $scope.transactionList = tList
                     for (var i = 0; i < tList.length; i++) {
                         if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO) {
-                            $scope.transactionList[i].status = '支付宝充值'
+                            $scope.transactionList[i].statusToString = '支付宝充值'
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_STRIPE) {
-                            $scope.transactionList[i].status = '信用卡充值'
+                            $scope.transactionList[i].statusToString = '信用卡充值'
 
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED) {
                             //$scope.transactionList[i].status = '支付宝充值'
 
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CREDIT_USER) {
-                            $scope.transactionList[i].status = '系统赠款'
+                            $scope.transactionList[i].statusToString = '系统赠款'
 
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CLAIM_REWARD) {
-                            $scope.transactionList[i].status = 'YD币兑换'
+                            $scope.transactionList[i].statusToString = 'YD币兑换'
 
                         }
                         var tmp = $scope.transactionList[i].createdAt
@@ -8179,6 +8181,7 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
 })
 
 YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
+    $scope.Math = Math;
     $scope.isLoadingTrue = false;
     $scope.promote = "";
     $scope.open1 = function ($event) {
@@ -8201,36 +8204,34 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
         if ($scope.currentUser.id != undefined) {
 
             var query = new AV.Query("Transaction");
-            //query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            //query.lessThanOrEqualTo("createdAt", $scope.dt2)
-            //query.equalTo("user", $scope.currentUser)
+
             query.include("user");
             query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE, YD.Transaction.STATUS_CREDIT_USER, YD.Transaction.STATUS_CLAIM_REWARD]);
             query.limit($scope.LIMIT_NUMBER);
             query.skip($scope.LIMIT_NUMBER * index);
             query.descending("createdAt");
-            if($scope.searchName) {
+            if ($scope.searchName) {
                 var innerQuery = new AV.Query(YD.User);
                 innerQuery.equalTo("stringId", $scope.queryString);
                 query.matchesQuery("user", innerQuery);
+            }
+            if ($scope.searchDate) {
+                var date = new Date()
+                var hour = date.getHours()
+                var minute = date.getMinutes()
+                $scope.dt1 = new Date($scope.dt1)
+                $scope.dt2 = new Date($scope.dt2)
+                $scope.dt1.setHours(hour)
+                $scope.dt1.setMinutes(minute)
+                $scope.dt2.setHours(hour)
+                $scope.dt2.setMinutes(minute)
+                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+                query.lessThanOrEqualTo("createdAt", $scope.dt2)
             }
             query.find({
                 success: function (tList) {
                     $scope.transactionList = tList
                     for (var i = 0; i < tList.length; i++) {
-                        if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO) {
-                            $scope.transactionList[i].status = '支付宝充值'
-                        } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_STRIPE) {
-                            $scope.transactionList[i].status = '信用卡充值'
-
-                        } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED) {
-                            $scope.transactionList[i].status = '支付宝充值'
-
-                        } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CREDIT_USER) {
-                            $scope.transactionList[i].status = '系统赠款';
-                        } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CLAIM_REWARD) {
-                            $scope.transactionList[i].status = 'YD币兑换'
-                        }
                         var tmp = $scope.transactionList[i].createdAt
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
@@ -8253,10 +8254,23 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
         var query = new AV.Query("Transaction");
         query.include("user");
         query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE, YD.Transaction.STATUS_CREDIT_USER, YD.Transaction.STATUS_CLAIM_REWARD]);
-        if($scope.searchName) {
+        if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);
             query.matchesQuery("user", innerQuery);
+        }
+        if ($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            $scope.dt1 = new Date($scope.dt1)
+            $scope.dt2 = new Date($scope.dt2)
+            $scope.dt1.setHours(hour)
+            $scope.dt1.setMinutes(minute)
+            $scope.dt2.setHours(hour)
+            $scope.dt2.setMinutes(minute)
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+            query.lessThanOrEqualTo("createdAt", $scope.dt2)
         }
         query.count({
             success: function (count) {
@@ -8265,7 +8279,7 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
             }
         });
     };
-    $scope.setPage = function() {
+    $scope.setPage = function () {
         $scope.currentPage = $scope.inputPage;
         $scope.reloadTransaction($scope.currentPage - 1);
     }
@@ -8276,82 +8290,30 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
         return;
     } else {
         $scope.reloadTransactionCount();
-
         $scope.reloadTransaction(0)
     }
     ;
     $scope.$on('admindb', function () {
         $scope.searchName = false;
         $scope.queryString = '';
+        $scope.searchDate = false;
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
 
     $scope.searching = function () {
         $scope.searchName = true;
+        $scope.searchDate = false;
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     }
     $scope.reloadSelectedTransaction = function () {
-        if ($scope.currentUser.id != undefined) {
-            if ($scope.dt1 != undefined && $scope.dt2 != undefined) {
-                var date = new Date()
-                var hour = date.getHours()
-                var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(hour)
-                $scope.dt1.setMinutes(minute)
-                $scope.dt2.setHours(hour)
-                $scope.dt2.setMinutes(minute)
-                ////console.log("date 1: " + $scope.dt1)
-                ////console.log("date 2: " + $scope.dt2)
-                //console.log("TRANSACTION 2: FREIGHT")
-
-                var query = new AV.Query("Transaction")
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
-                query.include("user");
-                //query.equalTo("user", $scope.currentUser)
-                query.containedIn("status", [YD.Transaction.STATUS_ZHIFUBAO, YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED, YD.Transaction.STATUS_STRIPE])
-                query.find({
-                    success: function (tList) {
-                        $scope.transactionList = tList
-                        for (var i = 0; i < tList.length; i++) {
-                            if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO) {
-                                $scope.transactionList[i].status = '支付宝充值(待审核)'
-                            } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_STRIPE) {
-                                $scope.transactionList[i].status = '信用卡充值'
-
-                            } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED) {
-                                $scope.transactionList[i].status = '支付宝充值'
-
-                            } else {
-                            }
-                            var tmp = $scope.transactionList[i].createdAt
-                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                            if (tmp.getMinutes() < 10)
-                                tmp_date += "0" + tmp.getMinutes()
-                            else
-                                tmp_date += tmp.getMinutes();
-                            _
-                            $scope.transactionList[i].createdAt = tmp_date
-                        }
-                        $scope.$apply()
-                        //console.log("DatePicker: get all transaction successful: " + tList.length)
-                    },
-                    error: function (tList, err) {
-                        //console.log("DatePicker: get all transaction not successful: " + err.id + err.message)
-
-                    }
-                })
-            }
-            else {
-                alert("请先选择日期")
-            }
-        }
-    }
-}])
+        $scope.searchName = false;
+        $scope.searchDate = true;
+        $scope.reloadTransactionCount();
+        $scope.reloadTransaction(0);
+    };
+}]);
 
 YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope, $modal) {
     $scope.query = ""
@@ -8637,10 +8599,45 @@ YundaApp.controller('DecreaseUserBalance', ["$scope", "$modalInstance", "user", 
 }]);
 
 YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
-    $scope.query = {
-        number: "",
-        string: ""
-    };
+    $scope.transactionType = [
+        {
+            index: 0,
+            value: '运费',
+            status: YD.Transaction.STATUS_CONSUME
+        },
+        {
+            index: 1,
+            value: '精确分箱',
+            status: YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE
+        },
+        {
+            index: 2,
+            value: '开箱检查',
+            status: YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE
+        },
+        {
+            index: 3,
+            value: '加固',
+            status: YD.Transaction.STATUS_CONSUME_ADD_PACKAGE
+        },
+        {
+            index: 4,
+            value: '系统扣款',
+            status: YD.Transaction.STATUS_DEBIT_USER
+        },
+        {
+            index: 5,
+            value: '退货',
+            status: YD.Transaction.STATUS_CONSUME_RETURN_GOODS
+        },
+        {
+            index: 6,
+            value: '退款',
+            status: YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE
+        },
+    ]
+
+
     $scope.open1 = function ($event) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -8652,6 +8649,7 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         $event.stopPropagation();
         $scope.opened2 = true;
     }
+
     //$scope.showCMD = function() {
     //    //console.log('Show dt1: ' + $scope.dt1)
     //}
@@ -8662,18 +8660,34 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
 
             var query = new AV.Query("Transaction");
             query.include("user");
-            query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE, YD.Transaction.STATUS_CONSUME_ADD_PACKAGE, YD.Transaction.STATUS_CONSUME_RETURN_GOODS, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_DEBIT_USER]);
-
+            if($scope.searchType) {
+                query.equalTo("status", parseInt($scope.queryType));
+            } else {
+                query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE, YD.Transaction.STATUS_CONSUME_ADD_PACKAGE, YD.Transaction.STATUS_CONSUME_RETURN_GOODS, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_DEBIT_USER]);
+            }
             query.limit($scope.LIMIT_NUMBER);
             query.skip($scope.LIMIT_NUMBER * index);
             query.descending("createdAt");
-            if($scope.searchName) {
+            if ($scope.searchName) {
                 var innerQuery = new AV.Query(YD.User);
                 innerQuery.equalTo("stringId", $scope.queryString);
                 query.matchesQuery("user", innerQuery);
             }
-            if($scope.searchRK) {
+            if ($scope.searchRK) {
                 query.equalTo("RKNumber", $scope.queryNumber);
+            }
+            if ($scope.searchDate) {
+                var date = new Date()
+                var hour = date.getHours()
+                var minute = date.getMinutes()
+                $scope.dt1 = new Date($scope.dt1)
+                $scope.dt2 = new Date($scope.dt2)
+                $scope.dt1.setHours(hour)
+                $scope.dt1.setMinutes(minute)
+                $scope.dt2.setHours(hour)
+                $scope.dt2.setMinutes(minute)
+                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+                query.lessThanOrEqualTo("createdAt", $scope.dt2)
             }
             query.find({
                 success: function (tList) {
@@ -8719,14 +8733,31 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
     $scope.reloadTransactionCount = function () {
         var query = new AV.Query("Transaction");
         query.include("user");
-        query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE, YD.Transaction.STATUS_CONSUME_ADD_PACKAGE, YD.Transaction.STATUS_CONSUME_RETURN_GOODS, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_DEBIT_USER]);
-        if($scope.searchName) {
+        if($scope.searchType) {
+            query.equalTo("status", $scope.queryType);
+        } else {
+            query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE, YD.Transaction.STATUS_CONSUME_ADD_PACKAGE, YD.Transaction.STATUS_CONSUME_RETURN_GOODS, YD.Transaction.STATUS_CONFIRMED_RETURN_BALANCE, YD.Transaction.STATUS_DEBIT_USER]);
+        }
+        if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);
             query.matchesQuery("user", innerQuery);
         }
-        if($scope.searchRK) {
+        if ($scope.searchRK) {
             query.equalTo("RKNumber", $scope.queryNumber);
+        }
+        if ($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            $scope.dt1 = new Date($scope.dt1)
+            $scope.dt2 = new Date($scope.dt2)
+            $scope.dt1.setHours(hour)
+            $scope.dt1.setMinutes(minute)
+            $scope.dt2.setHours(hour)
+            $scope.dt2.setMinutes(minute)
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+            query.lessThanOrEqualTo("createdAt", $scope.dt2)
         }
         query.count({
             success: function (count) {
@@ -8742,9 +8773,10 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
     } else {
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
-    };
+    }
+    ;
 
-    $scope.setPage = function() {
+    $scope.setPage = function () {
         $scope.currentPage = $scope.inputPage;
         $scope.reloadTransaction($scope.currentPage - 1);
     }
@@ -8753,6 +8785,9 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         $scope.queryString = '';
         $scope.searchRK = false;
         $scope.queryNumber = '';
+        $scope.searchDate = false;
+        $scope.searchType = false;
+        $scope.queryType = undefined;
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
@@ -8764,6 +8799,9 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         }
         $scope.searchRK = false;
         $scope.searchName = true;
+        $scope.searchDate = false;
+        $scope.searchType = false;
+
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
 
@@ -8777,67 +8815,39 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         }
         $scope.searchRK = true;
         $scope.searchName = false;
+        $scope.searchDate = false;
+        $scope.searchType = false;
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     }
     $scope.reloadSelectedTransaction = function () {
-        if ($scope.currentUser.id != undefined) {
-            if ($scope.dt1 != undefined && $scope.dt2 != undefined) {
-                var date = new Date()
-                var hour = date.getHours()
-                var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(hour)
-                $scope.dt1.setMinutes(minute)
-                $scope.dt2.setHours(hour)
-                $scope.dt2.setMinutes(minute)
-                ////console.log("date 1: " + $scope.dt1)
-                ////console.log("date 2: " + $scope.dt2)
-                //console.log("reloadTransaction: Transaction")
-
-                var query = new AV.Query("Transaction")
-                query.include("user");
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
-                query.containedIn("status", [YD.Transaction.STATUS_CONSUME, YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE, YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE])
-
-                query.find({
-                    success: function (tList) {
-                        $scope.transactionList = tList;
-                        for (var i = 0; i < tList.length; i++) {
-                            if ($scope.transactionList[i].status == YD.Transaction.STATUS_CONSUME) {
-                                $scope.transactionList[i].status = '消费';
-                            } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE) {
-                                $scope.transactionList[i].status = '精确分箱费用';
-                            } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CONSUME_CHECK_PACKAGE) {
-                                $scope.transactionList[i].status = '开箱检查费用';
-                            }
-                            var tmp = $scope.transactionList[i].createdAt
-                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                            if (tmp.getMinutes() < 10)
-                                tmp_date += "0" + tmp.getMinutes()
-                            else
-                                tmp_date += tmp.getMinutes();
-                            _
-                            $scope.transactionList[i].createdAt = tmp_date
-                        }
-                        $scope.$apply()
-
-                        //console.log("DatePicker: get all transaction successful: " + tList.length)
-                    },
-                    error: function (tList, err) {
-                        //console.log("DatePicker: get all transaction not successful: " + err.id + err.message)
-
-                    }
-                })
-            }
-            else {
-                alert("请先选择日期")
-            }
+        if ($scope.dt1 != undefined && $scope.dt2 != undefined) {
+            $scope.searchRK = false;
+            $scope.searchName = false;
+            $scope.searchDate = true;
+            $scope.searchType = false;
+            $scope.reloadTransactionCount();
+            $scope.reloadTransaction(0);
+        }
+        else {
+            alert("请先选择日期");
         }
     }
-}])
+    $scope.searchingType = function() {
+        if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
+            alert("您没有权限");
+            return;
+        }
+        $scope.searchRK = false;
+        $scope.searchName = false;
+        $scope.searchDate = false;
+        $scope.searchType = true;
+        $scope.reloadTransactionCount();
+        $scope.reloadTransaction(0);
+    }
+
+}]);
 
 YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardRecord = function (index) {
@@ -8851,6 +8861,19 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);
             query.matchesQuery("user", innerQuery);
+        }
+        if($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            $scope.dt1 = new Date($scope.dt1)
+            $scope.dt2 = new Date($scope.dt2)
+            $scope.dt1.setHours(hour)
+            $scope.dt1.setMinutes(minute)
+            $scope.dt2.setHours(hour)
+            $scope.dt2.setMinutes(minute)
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+            query.lessThanOrEqualTo("createdAt", $scope.dt2)
         }
         query.find({
             success: function (list) {
@@ -8883,6 +8906,19 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             innerQuery.equalTo("stringId", $scope.queryString);
             query.matchesQuery("user", innerQuery);
         }
+        if($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            $scope.dt1 = new Date($scope.dt1)
+            $scope.dt2 = new Date($scope.dt2)
+            $scope.dt1.setHours(hour)
+            $scope.dt1.setMinutes(minute)
+            $scope.dt2.setHours(hour)
+            $scope.dt2.setMinutes(minute)
+            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+        }
         query.count({
             success: function (count) {
                 $scope.tCount = count;
@@ -8904,6 +8940,7 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.$on('admindd', function () {
         $scope.searchName = false;
         $scope.queryString = '';
+        $scope.searchDate = false;
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     });
@@ -8914,9 +8951,22 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             return;
         }
         $scope.searchName = true;
+        $scope.searchDate = false;
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     }
+    $scope.reloadSelectedTransaction = function () {
+        if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER
+            && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
+            alert("您没有权限");
+            return;
+        }
+        $scope.searchName = false;
+        $scope.searchDate = true;
+        $scope.reloadRewardCount();
+        $scope.reloadRewardRecord(0);
+    }
+
     $scope.open1 = function ($event) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -8937,45 +8987,10 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.reloadSelectedTransaction = function () {
         if ($scope.currentUser.id != undefined) {
             if ($scope.dt1 != undefined && $scope.dt2 != undefined) {
-                var date = new Date()
-                var hour = date.getHours()
-                var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(hour)
-                $scope.dt1.setMinutes(minute)
-                $scope.dt2.setHours(hour)
-                $scope.dt2.setMinutes(minute)
-                ////console.log("date 1: " + $scope.dt1)
-                ////console.log("date 2: " + $scope.dt2)
-                //console.log("TRANSACTION 2: FREIGHT")
-
-                var query = new AV.Query(YD.Transaction)
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
-                query.include("user")
-                query.equalTo("status", YD.Transaction.STATUS_CLAIM_REWARD);
-                query.find({
-                    success: function (tList) {
-                        $scope.transactions = tList
-                        for (var i = 0; i < tList.length; i++) {
-                            var tmp = $scope.transactions[i].createdAt
-                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                            if (tmp.getMinutes() < 10)
-                                tmp_date += "0" + tmp.getMinutes()
-                            else
-                                tmp_date += tmp.getMinutes();
-                            _
-                            $scope.transactions[i].createdAtToString = tmp_date
-                        }
-                        $scope.$apply()
-                        //console.log("DatePicker: get all transaction successful: " + tList.length)
-                    },
-                    error: function (tList, err) {
-                        //console.log("DatePicker: get all transaction not successful: " + err.id + err.message)
-
-                    }
-                })
+                $scope.searchName = false;
+                $scope.searchDate = true;
+                $scope.reloadRewardCount();
+                $scope.reloadRewardRecord(0);
             }
             else {
                 alert("请先选择日期")
