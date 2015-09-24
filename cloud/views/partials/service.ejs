@@ -117,91 +117,17 @@
         <th>起运磅数</th>
         <th>约合人民币价格<br>（首／续）</th>
     </tr>
-    <tr>
-        <td>小包裹A渠道</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$4.5</td>
-        <td>$4.5</td>
-        <td>2</td>
-        <td>¥28/¥28</td>
-    </tr>
-    <tr>
-        <td>小包裹B渠道</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$6.00</td>
-        <td>$6.00</td>
-        <td>2</td>
-        <td>¥38/¥38</td>
+    <tr ng-repeat="pricing in systemSetting.pricing track by pricing.name">
+        <td ng-bind="pricing.name"></td>
+        <td ng-bind="pricing.start"></td>
+        <td ng-bind="pricing.end"></td>
+        <td ng-bind="'$ ' + pricing.initAt"></td>
+        <td ng-bind="'$ ' + pricing.contAt"></td>
+        <td ng-bind="pricing.startAt + ' Lb'"></td>
+        <td ng-bind="'¥' + pricing.rmbInitAt + '/¥' + pricing.rmbContAt"></td>
+
 
     </tr>
-    <tr>
-        <td>美国境内FEDEX</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$5.00</td>
-        <td>$2.00</td>
-        <td>6</td>
-        <td>¥32/¥13</td>
-
-    </tr>
-    <tr>
-        <td>USPS EXPRESS</td>
-        <td>美国</td>
-        <td>美国</td>
-        <td>$42.00</td>
-        <td>$6.00</td>
-        <td>4</td>
-        <td>¥269/¥38</td>
-    </tr>
-    <tr>
-        <td>Q渠道A</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$8.00</td>
-        <td>$4.50</td>
-        <td>2</td>
-        <td>¥51/¥29</td>
-    </tr>
-    <tr>
-        <td>Q渠道B</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$10.00</td>
-        <td>$6.00</td>
-        <td>2</td>
-        <td>¥64/¥38</td>
-    </tr>
-
-    <tr>
-        <td>安全座椅童车行李箱渠道（无体积费）</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$5.00</td>
-        <td>$5.00</td>
-        <td>15</td>
-        <td>¥32/¥32</td>
-    </tr>
-    <tr>
-        <td>香港大货</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$2.30</td>
-        <td>$2.30</td>
-        <td>100</td>
-        <td>¥15/¥15</td>
-    </tr>
-    <tr>
-        <td>香港小货</td>
-        <td>美国</td>
-        <td>中国</td>
-        <td>$2.50</td>
-        <td>$2.50</td>
-        <td>0.5</td>
-        <td>¥16/¥16</td>
-    </tr>
-
 
 </table>
 <br>

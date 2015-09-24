@@ -5,49 +5,39 @@
 <div class="modal-body">
     <form name="checkForm">
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
+
                     <label>入库单号: </label>
-                </div>
-                <div class="col-md-5">
+
 
                     <input type="text" class="form-control" ng-model="freightIn.trackingNumber" disabled>
-                </div>
-            </div>
+
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label>Email: </label>
-                </div>
-                <div class="col-md-5">
+        <div class="form-group has-feedback">
+
+                    <label  class="control-label">电子邮箱地址: </label>
+
                     <span ng-show="!checkForm.email.$valid || !checkInfo.email" style="color:red" class="glyphicon glyphicon-remove form-control-feedback"></span>
                     <span ng-show="checkForm.email.$valid && checkInfo.email" class="glyphicon glyphicon-ok form-control-feedback"></span>
 
-                    <input type="email" name="email" ng-model="checkInfo.email" class="form-control">
-                </div>
-            </div>
+                    <input type="email" name="email" ng-model="checkInfo.email" placeholder="john.smith@gmail.com" class="form-control" required>
+
+
         </div>
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
+
                     <label>是否拍照: </label>
-                </div>
-                <div class="col-md-2">
+
                     <input type="checkbox" class="form-control" ng-model="checkInfo.isTakingPhoto">
-                </div>
+
                 <small>(如果需要拍照请打勾)</small>
-            </div>
+
         </div>
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
+
                     <label>验货要求</label>
-                </div>
-                <div class="col-md-5">
+
                     <textarea rows="5" class="form-control" ng-model="checkInfo.notes"></textarea>
-                </div>
-            </div>
+
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-default" ng-click="confirm()"  ng-disabled="!checkForm.$valid">确认</button>

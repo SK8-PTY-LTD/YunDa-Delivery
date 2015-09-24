@@ -83,8 +83,8 @@
                 </div>
             </div><hr>
         </div>
-        <div class="form-group">
-            <div class="row bottom-buffer-2" ng-repeat="channel in systemSetting.channelList track by channel.name">
+        <div class="form-group" ng-repeat="channel in systemSetting.pricing track by channel.name">
+            <div class="row bottom-buffer-2">
                 <!--<div class="row">-->
                     <!--<strong ng-bind="channel.name"></strong>-->
                 <!--</div>-->
@@ -95,13 +95,25 @@
                 </div>
                 <div class="col-lg-2">
                     <label>首磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.initialPrice">
+                    <input class="form-control" type="number" step="any" ng-model="channel.initAt">
+                    <!--<span ng-bind="channel.initialPrice"></span>-->
+
+                </div>
+                <div class="col-lg-2">
+                    <label>首磅价(¥)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="channel.rmbInitAt">
                     <!--<span ng-bind="channel.initialPrice"></span>-->
 
                 </div>
                 <div class="col-lg-2">
                     <label>续磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.continuePrice">
+                    <input class="form-control" type="number" step="any" ng-model="channel.contAt">
+                    <!--<span ng-bind="channel.continuePrice"></span>-->
+
+                </div>
+                <div class="col-lg-2">
+                    <label>续磅价(¥)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="channel.rmbContAt">
                     <!--<span ng-bind="channel.continuePrice"></span>-->
 
                 </div>
@@ -109,7 +121,16 @@
                     <label>起运磅数: </label>
                     <input class="form-control" type="number" step="any" ng-model="channel.startAt">
                     <!--<span ng-bind="channel.startAt"></span>-->
-
+                </div>
+                <div class="col-lg-2">
+                    <label>起点: </label>
+                    <input class="form-control" type="text" step="any" ng-model="channel.start">
+                    <!--<span ng-bind="channel.startAt"></span>-->
+                </div>
+                <div class="col-lg-2">
+                    <label>终点: </label>
+                    <input class="form-control" type="text" step="any" ng-model="channel.end">
+                    <!--<span ng-bind="channel.startAt"></span>-->
                 </div>
                 <div class="col-lg-1">
                     <button class="btn btn-default btn-sm top-buffer-2" ng-click="deleteChannel(channel)">删除</button>
@@ -117,31 +138,58 @@
                 <div class="col-lg-1">
                     <button class="btn btn-default btn-sm top-buffer-2" ng-click="confirm()">保存</button>
                 </div>
+
             </div>
+            <hr>
 
         </div>
         <div class="form-group" style="border: 1px dashed #ddd; background-color: #eee">
 
             <div class="row">
-            <div class="col-md-4">
-                <label>新渠道名称: </label>
-                <input class="form-control" type="text" ng-model="newChannel.name" placeholder="新渠道名称" >
-            </div>
-            <div class="col-lg-2">
-                <label>首磅价($): </label>
-                <input class="form-control" type="number" step="any" ng-model="newChannel.initialPrice" >
-            </div>
-            <div class="col-lg-2">
-                <label>续磅价($): </label>
-                <input class="form-control" type="number" step="any" ng-model="newChannel.continuePrice" >
-            </div>
-            <div class="col-lg-2">
-                <label>起运磅数: </label>
-                <input class="form-control" type="number" step="any" ng-model="newChannel.startAt" >
-            </div>
-            <div class="col-lg-2 top-buffer-2">
-                <button class="btn btn-default btn-sm" ng-click="addNewChannel()">添加新渠道</button>
-            </div>
+                <div class="col-md-4">
+                    <label>新渠道名称: </label>
+                    <input class="form-control" type="text" ng-model="newChannel.name" placeholder="新渠道名称">
+                </div>
+                <div class="col-lg-2">
+                    <label>首磅价($): </label>
+                    <input class="form-control" type="number" step="any" ng-model="newChannel.initAt">
+                </div>
+                <div class="col-lg-2">
+                    <label>首磅价(¥)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="newChannel.rmbInitAt">
+                    <!--<span ng-bind="channel.initialPrice"></span>-->
+
+                </div>
+                <div class="col-lg-2">
+                    <label>续磅价($)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="newChannel.contAt">
+                    <!--<span ng-bind="channel.continuePrice"></span>-->
+
+                </div>
+                <div class="col-lg-2">
+                    <label>续磅价(¥)：</label>
+                    <input class="form-control" type="number" step="any" ng-model="newChannel.rmbContAt">
+                    <!--<span ng-bind="channel.continuePrice"></span>-->
+
+                </div>
+                <div class="col-lg-2">
+                    <label>起运磅数: </label>
+                    <input class="form-control" type="number" step="any" ng-model="newChannel.startAt">
+                    <!--<span ng-bind="channel.startAt"></span>-->
+                </div>
+                <div class="col-lg-2">
+                    <label>起点: </label>
+                    <input class="form-control" type="text" step="any" ng-model="newChannel.start">
+                    <!--<span ng-bind="channel.startAt"></span>-->
+                </div>
+                <div class="col-lg-2">
+                    <label>终点: </label>
+                    <input class="form-control" type="text" step="any" ng-model="newChannel.end">
+                    <!--<span ng-bind="channel.startAt"></span>-->
+                </div>
+                <div class="col-lg-2 top-buffer-2">
+                    <button class="btn btn-default btn-sm" ng-click="addNewChannel()">添加新渠道</button>
+                </div>
             </div>
 
         </div>
@@ -312,10 +360,11 @@
         </tr>
         <tr>
             <td><input type="text" class="form-control" ng-model="newNews.title" placeholder="新的新闻标题"> </td>
-            <td><input type="text" class="form-control" ng-model="newNews.link" placeholder="新的新闻链接"></td>
+            <td><input type="text" value="http://" class="form-control" ng-model="newNews.link" placeholder="新的新闻链接"></td>
             <td colspan="2"><button class="btn btn-default btn-sm" ng-click="addNews()">添加</button></td>
         </tr>
     </table>
+    <small>备注：请输入完整的新闻链接(如http://xxxx.com)</small>
 
 </div>
 <div ng-show="view_tab=='bz'" ng-controller="AdminFreightInArriveCtrl">
@@ -333,7 +382,7 @@
       </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -429,7 +478,7 @@
       </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -504,7 +553,7 @@
       </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -589,7 +638,7 @@
             </div><!-- /input-group -->
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -778,7 +827,7 @@
             </div><!-- /input-group -->
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -866,7 +915,7 @@
       </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 
@@ -940,7 +989,7 @@
       </span>
         </div><!-- /input-group -->
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
 
         <div class="input-group">
 
@@ -1134,11 +1183,11 @@
             </div>
             <div class="form-group">
                 <label class="control-label">实际余额</label>
-                <span class="form-control">{{newUser ? '$' + newUser.balance/100 : ""}}</span>
+                <span class="form-control">{{newUser ? '$' + (newUser.balance/100).toFixed(2) : ""}}</span>
             </div>
             <div class="form-group">
                 <label class="control-label">兑换余额</label>
-                <span class="form-control">{{newUser ? '$' + newUser.rewardBalance/100 : ""}}</span>
+                <span class="form-control">{{newUser ? '$' + (newUser.rewardBalance/100).toFixed(2) : ""}}</span>
             </div>
             <div class="form-group">
                 <label class=" control-label">手机号</label>
@@ -1203,7 +1252,7 @@
       </span>
         </div><!-- /input-group -->
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
 
         <div class="input-group">
 
@@ -1300,7 +1349,7 @@
         </div><!-- /input-group -->
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
 
         <div class="input-group">
 
@@ -1322,7 +1371,7 @@
         <th width="25%">退货地址</th>
         <th width="10%">Label</th>
         <th>备注</th>
-        <th >处理</th>
+        <th>处理</th>
         <th>凭证</th>
 
         </thead>
@@ -1349,11 +1398,17 @@
                     <button class="btn btn-xs btn-default" ng-click="confirmReturn(f)">同意退货</button>
                     <button class="btn btn-xs btn-default" ng-click="refuseReturn(f)">拒绝退货</button>
                 </div>
-                <div ng-if="f.status==990">
+                <div ng-if="f.status== 990">
                     已退货
                 </div>
                 <div ng-if="f.status ==900">
                     拒绝退货: {{f.notes}}
+                </div>
+                <div ng-if="f.status ==910">
+                    已重新退货
+                </div>
+                <div ng-if="f.status ==920">
+                    已重新入库
                 </div>
 
             </td>
@@ -1406,7 +1461,7 @@
       </span>
         </div><!-- /input-group -->
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
 
         <div class="input-group">
 
@@ -1925,7 +1980,7 @@
       </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
 
             <div class="input-group">
 

@@ -247,6 +247,9 @@
     // after admin confirmation
     YD.FreightReturn.STATUS_AWAITING = 200;
     YD.FreightReturn.STATUS_REFUSED = 900;
+    YD.FreightReturn.STATUS_REAPPLY = 910;
+    YD.FreightReturn.STATUS_FREIGHTIN = 920;
+
     YD.FreightReturn.STATUS_FINISHED = 990;
 
 
@@ -1001,10 +1004,7 @@
             this.status = 200;
         }
     }, {
-        STATUS_INITIALIZED: 0,
-        //Pending user action
-        STATUS_ARRIVED: 200,
-        STATUS_CONFIRMED: 300
+
 
     });
 
@@ -1012,17 +1012,17 @@
 // Shelf Methods
 //================================================================================
 
-    YD.FreightIn.STATUS_INITIALIZED = 0
+    YD.FreightIn.STATUS_INITIALIZED = 0;
 //Pending user action
-    YD.FreightIn.STATUS_MANUAL = 100
-    YD.FreightIn.STATUS_SPEED_MANUAL = 110
-    YD.FreightIn.STATUS_ARRIVED = 200
-    YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE = 210
-    YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE = 290
-    YD.FreightIn.STATUS_CONFIRMED = 300
+    YD.FreightIn.STATUS_MANUAL = 100;
+    YD.FreightIn.STATUS_SPEED_MANUAL = 110;
+    YD.FreightIn.STATUS_ARRIVED = 200;
+    YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE = 210;
+    YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE = 290;
+    YD.FreightIn.STATUS_CONFIRMED = 300;
     //YD.FreightIn.STATUS_REJECTED = 400;
-    YD.FreightIn.STATUS_FINISHED = 900
-    YD.FreightIn.STATUS_CANCELED = 990
+    YD.FreightIn.STATUS_FINISHED = 900;
+    YD.FreightIn.STATUS_CANCELED = 990;
 
 
     YD.FreightIn.prototype.getAddressWithCallBack = function (callback) {
@@ -1788,6 +1788,16 @@
             this.set("contactNumber", value);
         }
     });
+
+
+    Object.defineProperty(YD.SystemSetting.prototype, "pricing", {
+        get: function () {
+            return this.get("pricing");
+        },
+        set: function (value) {
+            this.set("pricing", value);
+        }
+    });
     Object.defineProperty(YD.SystemSetting.prototype, "contactEmail", {
         get: function () {
             return this.get("contactEmail");
@@ -1972,6 +1982,7 @@
             this.set("status", value);
         }
     });
+
 
     Object.defineProperty(YD.Transaction.prototype, "zhifubao", {
         get: function () {

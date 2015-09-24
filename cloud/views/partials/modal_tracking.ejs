@@ -16,7 +16,7 @@
 
                     <tr ng-show="freight.status <= 400">
                         <td ng-bind="freight.updatedAtToString"></td>
-                        <td>当前状态: 等待发货</td>
+                        <td>当前状态: 等待发出</td>
                     </tr>
                         <tr ng-show="freight.status > 400">
                             <td ng-bind="freight.shipping.delivery"></td>
@@ -24,11 +24,11 @@
                         </tr>
                         <tr ng-show="freight.status >= 500">
                             <td ng-bind="freight.shipping.delivering"></td>
-                            <td>飞往中国途中</td>
+                            <td>离境飞往中国</td>
                         </tr>
                         <tr ng-show="freight.status >= 600">
                             <td ng-bind="freight.shipping.clear"></td>
-                            <td>已清关</td>
+                            <td>抵达清关口岸，包裹清关中</td>
                         </tr>
                         <tr ng-show="freight.status >= 610">
                             <td ng-bind="freight.shipping.atChina"></td>

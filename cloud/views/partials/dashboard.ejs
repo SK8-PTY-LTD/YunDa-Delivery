@@ -981,7 +981,7 @@
             <td><span ng-bind="freight.updatedAtToString"></span></td>
             <td>
                 <div ng-show="freight.status != 400">
-                    <span ng-bind="freight.statusToString"></span>
+                    <span>等待发货</span>
                 </div>
                 <div ng-show="freight.status == 400">
                     拒绝发货
@@ -1094,7 +1094,7 @@
                       placeholder="每行一个运单"></textarea>
         </div>
         <div class="form-group">
-            <button class="form-control btn btn-info" ng-click="trackingInfo()">查询运单</button>
+            <button class="form-control btn btn-info" ng-click="trackingInfo()">查询YD运单</button>
         </div>
     </form>
 </div>
@@ -1418,7 +1418,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-2">
-                    <label>兑换美金: </label>
+                    <label>兑换数量: </label>
                 </div>
                 <div class="col-md-3">
                     <input type="number" step="any" min="0" ng-model="amount" class="form-control">
@@ -1559,8 +1559,11 @@
             <td ng-bind="t.statusToString"></td>
             <td ng-bind="t.createdAtToString"></td>
             <td>
-                <div ng-show="t.status == 590">
-                    <a target="_blank" ng-href="{{t.adminEvidence}}">下载</a>
+                <div ng-if="t.adminEvidence">
+                    <a target="_blank" ng-href="{{t.adminEvidence._url}}">下载</a>
+                </div>
+                <div ng-if="!t.adminEvidence">
+                    无凭证
                 </div>
             </td>
             <td ng-bind="t.notes"></td>
@@ -1634,8 +1637,11 @@
             <td ng-bind="freight.statusToString"></td>
             <!--<td><a target="_blank" ng-href="{{freight.adminEvidence}}">点此下载</a></td>-->
             <td>
-                <div ng-if="freight.status == 990">
-                    <a target="_blank" ng-href="{{freight.adminEvidence._url}}">点此下载</a>
+                <div ng-if="freight.adminEvidence">
+                    <a target="_blank" ng-href="{{freight.adminEvidence._url}}">下载</a>
+                </div>
+                <div ng-if="!freight.adminEvidence">
+                    无凭证
                 </div>
             </td>
             <td ng-bind="freight.notes"></td>

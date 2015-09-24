@@ -1,21 +1,25 @@
 <div class="modal-body">
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
 
-    <form name="addressForm">
+    <form name="loginForm">
         <strong class="text-danger">更改登录邮箱后需要重新验证账号</strong>
         <div class="form-group">
-            <label for="newPassword">当前登录邮箱</label></br>
-            <input type="email" id="email" ng-model="currentUser.username" disabled/></br>
+            <label for="newPassword" class="control-label">当前登录邮箱</label>
+            <input type="email" id="oldemail" class="form-control" ng-model="currentUser.username" disabled/>
         </div>
-        <div class="form-group">
-            <label for="newPassword">新登录邮箱</label></br>
-            <input type="email" id="email" ng-model="newUsername"/></br>
+        <div class="form-group has-feedback">
+            <label class="control-label">新登录邮箱</label>
+             <span ng-show="!loginForm.email.$valid" style="color:red"
+                   class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="loginForm.email.$valid" class="glyphicon glyphicon-ok form-control-feedback"></span>
+            <input type="email" id="email" name="email" ng-model="newUsername" placeholder="john.smith@email.com" class="form-control" required/>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" ng-click="saveUsername()" class="btn btn-default" ng-disabled="!loginForm.$valid">保存</button>
+            <button ng-click="close()" class="btn btn-default">取消</button>
         </div>
     </form>
 
 </div>
-<div class="modal-footer">
-    <button type="submit" ng-click="saveUsername()">保存</button>
-    <button ng-click="close()">取消</button>
-</div>
+
 
