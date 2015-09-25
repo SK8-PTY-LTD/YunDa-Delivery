@@ -1933,8 +1933,9 @@
     });
 
     YD.Transaction = AV.Object.extend("Transaction", {}, {});
-
+    YD.Transaction.STATUS_ZHIFUBAO_PENDING = 99;
     YD.Transaction.STATUS_ZHIFUBAO = 100;
+    YD.Transaction.STATUS_ZHIFUBAO_FAILED = 101;
     YD.Transaction.STATUS_STRIPE = 200;
     YD.Transaction.STATUS_CONSUME = 300;
     YD.Transaction.STATUS_CONSUME_SPLIT_PACKAGE = 310;
@@ -1980,6 +1981,14 @@
         },
         set: function (value) {
             this.set("status", value);
+        }
+    });
+    Object.defineProperty(YD.Transaction.prototype, "yuanInCent", {
+        get: function () {
+            return this.get("yuanInCent");
+        },
+        set: function (value) {
+            this.set("yuanInCent", value);
         }
     });
 

@@ -102,7 +102,7 @@
             </div>
             <div class="col-md-5">
                 <label>重量: </label>
-                <span ng-bind="freight.weight + ' Lb'"></span>
+                <span ng-bind="(freight.weight).toFixed(2) + ' Lb'"></span>
             </div>
         </div>
         <div class="row">

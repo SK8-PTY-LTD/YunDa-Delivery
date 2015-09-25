@@ -32,7 +32,7 @@ exports.alipayReturn = function(req, res) {
   //var seller
   var isSuccess = req.query.is_success;
   var userId = req.query.body;
-  var totalInDollar = parseFloat((req.query.total_fee / 6.4).toFixed(2)) * 100;
+  var totalInDollar = req.query.total_fee / 6.4 * 100;
   console.log(isSuccess + " | " + userId + " | " + totalInDollar);
   debug('userId:', userId);
 
@@ -66,7 +66,140 @@ exports.alipayReturn = function(req, res) {
             });
           },
           error: function(u, error) {
+
             console.log("error: " + error.message);
+          }
+        });
+      },
+      error: function(t, error) {
+        t.save(null, {
+          success: function (t1) {
+            console.log("transaction saved");
+            var User = AV.Object.extend("_User");
+            var query = new AV.Query(User);
+            //user.set("id", userId);
+            query.get(userId, {
+              success: function(fetchedUser) {
+                var userBl = parseInt(fetchedUser.get("balance"));
+                debug('userBl:', userBl);
+                console.log("user balance: " + userBl);
+
+                fetchedUser.set("balance", (userBl + totalInDollar));
+                fetchedUser.save(null, {
+                  success: function(u) {
+                    console.log("u saved: " + u.id + " | u.balance");
+                    res.render('partials/payReturn');
+                  }
+                });
+              },
+              error: function(u, error) {
+
+                console.log("error: " + error.message);
+              }
+            });
+          },
+          error: function (t1, error) {
+            t1.save(null, {
+              success: function (t2) {
+                console.log("transaction saved");
+                var User = AV.Object.extend("_User");
+                var query = new AV.Query(User);
+                //user.set("id", userId);
+                query.get(userId, {
+                  success: function(fetchedUser) {
+                    var userBl = parseInt(fetchedUser.get("balance"));
+                    debug('userBl:', userBl);
+                    console.log("user balance: " + userBl);
+
+                    fetchedUser.set("balance", (userBl + totalInDollar));
+                    fetchedUser.save(null, {
+                      success: function(u) {
+                        console.log("u saved: " + u.id + " | u.balance");
+                        res.render('partials/payReturn');
+                      }
+                    });
+                  }
+                });
+              },
+              error: function (t2, error) {
+                t2.save(null, {
+                  success: function (t2) {
+                    console.log("transaction saved");
+                    var User = AV.Object.extend("_User");
+                    var query = new AV.Query(User);
+                    //user.set("id", userId);
+                    query.get(userId, {
+                      success: function (fetchedUser) {
+                        var userBl = parseInt(fetchedUser.get("balance"));
+                        debug('userBl:', userBl);
+                        console.log("user balance: " + userBl);
+
+                        fetchedUser.set("balance", (userBl + totalInDollar));
+                        fetchedUser.save(null, {
+                          success: function (u) {
+                            console.log("u saved: " + u.id + " | u.balance");
+                            res.render('partials/payReturn');
+                          }
+                        });
+                      }
+                    });
+                  },
+                  error: function (t3) {
+                    t3.save(null, {
+                      success: function (t4) {
+                        var User = AV.Object.extend("_User");
+                        var query = new AV.Query(User);
+                        //user.set("id", userId);
+                        query.get(userId, {
+                          success: function (fetchedUser) {
+                            var userBl = parseInt(fetchedUser.get("balance"));
+                            debug('userBl:', userBl);
+                            console.log("user balance: " + userBl);
+
+                            fetchedUser.set("balance", (userBl + totalInDollar));
+                            fetchedUser.save(null, {
+                              success: function (u) {
+                                console.log("u saved: " + u.id + " | u.balance");
+                                res.render('partials/payReturn');
+                              }
+                            });
+                          }
+                        });
+                      },
+                      error: function (t5) {
+                        t5.save(null, {
+                          success: function (t6) {
+                            var User = AV.Object.extend("_User");
+                            var query = new AV.Query(User);
+                            //user.set("id", userId);
+                            query.get(userId, {
+                              success: function (fetchedUser) {
+                                var userBl = parseInt(fetchedUser.get("balance"));
+                                debug('userBl:', userBl);
+                                console.log("user balance: " + userBl);
+
+                                fetchedUser.set("balance", (userBl + totalInDollar));
+                                fetchedUser.save(null, {
+                                  success: function (u) {
+                                    console.log("u saved: " + u.id + " | u.balance");
+                                    res.render('partials/payReturn');
+                                  }
+                                });
+                              }
+                            });
+                          },
+                          error: function(t6, error) {
+                            t6.set("status", 101);
+                            t6.save();
+                            res.render('partials/payReturnFail');
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
           }
         });
       }

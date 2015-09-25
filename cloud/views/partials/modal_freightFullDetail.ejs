@@ -15,8 +15,8 @@
             <td ng-bind="'数字ID: ' + freight.user.numberId"></td>
         </tr>
         <tr>
-            <td ng-bind="'重量: ' + freight.weight + ' Lb'"></td>
-            <td ng-bind="'最终重量: ' + freight.finalWeight + ' Lb'"></td>
+            <td ng-bind="'重量: ' + (freight.weight).toFixed(2) + ' Lb'"></td>
+            <td ng-bind="'最终重量: ' + (freight.finalWeight).toFixed(2) + ' Lb'"></td>
         </tr>
         <tr>
             <td colspan="2">

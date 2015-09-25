@@ -350,7 +350,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
                                 if (ydReward > 0) {
                                     var tns = new Transaction();
                                     tns.set("amount", ydReward);
-                                    tns.set("notes", "YD币赠送: " + notes);
+                                    tns.set("notes", "YD币赠送 " + ydReward +  " 个: + notes");
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
                                     if (!YDNumber) {

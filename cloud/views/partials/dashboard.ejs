@@ -308,11 +308,13 @@
         <th>美国转运号</th>
         <th>创建时间</th>
         <th>状态</th>
+        <th>操作</th>
         </thead>
         <tr ng-repeat="f in freights">
             <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.createdAt"></td>
             <td>暂未到货</td>
+            <td><button class="btn btn-default btn-sm" ng-click="deleteFreight(f)">删除</button></td>
         </tr>
     </table>
     <!--pagination-->
@@ -714,7 +716,7 @@
                                     ng-bind="(freightIn.weight).toFixed(2)"></span>Lb
                         </div>
                         <div class="col-lg-1" style="font-size:0.7em; margin-left: -3em;"><span
-                                    ng-bind="freightIn.updatedAt"></span></div>
+                                    ng-bind="freightIn.createdAtToString"></span></div>
                         <div class="col-lg-1" style="margin-left: 2em;">
                             <div ng-show="freightIn.isSplit || freightIn.isSplitPremium">
                                 <button class="btn btn-xs btn-default" ng-click="cancelSplit(freightIn)"
@@ -1174,10 +1176,11 @@
             <br>
 
             <p>
-                请将需要充值的金额打到”yunda“支付宝账号。<br>
-                支付宝即时到帐服务已开通， 只支持“即时到帐交易”充值，不支持“担保交易”充值。<br>
-                另外国内的支付宝是和IE绑定的，所以当您在充值的时候用选择了别的浏览器比如说搜狗，360之类的浏览器,就有可能会发生明明充值成功，但账户内却没有充值成功的情况。
-                所以现在提醒大家在充值的时候尽量用其他主流浏览器，谢谢支持。<br>
+                请将需要充值的金额打到”yunda“支付宝账号,支付宝即时到帐服务已开通, 只支持“即时到帐交易”充值, 不支持“担保交易”充值。<br>
+                <strong class="text-danger">必读！重要提示：<br><br>
+                充值后，务必请保持停留在该页面不要离开，直至系统自动跳转回Yunda主页面。<br><br></strong>
+                过早关闭页面会导致信息传递被阻断，从而导致明明充值成功，但账户内却未到账的情况发生，所以当您在充值后请耐心等待几秒钟。谢谢支持！<br>
+
             </p>
             <em>支付宝充值输入金额为人民币金额，自动换算后美元入账。汇率为1:{{systemSetting.rate}}</em><br>
             <!--<p></p>-->
@@ -1294,7 +1297,7 @@
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.id"></td>
-            <td>{{t.status == 100 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.amount*6.4 +')' : '$' + (t.amount).toFixed(2)}}</td>
+            <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
             <td ng-bind="t.notes"></td>
             <td ng-bind="t.createdAtToString"></td>
             <td ng-bind="t.statusToString"></td>
@@ -1618,7 +1621,7 @@
             YD入库号
         </th>
         <th>
-            更新时间
+            申请时间
         </th>
         <th>
             状态
