@@ -1743,7 +1743,7 @@
             <td ng-bind="t.user.stringId"></td>
             <td ng-bind="t.record"></td>
             <td>{{t.status == 100 ? '$' + (t.amount).toFixed(2) + '(‎¥' + (t.amount*6.4).toFixed(2) + ')' : '$' + (t.amount).toFixed(2)}}</td>
-            <td ng-bind="t.notes"></td>
+            <td>{{t.status == 99 ? '支付宝(未充值)' : t.notes}}</td>
             <td ng-bind="t.createdAtToString"></td>
             <!--<td ng-bind="t.status"></td>-->
             <!--<td>pending</td>-->
