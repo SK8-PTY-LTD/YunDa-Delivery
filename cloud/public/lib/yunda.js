@@ -1,9 +1,7 @@
 //================================================================================
 // Yunda is a utility class for apps empowered for Yunda
-// Author: Xujie Song
 // Copyright: SK8 PTY LTD
 //================================================================================
-
 "use strict";
 
 //Isolation function
@@ -232,7 +230,6 @@
             this.set("user", value);
         }
     });
-
     Object.defineProperty(YD.Address.prototype, "identity", {
         get: function () {
             return this.get("identity");
