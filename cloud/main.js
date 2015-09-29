@@ -271,6 +271,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
     var YDNumber = request.params.YDNumber;
     var status = request.params.status;
     var admin = request.user;
+    var usedRewardBalance = 0;
 
     var ydReward = 0;
     console.log("getting user now: " + id + " | " + amount);
@@ -296,28 +297,31 @@ AV.Cloud.define("chargingUser", function (request, response) {
                 /**
                  * Make sure user's rewardBalance is charged first.
                  */
-                console.log("in else");
                 if (rewardBalance == 0) {
                     balance -= amount;
                     ydReward = amount;
+                    usedRewardBalance = 0;
                     //tnsSaveStatus = 1;
 
                 } else if (rewardBalance > 0 && rewardBalance < amount) {
                     //rewardTransaction = rewardBalance;
                     //balanceTransaction = amount - rewardBalance;
+                    usedRewardBalance = rewardBalance;
                     ydReward = (amount - rewardBalance);
                     balance -= (amount - rewardBalance);
-
                     rewardBalance = 0;
                     //tnsSaveStatus = 2;
 
                 } else if (rewardBalance >= amount) {
                     rewardBalance -= amount;
                     ydReward = 0;
+                    usedRewardBalance = amount;
+
                     //tnsSaveStatus = 3;
                 } else {
                     balance -= amount;
                     ydReward = amount;
+                    usedRewardBalance = 0;
                     //tnsSaveStatus = 1;
                 }
                 user.set("balance", balance * 100);
@@ -334,7 +338,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
                         userPT.id = u.id;
                         var transaction = new Transaction();
                         transaction.set("amount", amount);
-                        transaction.set("notes", notes);
+                        transaction.set("notes", notes + ', 使用YD币兑换钱数: $' + (usedRewardBalance).toFixed(2));
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
                         if (!YDNumber) {
@@ -350,7 +354,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
                                 if (ydReward > 0) {
                                     var tns = new Transaction();
                                     tns.set("amount", ydReward);
-                                    tns.set("notes", "YD币赠送 " + ydReward +  " 个: + notes");
+                                    tns.set("notes", "YD币赠送 " + ydReward +  " 个: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
                                     if (!YDNumber) {
@@ -454,7 +458,7 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
                             success: function (t) {
                                 var tns = new Transaction();
                                 tns.set("amount", amount);
-                                tns.set("notes", "YD币赠送: " + notes);
+                                tns.set("notes", "YD币赠送 " + amount +  " 个: " + notes);
                                 tns.set("RKNumber", RKNumber);
                                 tns.set("user", userPT);
                                 if (!YDNumber) {

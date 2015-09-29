@@ -820,6 +820,22 @@
             this.set("packageComments", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "submitDate", {
+        get: function () {
+            return this.get("submitDate");
+        },
+        set: function (value) {
+            this.set("submitDate", value);
+        }
+    });
+    Object.defineProperty(YD.Freight.prototype, "operateDate", {
+        get: function () {
+            return this.get("operateDate");
+        },
+        set: function (value) {
+            this.set("operateDate", value);
+        }
+    });
 
     YD.FreightGroup = AV.Object.extend("FreightGroup", {
         getStatus: function () {
@@ -1313,7 +1329,32 @@
             this.set("exceedWeight", value);
         }
     });
-    // YD.Transactoin = require('cloud/shelf/objects/YDTransactoin.js')
+
+    Object.defineProperty(YD.FreightIn.prototype, "checkDate", {
+        get: function () {
+            return this.get("checkDate");
+        },
+        set: function (value) {
+            this.set("checkDate", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "confirmDate", {
+        get: function () {
+            return this.get("confirmDate");
+        },
+        set: function (value) {
+            this.set("confirmDate", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "deleteDate", {
+        get: function () {
+            return this.get("deleteDate");
+        },
+        set: function (value) {
+            this.set("deleteDate", value);
+        }
+    });
+
     YD.User = AV.Object.extend("_User", {
         isUser: function (user) {
             if (user != undefined) {

@@ -58,12 +58,15 @@
             <td colspan="2" ng-bind="'清关时间: ' + freight.shipping.clear"></td>
         </tr>
         <tr>
-            <td ng-bind="'物流公司: ' + freight.chineseCourier"></td>
-            <td ng-bind="'快递号: ' + freight.chineseTrackingNumber"></td>
+            <!--<td ng-bind="'物流公司: ' + freight.chineseCourier"></td>-->
+            <!--<td ng-bind="'快递号: ' + freight.chineseTrackingNumber"></td>-->
+            <td>物流公司: <input type="text" class="form-control" ng-model="freight.chineseCourier"></td>
+            <td>快递号: <input type="text" class="form-control" ng-model="freight.chineseTrackingNumber"></td>
         </tr>
     </table>
 </div>
 
 <div class="modal-footer">
+    <button class="btn btn-default" ng-click="saveFreight(freight)">保存</button>
     <button class="btn btn-default" ng-click="close()">关闭</button>
 </div>

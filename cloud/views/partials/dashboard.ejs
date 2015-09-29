@@ -980,7 +980,7 @@
             <td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>
             <td ng-bind="freight.address.recipient"></td>
             <td ng-bind="freight.brief"></td>
-            <td><span ng-bind="freight.updatedAtToString"></span></td>
+            <td><span ng-bind="freight.createdAtToString"></span></td>
             <td>
                 <div ng-show="freight.status != 400">
                     <span>等待发货</span>
@@ -1121,7 +1121,7 @@
         <th>YD运单号</th>
         <th width="10%">收件人</th>
         <th>货物描述</th>
-        <th>提交时间</th>
+        <th>生成时间</th>
         <th width="15%">状态</th>
         <th>分/合包</th>
         </thead>
@@ -1130,17 +1130,21 @@
             <td ng-bind="freight.address.recipient"></td>
             <td ng-bind="freight.brief"></td>
             <td>
-                <span ng-bind="freight.updatedAtToString"></span>
+                <span ng-bind="freight.createdAtToString"></span>
             </td>
             <td ng-bind="freight.statusToString"></td>
+
             <td>
                 <div ng-show="freight.isMerged">
                     合包
                 </div>
+                <div ng-show="freight.isSpeedManual">
+                    原箱闪运
+                </div>
                 <div ng-show="freight.isSplit || freight.isSplitPremium">
                     分包
                 </div>
-                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium">
+                <div ng-show="!freight.isMerged && !freight.isSplit && !freight.isSplitPremium && !freight.isSpeedManual">
                     无
                 </div>
             </td>
@@ -1261,7 +1265,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
-                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -1273,7 +1277,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
-                       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -1339,7 +1343,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
-                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -1351,7 +1355,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
-                       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"     date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -1365,9 +1369,9 @@
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <tr>
-            <th>YD运单号</th>
-            <th>消费金额</th>
-            <th>消费类型</th>
+            <th width="20%">YD运单号</th>
+            <th width="10%">消费金额</th>
+            <th width="40%">消费类型</th>
             <th>消费时间</th>
             <!--<th>备注</th>-->
         </tr>
@@ -1441,7 +1445,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
-                       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -1453,7 +1457,7 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
-                       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                     class="glyphicon glyphicon-calendar"></i></button>
