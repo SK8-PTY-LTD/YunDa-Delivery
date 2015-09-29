@@ -1298,7 +1298,7 @@
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.id"></td>
             <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
-            <td ng-bind="t.notes"></td>
+            <td>{{t.status == 99 ? '支付宝(未充值)' : t.notes}}</td>
             <td ng-bind="t.createdAtToString"></td>
             <td ng-bind="t.statusToString"></td>
             <!--<td>pending</td>-->
