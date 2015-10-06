@@ -6947,7 +6947,7 @@ YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope
                             tmp_date += tmp.getMinutes();
                         _
                         $scope.users[i].createdAt = tmp_date
-                        $scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
+                        //$scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
                     }
                     $scope.searchedString = false
                     $scope.searchedNumber = true
@@ -7744,7 +7744,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
                             tmp_date += tmp.getMinutes();
                         _
                         $scope.users[i].createdAt = tmp_date
-                        $scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
+                        //$scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
                     }
                     $scope.searchedString = true
                     $scope.searchedNumber = false
@@ -7774,7 +7774,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
                             tmp_date += tmp.getMinutes();
                         }
                         $scope.users[i].createdAt = tmp_date
-                        $scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
+                        //$scope.users[i].balance = ($scope.users[i].balance / 100).toFixed(2)
                     }
                     $scope.searchedString = false
                     $scope.searchedNumber = true
