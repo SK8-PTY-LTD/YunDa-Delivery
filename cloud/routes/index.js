@@ -32,7 +32,7 @@ exports.alipayReturn = function(req, res) {
   //var seller
   var isSuccess = req.query.is_success;
   var userId = req.query.body;
-  var totalInDollar = req.query.total_fee / 6.4 * 100;
+  var totalInDollar = (Math.floor(req.query.total_fee / 6.4 * 100))/100;
   console.log(isSuccess + " | " + userId + " | " + totalInDollar);
   debug('userId:', userId);
 
