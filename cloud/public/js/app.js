@@ -4437,7 +4437,7 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardRecord = function (index) {
         var query = new AV.Query(YD.Transaction);
         query.equalTo("user", $scope.currentUser);
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
+        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
         query.limit($scope.LIMIT_NUMBER);
         query.skip($scope.LIMIT_NUMBER * index);
         query.descending("createdAt");
@@ -4458,6 +4458,10 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
                         $scope.transactions[i].statusToString = $scope.transactions[i].notes;
                     else if ($scope.transactions[i].status == YD.Transaction.STATUS_GET_YD_REWARD)
                         $scope.transactions[i].statusToString = $scope.transactions[i].notes;
+                    else if ($scope.transactions[i].status == YD.Transaction.STATUS_CREDIT_YD)
+                        $scope.transactions[i].statusToString = $scope.transactions[i].notes;
+                    else if ($scope.transactions[i].status == YD.Transaction.STATUS_DEBIT_YD)
+                        $scope.transactions[i].statusToString = $scope.transactions[i].notes;
                 }
                 $scope.$apply();
             }
@@ -4466,7 +4470,7 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardCount = function () {
         var query = new AV.Query(YD.Transaction);
         query.equalTo("user", $scope.currentUser);
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
+        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
         query.count({
             success: function (count) {
                 $scope.tCount = count;
@@ -7035,22 +7039,7 @@ YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope
             })
         }
     }
-    $scope.$watch("queryString", function (newVal) {
-        if (!$scope.searchedString) {
-            return
-        } else {
-            if (newVal === "" || newVal === undefined)
-                $scope.reloadUser()
-        }
-    })
-    $scope.$watch("queryNumber", function (newVal) {
-        if (!$scope.searchedNumber) {
-            return
-        } else {
-            if (newVal === "" || newVal === undefined)
-                $scope.reloadUser()
-        }
-    })
+
     $scope.showDetails = function (user) {
         $scope.newAddress = null;
         var query = new AV.Query(YD.Address);
@@ -7101,6 +7090,169 @@ YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope
         });
     }
 }]);
+
+YundaApp.controller('AdminCreditYDCtrl', ["$scope", "$modal", function ($scope, $modal) {
+    $scope.query = ""
+    $scope.searchedString = false
+    $scope.searchedNumber = false
+    $scope.isLoading = false
+    $scope.promote = ""
+    $scope.reloadUser = function (index) {
+        var query = new AV.Query("_User");
+        query.limit($scope.LIMIT_NUMBER);
+        query.skip($scope.LIMIT_NUMBER * index);
+        query.descending("updatedAt");
+        query.find({
+            success: function (users) {
+                $scope.$apply(function () {
+                    $scope.users = users
+                    for (var i = 0; i < $scope.users.length; i++) {
+                        var tmp = $scope.users[i].updatedAt
+                        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        _
+                        $scope.users[i].updatedAtToString = tmp_date
+                    }
+                })
+            },
+            error: function (error) {
+            }
+        })
+    };
+    if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
+        //alert("您没有权限");
+        return;
+    } else {
+        $scope.reloadUser(0);
+    }
+    ;
+    $scope.$on('adminde', function () {
+        $scope.reloadUser(0);
+    });
+    $scope.reloadCount = function () {
+        var query = new AV.Query("_User");
+        query.count({
+            success: function (count) {
+                $scope.userCount = count;
+            }
+        });
+    };
+    $scope.reloadCount();
+    $scope.setPage = function () {
+        $scope.currentPage = $scope.inputPage;
+        $scope.reloadUser($scope.currentPage - 1);
+    }
+    $scope.searchForUser = function (type) {
+        if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
+            alert("您没有权限");
+            return;
+        }
+        $scope.isLoading = true
+        $scope.promote = "正在查询,请稍候..."
+        if (type == 'string') {
+            var query = new AV.Query("_User")
+            query.equalTo("stringId", $scope.queryString)
+            query.include("address");
+            query.find({
+                success: function (list) {
+                    $scope.users = list
+                    for (var i = 0; i < $scope.users.length; i++) {
+                        var tmp = $scope.users[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        _
+                        $scope.users[i].createdAt = tmp_date
+                    }
+                    $scope.searchedString = true
+                    $scope.searchedNumber = false
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    $scope.$apply()
+                },
+                error: function (error) {
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    alert("错误！" + error.message)
+                }
+            })
+        } else {
+            var query = new AV.Query("_User")
+            query.equalTo("numberId", $scope.queryNumber)
+            query.include("address");
+            query.find({
+                success: function (list) {
+                    $scope.users = list
+                    for (var i = 0; i < $scope.users.length; i++) {
+                        var tmp = $scope.users[i].createdAt
+                        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                        if (tmp.getMinutes() < 10)
+                            tmp_date += "0" + tmp.getMinutes()
+                        else
+                            tmp_date += tmp.getMinutes();
+                        _
+                        $scope.users[i].createdAt = tmp_date
+                    }
+                    $scope.searchedString = false
+                    $scope.searchedNumber = true
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    $scope.$apply()
+                },
+                error: function (error) {
+                    $scope.isLoading = false
+                    $scope.promote = ""
+                    alert("错误！" + error.message)
+                }
+            })
+        }
+    }
+
+
+    $scope.increaseBalance = function (user) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_indecreaseYD',
+            controller: 'IncreaseUserYD',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                user: function () {
+                    return user
+                }
+            },
+            windowClass: 'center-modal'
+        });
+        modalInstance.result.then(function () {
+            $scope.reloadUser();
+            alert("添加成功");
+        });
+    }
+    $scope.decreaseBalance = function (user) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_indecreaseYD',
+            controller: 'DecreaseUserYD',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                user: function () {
+                    return user
+                }
+            },
+            windowClass: 'center-modal'
+        });
+        modalInstance.result.then(function () {
+            $scope.reloadUser();
+            alert("添加成功");
+        });
+    }
+}]);
+
+
 YundaApp.controller('IncreaseUserBalance', ["$scope", "$modalInstance", "user", function ($scope, $modalInstance, user) {
     $scope.isLoading = false;
     $scope.promote = "";
@@ -7114,7 +7266,8 @@ YundaApp.controller('IncreaseUserBalance', ["$scope", "$modalInstance", "user", 
             $scope.promote = "正在处理...";
             AV.Cloud.run('creditUser', {
                 userId: user.id,
-                amount: $scope.amount
+                amount: $scope.amount,
+                role: $scope.currentUser.role
             }, {
                 success: function () {
                     $scope.isLoading = false;
@@ -7144,6 +7297,38 @@ YundaApp.controller('DecreaseUserBalance', ["$scope", "$modalInstance", "user", 
             $scope.promote = "正在处理...";
             AV.Cloud.run('debitUser', {
                 userId: user.id,
+                amount: $scope.amount,
+                role: $scope.currentUser.role
+            }, {
+                success: function () {
+                    $scope.isLoading = false;
+                    $scope.promote = "";
+                    alert("操作成功！");
+                    $modalInstance.close();
+                },
+                error: function (error) {
+                    $scope.isLoading = false;
+                    $scope.promote = "";
+                    $modalInstance.dismiss();
+                }
+            });
+        }
+    }
+}]);
+
+YundaApp.controller('IncreaseUserYD', ["$scope", "$modalInstance", "user", function ($scope, $modalInstance, user) {
+    $scope.isLoading = false;
+    $scope.promote = "";
+    $scope.user = user;
+    $scope.confirm = function () {
+        if (!$scope.amount) {
+            alert("请先填写金额");
+            return;
+        } else {
+            $scope.isLoading = true;
+            $scope.promote = "正在处理...";
+            AV.Cloud.run('creditYD', {
+                userId: user.id,
                 amount: $scope.amount
             }, {
                 success: function () {
@@ -7161,6 +7346,37 @@ YundaApp.controller('DecreaseUserBalance', ["$scope", "$modalInstance", "user", 
         }
     }
 }]);
+YundaApp.controller('DecreaseUserYD', ["$scope", "$modalInstance", "user", function ($scope, $modalInstance, user) {
+    $scope.isLoading = false;
+    $scope.promote = "";
+    $scope.user = user;
+    $scope.confirm = function () {
+        if (!$scope.amount) {
+            alert("请先填写金额");
+            return;
+        } else {
+            $scope.isLoading = true;
+            $scope.promote = "正在处理...";
+            AV.Cloud.run('debitYD', {
+                userId: user.id,
+                amount: $scope.amount
+            }, {
+                success: function () {
+                    $scope.isLoading = false;
+                    $scope.promote = "";
+                    alert("操作成功！");
+                    $modalInstance.close();
+                },
+                error: function (error) {
+                    $scope.isLoading = false;
+                    $scope.promote = "";
+                    $modalInstance.dismiss();
+                }
+            });
+        }
+    }
+}]);
+
 YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
     $scope.transactionType = [{
         index: 0,
@@ -7392,7 +7608,7 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardRecord = function (index) {
         var query = new AV.Query(YD.Transaction);
         query.include("user");
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
+        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
         query.limit($scope.LIMIT_NUMBER);
         query.skip($scope.LIMIT_NUMBER * index);
         query.descending("createdAt");
@@ -7431,6 +7647,10 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
                         $scope.transactions[i].statusToString = $scope.transactions[i].notes;
                     else if ($scope.transactions[i].status == YD.Transaction.STATUS_GET_YD_REWARD)
                         $scope.transactions[i].statusToString = $scope.transactions[i].notes;
+                    else if ($scope.transactions[i].status == YD.Transaction.STATUS_CREDIT_YD)
+                        $scope.transactions[i].statusToString = $scope.transactions[i].notes;
+                    else if ($scope.transactions[i].status == YD.Transaction.STATUS_DEBIT_YD)
+                        $scope.transactions[i].statusToString = $scope.transactions[i].notes;
                 }
                 $scope.$apply();
             }
@@ -7439,7 +7659,7 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardCount = function () {
         var query = new AV.Query(YD.Transaction);
         query.include("user");
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD]);
+        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
         if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);

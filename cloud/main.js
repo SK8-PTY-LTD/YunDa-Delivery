@@ -114,32 +114,43 @@ AV.Cloud.define("createCharge", function (request, response) {
 });
 
 AV.Cloud.define("creditUser", function (request, response) {
+    var user = request.user;
+    if (user == undefined) {
+        response.error("A logged in user is required before charging.");
+        return;
+    }
+    var role = parseInt(request.params.role);
+    if(role != 190 || role != 100 ) {
+        console.log("In Cloud Code -- not an admin: " + role + " | type: " + typeof(role))
+        response.error("权限不够！");
+    }
     var amount = parseFloat(request.params.amount);
     var userId = request.params.userId;
     console.log("amount: " + amount + " | id: " + userId);
-    var query = new AV.Query("_User");
-    query.get(userId, {
-        success: function (user) {
-            console.log("got user, balanceInDollar: " + user.balanceInDollar);
-            user.balanceInDollar = parseFloat(user.balanceInDollar) + amount;
-            console.log("user now balance: " + user.balanceInDollar);
-            user.save(null, {
-                success: function (u) {
-                    var transaction = new YD.Transaction();
-                    var userPointer = new YD.User();
-                    userPointer.id = userId;
-                    transaction.set("status", 700);
-                    transaction.set("user", userPointer);
-                    transaction.set("amount", amount);
-                    transaction.set("notes", "管理员增加金额");
 
-                    console.log("ready to save transaction");
-                    transaction.save(null, {
-                        success: function (t) {
-                            console.log("t saved; finished now");
+    var transaction = new YD.Transaction();
+    var userPointer = new YD.User();
+    userPointer.id = userId;
+    transaction.set("status", 700);
+    transaction.set("user", userPointer);
+    transaction.set("amount", amount);
+    transaction.set("notes", "管理员增加金额");
+
+    console.log("ready to save transaction");
+    transaction.save(null, {
+        success: function (t) {
+            console.log("t saved; finished now");
+            var query = new AV.Query("_User");
+            query.get(userId, {
+                success: function (user) {
+                    console.log("got user, balanceInDollar: " + user.balanceInDollar);
+                    user.balanceInDollar = parseFloat(user.balanceInDollar) + amount;
+                    console.log("user now balance: " + user.balanceInDollar);
+                    user.save(null, {
+                        success: function (u) {
                             response.success();
                         },
-                        error: function (t, error) {
+                        error: function (u, error) {
                             response.error(error.message);
                         }
                     });
@@ -149,32 +160,131 @@ AV.Cloud.define("creditUser", function (request, response) {
                 }
             });
         },
-        error: function (u, error) {
+        error: function (t, error) {
             response.error(error.message);
         }
     });
+
 
 });
 
 AV.Cloud.define("debitUser", function (request, response) {
+    var user = request.user;
+    if (user == undefined) {
+        response.error("A logged in user is required before charging.");
+        return;
+    }
+    var role = parseInt(request.params.role);
+    if(role != 190 || role != 100 ) {
+        console.log("In Cloud Code -- not an admin: " + role + " | type: " + typeof(role))
+        response.error("权限不够！");
+    }
+    var amount = parseFloat(request.params.amount);
+    var userId = request.params.userId;
+    console.log("amount: " + amount + " | id: " + userId);
+    var transaction = new YD.Transaction();
+    var userPointer = new YD.User();
+    userPointer.id = userId;
+    transaction.set("status", 710);
+    transaction.set("user", userPointer);
+    transaction.set("amount", amount);
+    transaction.set("notes", "管理员扣金额");
+
+    console.log("ready to save transaction");
+    transaction.save(null, {
+        success: function (t) {
+            console.log("t saved; finished now");
+            var query = new AV.Query("_User");
+            query.get(userId, {
+                success: function (user) {
+                    console.log("got user, balanceInDollar: " + user.balanceInDollar);
+                    user.balanceInDollar = parseFloat(user.balanceInDollar) - amount;
+                    console.log("user now balance: " + user.balanceInDollar);
+                    user.save(null, {
+                        success: function (u) {
+                            response.success();
+
+                        },
+                        error: function (u, error) {
+                            response.error(error.message);
+                        }
+                    });
+                },
+                error: function (u, error) {
+                    response.error(error.message);
+                }
+            });
+        },
+        error: function (t, error) {
+            response.error(error.message);
+        }
+    });
+
+});
+
+
+AV.Cloud.define("creditYD", function (request, response) {
     var amount = parseFloat(request.params.amount);
     var userId = request.params.userId;
     console.log("amount: " + amount + " | id: " + userId);
     var query = new AV.Query("_User");
     query.get(userId, {
         success: function (user) {
-            console.log("got user, balanceInDollar: " + user.balanceInDollar);
-            user.balanceInDollar = parseFloat(user.balanceInDollar) - amount;
-            console.log("user now balance: " + user.balanceInDollar);
+            console.log("got user, accumulatedReward: " + user.accumulatedReward);
+            user.accumulatedReward = parseFloat(user.accumulatedReward) + amount;
+            console.log("user now balance: " + user.accumulatedReward);
             user.save(null, {
                 success: function (u) {
                     var transaction = new YD.Transaction();
                     var userPointer = new YD.User();
                     userPointer.id = userId;
-                    transaction.set("status", 710);
+                    transaction.set("status", 730);
                     transaction.set("user", userPointer);
                     transaction.set("amount", amount);
-                    transaction.set("notes", "管理员扣金额");
+                    transaction.set("notes", "管理员增加YD币");
+
+                    console.log("ready to save transaction");
+                    transaction.save(null, {
+                        success: function (t) {
+                            console.log("t saved; finished now");
+                            response.success();
+                        },
+                        error: function (t, error) {
+                            response.error(error.message);
+                        }
+                    });
+                },
+                error: function (u, error) {
+                    response.error(error.message);
+                }
+            });
+        },
+        error: function (u, error) {
+            response.error(error.message);
+        }
+    });
+
+});
+
+AV.Cloud.define("debitYD", function (request, response) {
+    var amount = parseFloat(request.params.amount);
+    var userId = request.params.userId;
+    console.log("amount: " + amount + " | id: " + userId);
+    var query = new AV.Query("_User");
+    query.get(userId, {
+        success: function (user) {
+            console.log("got user, accumulatedReward: " + user.accumulatedReward);
+            user.rewawrd = parseFloat(user.accumulatedReward) - amount;
+            console.log("user now balance: " + user.accumulatedReward);
+            user.save(null, {
+                success: function (u) {
+                    var transaction = new YD.Transaction();
+                    var userPointer = new YD.User();
+                    userPointer.id = userId;
+                    transaction.set("status", 740);
+                    transaction.set("user", userPointer);
+                    transaction.set("amount", amount);
+                    transaction.set("notes", "管理员减少YD币");
 
                     console.log("ready to save transaction");
                     transaction.save(null, {
@@ -198,8 +308,9 @@ AV.Cloud.define("debitUser", function (request, response) {
     });
 });
 
+
 AV.Cloud.define("increaseUserBalance", function (request, response) {
-    var role = request.params.role
+    //var role = request.params.role;
 
     //if(role !== 190 || role !== 100 ) {
     //    console.log("In Cloud Code -- not an admin: " + role + " | type: " + typeof(role))

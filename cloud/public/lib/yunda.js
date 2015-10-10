@@ -1991,7 +1991,8 @@
 
     YD.Transaction.STATUS_CREDIT_USER = 700;
     YD.Transaction.STATUS_DEBIT_USER = 710;
-
+    YD.Transaction.STATUS_CREDIT_YD = 730;
+    YD.Transaction.STATUS_DEBIT_YD = 740;
     YD.Transaction.STATUS_ZHIFUBAO_CONFIRMED = 190;
 
 

@@ -1483,14 +1483,17 @@
             <td>
                 {{t.YDNumber ? t.YDNumber : t.RKNumber ? '入库号:' + t.RKNumber : ''}}
             </td>
-            <td ng-bind="'$ ' + t.amount"></td>
+            <td>{{t.status == 730 || t.status == 740 ? '' : '$ ' + t.amount}}</td>
             <td ng-bind="t.notes"></td>
             <td>
-                <div ng-show="t.status == 600">
+                <div ng-show="t.status === 600">
                     <span ng-bind="'-' + t.amount*100"></span>
                 </div>
-                <div ng-show="t.status != 600">
+                <div ng-show="t.status === 330 || t.status === 360 || t.status === 730">
                     <span ng-bind="'+' + t.amount"></span>
+                </div>
+                <div ng-show="t.status === 740">
+                    <span ng-bind="'-' + t.amount"></span>
                 </div>
             </td>
             <td ng-bind="t.createdAtToString"></td>

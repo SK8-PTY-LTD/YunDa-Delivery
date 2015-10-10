@@ -38,6 +38,7 @@
                 <li ng-class="{'accordion-focused' : view_tab=='dc'}" ng-click="change_tab('dc')">消费记录</li>
                 <li ng-class="{'accordion-focused' : view_tab=='dd'}" ng-click="change_tab('dd')">YD币记录</li>
                 <li ng-class="{'accordion-focused' : view_tab=='de'}" ng-click="change_tab('de')">增/扣金额</li>
+                <li ng-class="{'accordion-focused' : view_tab=='dz'}" ng-click="change_tab('dz')">增/扣YD币</li>
                 <li ng-class="{'accordion-focused' : view_tab=='df'}" ng-click="change_tab('df')">未认领包裹</li>
             </ul>
         </accordion-group>
@@ -477,7 +478,7 @@
         <th>入库号</th>
         <th>创建时间</th>
         <th>重量</th>
-        <th>操作</th>
+        <!--<th>操作</th>-->
         </thead>
         <tr ng-repeat="f in freights | orderBy:'-createdAt'">
             <!--<td ng-bind="f.user.realName"></td>-->
@@ -486,9 +487,9 @@
             <td ng-bind="f.RKNumber"></td>
             <td ng-bind="f.createdAtToString"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
-            <td>
-                <button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>
-            </td>
+            <!--<td>-->
+                <!--<button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>-->
+            <!--</td>-->
         </tr>
     </table>
     <!--pagination-->
@@ -2052,14 +2053,17 @@
             <td>
                 {{t.YDNumber ? t.YDNumber : t.RKNumber ? '入库号:' + t.RKNumber : ''}}
             </td>
-            <td ng-bind="'$ ' + t.amount"></td>
+            <td>{{t.status == 730 || t.status == 740 ? '' : '$ ' + t.amount}}</td>
             <td ng-bind="t.notes"></td>
             <td>
                 <div ng-show="t.status === 600">
                     <span ng-bind="'-' + t.amount*100"></span>
                 </div>
-                <div ng-show="t.status !== 600">
+                <div ng-show="t.status === 330 || t.status === 360 || t.status === 730">
                     <span ng-bind="'+' + t.amount"></span>
+                </div>
+                <div ng-show="t.status === 740">
+                    <span ng-bind="'-' + t.amount"></span>
                 </div>
             </td>
             <td ng-bind="t.createdAtToString"></td>
@@ -2177,6 +2181,91 @@
 </div>
 
 
+<div ng-show="view_tab=='dz'" ng-controller="AdminCreditYDCtrl">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="input-group">
+                <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchForUser('number')">搜索</button>
+
+      </span>
+                    <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入数字ID" required>
+
+                </div><!-- /input-group -->
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="input-group">
+
+                    <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+<span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchForUser('string')">搜索</button>
+
+      </span>
+                </div><!-- /input-group -->
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-hover small-table">
+        <thead>
+        <th>登录邮箱</th>
+        <th>用户名</th>
+        <th>数字ID</th>
+        <!--<th>字母ID</th>-->
+        <th>上次操作时间</th>
+        <th>操作</th>
+        </thead>
+        <div>
+            <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
+                <td ng-bind="user.email"></td>
+                <td ng-bind="user.stringId"></td>
+
+                <td ng-bind="user.numberId"></td>
+                <td ng-bind="user.updatedAtToString"></td>
+                <td>
+                    <button class="btn btn-default btn-sm" ng-click="increaseBalance(user)">增加YD币</button>
+                    <button class="btn btn-default btn-sm" ng-click="decreaseBalance(user)">减少YD币</button>
+
+                </td>
+            </tr>
+        </div>
+    </table>
+
+
+    <!--pagination-->
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-9">
+                    <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
+                                class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;"></pagination>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END PAGINATION-->
+</div>
 
 <div ng-show="view_tab=='df'" ng-controller="AdminDeletePackageCtrl">
     <div class="row">
