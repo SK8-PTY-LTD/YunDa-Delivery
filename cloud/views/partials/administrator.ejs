@@ -478,18 +478,18 @@
         <th>入库号</th>
         <th>创建时间</th>
         <th>重量</th>
-        <!--<th>操作</th>-->
+        <th>操作</th>
         </thead>
         <tr ng-repeat="f in freights | orderBy:'-createdAt'">
             <!--<td ng-bind="f.user.realName"></td>-->
             <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.trackingNumber"></td>
-            <td ng-bind="f.RKNumber"></td>
+            <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.RKNumber"></span> </a></td>
             <td ng-bind="f.createdAtToString"></td>
             <td><span ng-bind="f.weight"></span>Lb</td>
-            <!--<td>-->
-                <!--<button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>-->
-            <!--</td>-->
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="deleteFreight(f)">删除运单</button>
+            </td>
         </tr>
     </table>
     <!--pagination-->
@@ -556,7 +556,7 @@
         <!--<th>重量</th>-->
         <th>操作</th>
         </thead>
-        <tr ng-repeat="f in freightIn | orderBy:'-createdAt'">
+        <tr ng-repeat="f in freightIn">
             <td><a ng-click="showDetails(f)"><span  ng-bind="f.RKNumber"></span></a></td>
             <td ng-bind="f.checkInfo.email"></td>
             <td>
@@ -1086,7 +1086,7 @@
         <th>YD单号</th>
 
         <th>发件人</th>
-        <th width="25%">地址</th>
+        <th width="30%">地址</th>
 
         <th>清关时间</th>
         <!--<th>重量</th>-->
@@ -1187,14 +1187,14 @@
             <td ng-bind="f.RKNumber"></td>
             <td ng-bind="f.createdAtToString"></td>
             <td ng-bind="f.confirmDateToString"></td>
+
             <td><span ng-bind="f.weight"></span>Lb</td>
             <td>
-                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
                 <div ng-if="f.status >= 300">
                     <button class="btn btn-sm btn-default" ng-disabled="true">用户已确认</button>
                 </div>
                 <div ng-if="f.status < 300">
-                    <button class="btn btn-sm btn-default" ng-click="deleteFreightIn(f)">删除运单</button>
+                    <button class="btn btn-sm btn-default" ng-disabled="true">原箱闪运</button>
                 </div>
             </td>
         </tr>
@@ -1380,7 +1380,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                 current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1393,7 +1393,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1439,7 +1439,7 @@
         <th width="6%">用户名</th>
         <th>退款单号</th>
         <th>申请时间</th>
-        <th width="40%">支付宝</th>
+        <th>支付宝</th>
         <th width="30%">申请金额</th>
         <th width="15%">手续费</th>
         <th>实退</th>
@@ -1511,7 +1511,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1524,7 +1524,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1577,7 +1577,7 @@
         <th width="10%">Label</th>
         <th>备注</th>
         <th>处理</th>
-        <th>凭证</th>
+        <th width="10%">凭证</th>
 
         </thead>
         <tr ng-repeat="f in goodsList | orderBy:'-createdAt'">
@@ -1619,7 +1619,7 @@
             </td>
             <td>
                 <div ng-if="f.status == 990">
-                    <a target="_blank" ng-href="{{f.adminEvidence._url}}">点此下载</a>
+                    <a target="_blank" ng-href="{{f.adminEvidence._url}}"><i class="fa fa-download fa-lg"></i></a>
                 </div>
             </td>
         </tr>
@@ -1762,7 +1762,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1775,7 +1775,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1870,7 +1870,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1883,7 +1883,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1932,13 +1932,10 @@
     </div>
     <br>
 
-
-
-
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <tr>
-            <th>用户名</th>
+            <th width="10%">用户名</th>
             <th width="20%">YD运单号</th>
             <th width="10%">消费金额</th>
             <th width="15%">消费类型</th>
@@ -1994,7 +1991,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -2007,7 +2004,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -2019,20 +2016,41 @@
             <button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>
         </div>
     </div>
+
     <br>
     <div class="row">
-    <div class="col-md-4">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
-        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
+        <button class="btn btn-default" type="button" ng-click="searching()">用户搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
+            </div><!-- /input-group -->
+        </div>
+        <div class="col-md-4">
+
+            <div class="input-group">
+
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入入库/YD运单号" required>
+   <span class="input-group-btn">
+
+        <button class="btn btn-default" type="button" ng-click="searchingRK()">搜索</button>
+
+      </span>
+            </div><!-- /input-group -->
+        </div>
+
+        <div class="col-md-4">
+            <select ng-model="queryType">
+                <option value="">---消费类型--</option> <!-- not selected / blank option -->
+                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option> <!-- interpolation -->
+            </select>
+            <button class="btn btn-default" type="button" ng-click="searchingType()">类型搜索</button>
+        </div>
     </div>
     <br>
 
@@ -2040,7 +2058,7 @@
         <thead>
         <tr>
             <th>用户名</th>
-            <th>YD单号</th>
+            <th width="20%">YD单号</th>
             <th>消费金额</th>
             <th>消费类型</th>
             <th>YD币(+/-)</th>

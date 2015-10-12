@@ -1038,7 +1038,7 @@
         </div>
     </div><!-- END PAGINATION-->
 </tab>
-<tab ng-controller="FreightDeliveryCtrl" ng-click="reloadFreight(0)">
+<tab ng-controller="FreightDeliveryCtrl">
     <!--this is the content for 已发货-->
     <tab-heading>
         <!--已发货<span class="badge" style="margin-left:5px;">{{badgeDCount}}</span>-->
@@ -1054,12 +1054,12 @@
             <th>中国快递单号</th>
         </tr>
         </thead>
-        <tr ng-repeat="freight in freights | orderBy: '-updatedAt'">
+        <tr ng-repeat="freight in freightList">
             <td><a ng-click="showOperationDetails(freight)"><span ng-bind="freight.YDNumber"></span></a></td>
             <td ng-bind="freight.RKNumber"></td>
             <td ng-bind="freight.shipping.delivery"></td>
             <td ng-bind="freight.statusToString"></td>
-            <td ng-bind="freight.chineseTrackingNumber"></td>
+            <td ng-bind="freight.chineseCourier + ': ' + freight.chineseTrackingNumber"></td>
         </tr>
     </table>
 
@@ -1264,7 +1264,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1276,7 +1276,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1302,7 +1302,7 @@
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.id"></td>
             <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
-            <td>{{t.status == 99 ? '支付宝(未充值)' : t.notes}}</td>
+            <td>{{t.status == 99 ? '支付宝充值' : t.notes}}</td>
             <td ng-bind="t.createdAtToString"></td>
             <td ng-bind="t.statusToString"></td>
             <!--<td>pending</td>-->
@@ -1342,7 +1342,7 @@
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1354,7 +1354,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"     date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1436,15 +1436,13 @@
             </div>
         </div>
     </form>
-    <div class="row">
-        <small>每消费1美元可获得1个YD币，每100个YD币可抵扣1美元，每次YD币累计达到500分时便可以行使兑换权利。兑换金额可作为运费使用，不可提现。</small>
-    </div>
+        <small>每消费1美元可获得1个YD币，每100个YD币可抵扣1美元，每次YD币累计达到500分时便可以行使兑换权利。兑换金额可作为运费使用，不可提现。</small><br>
     <div class="row">
         <div class="col-md-4">
             <h5>起始日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
                        current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1($event)"><i
@@ -1456,7 +1454,7 @@
             <h5>截止日期:</h5>
 
             <p class="input-group">
-                <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2"
+                <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
                        current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open2($event)"><i
@@ -1465,13 +1463,13 @@
             </p>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-info" ng-click="reloadSelectedTransaction()">查找</button>
+            <button class="btn btn-info" style="margin-top:30px" ng-click="reloadSelectedTransaction()">查找</button>
         </div>
     </div>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <tr>
-            <th>YD运单号</th>
+            <th width="25%">YD运单号</th>
             <th>消费金额</th>
             <th>消费类型</th>
             <th>YD币(+/-)</th>

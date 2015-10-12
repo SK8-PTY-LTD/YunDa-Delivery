@@ -2,7 +2,10 @@
 /*	     01 - General & Basic Styles
 /*------------------------------------------*/
 
+.btn-info {
+    background-color: #013086;
 
+}
 ul {
     list-style-type: none;
 }

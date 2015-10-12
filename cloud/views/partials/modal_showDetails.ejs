@@ -2,10 +2,10 @@
         <h3>用户详细信息: </h3>
     </div>
     <div class="modal-body">
-        <p>用户名:<span ng-bind="freight.user.username"></span></p>
+        <p>登录邮件: <span ng-bind="freight.user.username"></span></p>
+        <p>用户名:<span ng-bind="freight.user.stringId"></span></p>
+        <p>数字ID:<span ng-bind="freight.user.numberId"></span></p>
         <p>手机号: {{freight.user.mobile || freight.user.contactNumber}}</p>
-        <!--<p>邮件: <span ng-bind="freight.user.email"></span></p>-->
-        <p>用户备注: <span ng-bind="freight.comments"></span></p>
     </div>
 
    <div class="modal-footer">

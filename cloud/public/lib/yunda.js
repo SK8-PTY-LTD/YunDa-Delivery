@@ -1687,6 +1687,23 @@
             this.set("stringId", value);
         }
     });
+    Object.defineProperty(YD.User.prototype, "isLoggedIn", {
+        get: function () {
+            return this.get("isLoggedIn");
+        },
+        set: function (value) {
+            this.set("isLoggedIn", value);
+        }
+    });
+    Object.defineProperty(YD.User.prototype, "lastLoginDate", {
+        get: function () {
+            return this.get("lastLoginDate");
+        },
+        set: function (value) {
+            this.set("lastLoginDate", value);
+        }
+    });
+
 
 
 

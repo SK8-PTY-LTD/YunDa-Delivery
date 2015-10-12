@@ -31,10 +31,13 @@ exports.alipayReturn = function(req, res) {
   //var alipayId = req.params.trade_no;
   //var seller
   var isSuccess = req.query.is_success;
-  var userId = req.query.body;
-  var totalInDollar = (Math.floor(req.query.total_fee / 6.4 * 100))/100;
-  console.log(isSuccess + " | " + userId + " | " + totalInDollar);
-  debug('userId:', userId);
+  var body = req.query.body;
+  var userId = body.substring(0, 24);
+  console.log("body: " + body + " | " + body.length);
+  console.log("userId: " + userId);
+  var rate = parseFloat(body.substring(25, body.length));
+  var totalInDollar = Math.floor(parseFloat(req.query.total_fee) / rate * 100); //actually this is totalInCent because user.balance is amount in cent.
+  console.log(isSuccess + " | " + userId + " | " + totalInDollar + " | " + rate + typeof rate);
 
   if(isSuccess == "T") {
     var transId = req.query.out_trade_no;
@@ -47,20 +50,18 @@ exports.alipayReturn = function(req, res) {
     transaction.set('notes', "支付宝充值");
     transaction.save(null, {
       success: function(t) {
-        console.log("transaction saved");
+        console.log("SERVER: Recharge transaction saved, now update user balance");
         var User = AV.Object.extend("_User");
         var query = new AV.Query(User);
         //user.set("id", userId);
         query.get(userId, {
           success: function(fetchedUser) {
-            var userBl = parseInt(fetchedUser.get("balance"));
-            debug('userBl:', userBl);
-            console.log("user balance: " + userBl);
-
+            var userBl = parseFloat(fetchedUser.get("balance"));
+            console.log("user balance: " + userBl + " | totalInDolalr: " + totalInDollar);
             fetchedUser.set("balance", (userBl + totalInDollar));
             fetchedUser.save(null, {
               success: function(u) {
-                console.log("u saved: " + u.id + " | u.balance");
+                console.log("u saved: " + u.id + " | u.balance: " + u.balance);
                 res.render('partials/payReturn');
               }
             });

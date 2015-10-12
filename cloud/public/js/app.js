@@ -74,7 +74,7 @@ var YundaApp = angular.module('YundaApp', ['ngRoute',
     AV.initialize("umouw51mkumgpt72hhir61xemo3b7q2n5js0zce3b96by895", "svsw3nybfcax9ssw7czti2fk86ak9gp6ekrb00essagscyrg");
 });
 /* controllers.js */
-YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $modal) {
+YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $modal, $window) {
     $http({
         method: 'GET',
         url: '/api/name'
@@ -204,6 +204,45 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
         }
     };
     $scope.LIMIT_NUMBER = 10;
+
+    $rootScope.logOutAndRedirect = function () {
+        $rootScope.currentUser.isLoggedIn = false;
+        $rootScope.currentUser.save(null, {
+            success: function () {
+                YD.User.logOut();
+                // Do stuff after successful login.
+                $rootScope.currentUser = new YD.User();
+                $window.location.href = '/';
+                $scope.$apply();
+            },
+            error: function (u, error) {
+                console.log("User log out error: " + error.message);
+                $rootScope.currentUser = new YD.User();
+                $window.location.href = '/';
+            }
+        });
+    };
+
+    $rootScope.checkUserAfterLogIn = function() {
+        if($rootScope.currentUser.lastLoginDate != undefined) {
+            var lastLogin = $rootScope.currentUser.lastLoginDate;
+            var cur = new Date();
+            var timeDiff = Math.abs(cur.getTime() - lastLogin.getTime());
+            var diff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            if(diff > 7) {
+                $rootScope.logOut();
+            } else {
+                $rootScope.currentUser.lastLoginDate = cur;
+
+            }
+        } else {
+            $rootScope.currentUser.lastLoginDate = new Date();
+
+        }
+        $rootScope.currentUser.isLoggedIn = true;
+        $rootScope.currentUser.save();
+
+    }
 });
 YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window) {
     if (YD.User.current() != undefined) {
@@ -224,25 +263,29 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
         modalInstance.result.then(function (user) {
             if (user != undefined) {
                 $rootScope.currentUser = user;
+                if($rootScope.currentUser.isLoggedIn) {
+                    YD.User.logOut();
+                    $rootScope.currentUser = new YD.User();
+                    alert("此帐号已在其他地方登录");
+                    $window.location.href = '/';
+
+                }
+                $scope.checkUserAfterLogIn();
+
                 if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
                     $rootScope.isAdmin = false;
                 } else {
                     $rootScope.isAdmin = true;
                 }
-                var address = new YD.Address()
+                var address = new YD.Address();
                 address.id = $rootScope.currentUser.addressId;
                 address.fetch().then(function (address) {
                     $rootScope.currentUser.address = address;
-                })
+                });
             }
-        })
+        });
     }
-    $scope.logOut = function () {
-        YD.User.logOut()
-        // Do stuff after successful login.
-        $rootScope.currentUser = new YD.User();
-        $window.location.href = '/';
-    }
+
     $scope.isActive = function () {
         return true
         //if($scope.currentUser != undefined){
@@ -452,16 +495,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
             }
         });
     }
-    $scope.logOut = function () {
-        YD.User.logOut()
-        $rootScope.currentUser = new YD.User()
-        if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
-            $rootScope.isAdmin = false
-        } else {
-            $rootScope.isAdmin = true
-        }
-        $window.location.href = '/'
-    }
+
     $scope.updatePassword = function () {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_password',
@@ -513,7 +547,17 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
         $scope.promote = "Logging in";
         YD.User.logIn($scope.currentUser.username, $scope.currentUser.password, {
             success: function (user) {
-                $rootScope.currentUser = user
+                $rootScope.currentUser = user;
+
+                if($rootScope.currentUser.isLoggedIn) {
+                    YD.User.logOut();
+                    $rootScope.currentUser = new YD.User();
+                    alert("此帐号已在其他地方登录");
+                    $window.location.href = '/';
+
+                }
+                $scope.checkUserAfterLogIn();
+
                 if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
                     $rootScope.isAdmin = false
                 } else {
@@ -523,7 +567,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                 address.id = $rootScope.currentUser.addressId
                 address.fetch().then(function (address) {
                     $rootScope.currentUser.address = address
-                })
+                });
                 $scope.$apply();
             },
             error: function (user, error) {
@@ -689,6 +733,9 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return true;
                 }
             },
             windowClass: 'center-modal'
@@ -1202,6 +1249,9 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                     street2: add.street2 || "",
                     suburb: add.suburb || ""
                 }
+                var freightInPt = new YD.FreightIn();
+                freightInPt.id = fIn.id;
+                $scope.freight.freightIn = freightInPt;
                 $scope.freight.status = YD.Freight.STATUS_SPEED_MANUAL;
                 $scope.freight.isSpeedManual = true;
                 $scope.freight.trackingNumber = $scope.freightIn.trackingNumber;
@@ -1295,13 +1345,13 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
                         } else if ($scope.returnList[i].status == YD.FreightReturn.STATUS_REFUSED) {
                             $scope.returnList[i].statusToString = "昀達拒绝退货";
                         }
-                        var tmp = $scope.returnList[i].createdAtToString;
+                        var tmp = $scope.returnList[i].createdAt;
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
                             tmp_date += "0" + tmp.getMinutes()
                         else
                             tmp_date += tmp.getMinutes();
-                        $scope.returnList[i].createdAtToString = tmp_date
+                        $scope.returnList[i].createdAtToString = tmp_date;
                         if ($scope.returnList[i].adminEvidence != undefined)
                             $scope.returnList[i].adminEvidence = $scope.returnList[i].adminEvidence.url();
                     }
@@ -1784,8 +1834,7 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal, $wind
         });
         modalInstance.result.then(function () {
             alert("请前往邮箱验证账号");
-            YD.User.logOut();
-            // Do stuff after successful login.
+            $scope.logOut();            // Do stuff after successful login.
             $rootScope.currentUser = new YD.User();
             $window.location.href = '/';
         })
@@ -3589,20 +3638,22 @@ YundaApp.controller('LeaveFreightCommentsCtrl', function ($scope, $modalInstance
     }
 })
 YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter, $modal) {
-    $scope.reloadFreight = function (index) {
+    $scope.reloadAllFreight = function (index) {
         if ($scope.currentUser.id != undefined) {
             var query = new AV.Query(YD.Freight);
             query.equalTo("user", $scope.currentUser);
             query.include("shipping");
             query.include("user");
             query.containedIn("status", [YD.Freight.STATUS_PENDING_DELIVERY, YD.Freight.STATUS_DELIVERING, YD.Freight.STATUS_PASSING_CUSTOM, YD.Freight.STATUS_FINAL_DELIVERY, YD.Freight.STATUS_DELIVERED])
-            query.limit($scope.LIMIT_NUMBER);
-            query.skip($scope.LIMIT_NUMBER * index);
-            query.descending("createdAt");
             query.find({
                 success: function (results) {
                     $scope.freights = $filter('packageSearchFilter')(results, $scope.query.number);
-                    var statusToString = ""
+                    for (var i = 0; i < $scope.freights.length; i++) {
+                        $scope.freights[i].delivery = new Date($scope.freights[i].shipping.delivery);
+                    }
+                    $scope.freights = $filter('orderBy')($scope.freights, '-delivery');
+                    $scope.freightCount = $scope.badge.D = results.length;
+                    var statusToString = "";
                     for (var i = 0; i < $scope.freights.length; i++) {
                         if ($scope.freights[i].status == YD.Freight.STATUS_PENDING_DELIVERY)
                             statusToString = "待处理";
@@ -3613,7 +3664,7 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
                         else if ($scope.freights[i].status == YD.Freight.STATUS_FINAL_DELIVERY)
                             statusToString = "已出关";
                         $scope.freights[i].statusToString = statusToString;
-                        var tmp = $scope.freights[i].createdAt
+                        var tmp = $scope.freights[i].createdAt;
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
                             tmp_date += "0" + tmp.getMinutes();
@@ -3622,11 +3673,30 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
                         _
                         $scope.freights[i].createdAtToString = tmp_date;
                     }
+                    $scope.reloadFreight(index);
+
                 },
                 error: function (error) {
                     alert("ERROR: Getting Freight delivery: " + error.id + " " + error.message)
                 }
             })
+        }
+    };
+    //$scope.reloadAllFreight();
+    $scope.reloadFreight = function (index) {
+        console.log("indeX: " + index);
+        var amount = index * $scope.LIMIT_NUMBER;
+        console.log("indeX * $scope.LIMIT_NUMBERL " + amount);
+        console.log(" | length: " + $scope.freights.length)
+
+        $scope.freightList = [];
+        console.log("freightList is empty now");
+        for (var i = amount; i < $scope.LIMIT_NUMBER*(index+1); i++) {
+            console.log(":index: " + i);
+            if($scope.freights[i] != undefined) {
+                $scope.freightList.push($scope.freights[i]);
+                console.log("$scope:" + i + ": " + $scope.freights[i].id);
+            }
         }
     };
     $scope.reloadFreightCount = function () {
@@ -3644,15 +3714,16 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
         $scope.currentPage = $scope.inputPage;
         $scope.reloadFreight($scope.currentPage - 1);
     }
-    $scope.reloadFreightCount();
-    $scope.reloadFreight(0);
-    $scope.$watch("query.isSearch", function (newVal) {
-        $scope.reloadFreight(0);
-    });
+    //$scope.reloadFreightCount();
+    //$scope.reloadFreight(0);
+    //$scope.$watch("query.isSearch", function (newVal) {
+    //    $scope.reloadFreight(0);
+    //});
     $scope.$on('userbb', function (event, args) {
         $scope.query.number = undefined;
-        $scope.reloadFreightCount();
-        $scope.reloadFreight(0);
+        $scope.reloadAllFreight(0);
+
+        //$scope.reloadFreightCount();
     });
     $scope.showOperationDetails = function (f) {
         var modalInstance = $modal.open({
@@ -3663,6 +3734,9 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return true;
                 }
             },
             windowClass: 'center-modal'
@@ -4085,7 +4159,6 @@ YundaApp.controller('RechargeCtrl', function ($scope, $rootScope, $modal) {
 })
 
 YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $location) {
-    $scope.FIXED_RATE = 6.4;
     $scope.rechargeAmount = 0
     $scope.rechargeAmountDollar = 0
     $scope.record = ''
@@ -4121,6 +4194,11 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
 
         }
     }, true);
+    $scope.$watch('systemSetting', function (newVal) {
+        if (newVal != undefined) {
+            $scope.FIXED_RATE = $scope.systemSetting.rate;
+        }
+    });
     $scope.submitAlipay = function () {
         if ($scope.rechargeAmountDollar != NaN || $scope.rechargeAmountDollar == "") {
             // call alipay web api
@@ -4140,7 +4218,8 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
                     $http.post('/pay', {
                         total_fee: $scope.rechargeAmount,
                         tranId: t.id,
-                        userId: $scope.currentUser.id
+                        userId: $scope.currentUser.id,
+                        rate: $scope.FIXED_RATE
                     }).success(function (data, status, headers, config) {
                         // this callback will be called asynchronously
                         // when the response is available
@@ -4189,14 +4268,14 @@ YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
                 var date = new Date()
                 var hour = date.getHours()
                 var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(0)
-                $scope.dt1.setMinutes(1)
-                $scope.dt2.setHours(23)
-                $scope.dt2.setMinutes(59)
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
+                var d1 = new Date($scope.dt1);
+                var d2 = new Date($scope.dt2);
+                d1.setHours(0);
+                d1.setMinutes(1);
+                d2.setHours(23);
+                d2.setMinutes(59);
+                query.greaterThanOrEqualTo("createdAt", d1);
+                query.lessThanOrEqualTo("createdAt", d2);
             }
             query.find({
                 success: function (tList) {
@@ -4241,14 +4320,14 @@ YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.count({
             success: function (count) {
@@ -4300,26 +4379,34 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
             if ($scope.searchDate) {
                 var date = new Date()
                 var hour = date.getHours()
-                var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(0)
-                $scope.dt1.setMinutes(1)
-                $scope.dt2.setHours(23)
-                $scope.dt2.setMinutes(59)
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
+                var minute = date.getMinutes();
+                var d1 = new Date($scope.dt1);
+                var d2 = new Date($scope.dt2);
+                d1.setHours(0);
+                d1.setMinutes(1);
+                d2.setHours(23);
+                d2.setMinutes(59);
+                query.greaterThanOrEqualTo("createdAt", d1);
+                query.lessThanOrEqualTo("createdAt", d2);
+                //$scope.dt1 = new Date($scope.dt1)
+                //$scope.dt2 = new Date($scope.dt2)
+                //$scope.dt1.setHours(0)
+                //$scope.dt1.setMinutes(1)
+                //$scope.dt2.setHours(23)
+                //$scope.dt2.setMinutes(59)
+                //query.greaterThanOrEqualTo("createdAt", $scope.dt1)
+                //query.lessThanOrEqualTo("createdAt", $scope.dt2)
             }
             query.find({
                 success: function (tList) {
                     $scope.transactionList = tList
                     for (var i = 0; i < tList.length; i++) {
                         if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO) {
-                            $scope.transactionList[i].statusToString = '支付宝充值'
+                            $scope.transactionList[i].statusToString = '充值成功';
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_STRIPE) {
-                            $scope.transactionList[i].statusToString = '信用卡充值'
+                            $scope.transactionList[i].statusToString = '信用卡充值';
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_ZHIFUBAO_PENDING) {
-                            $scope.transactionList[i].statusToString = '支付宝充值(未充值)'
+                            $scope.transactionList[i].statusToString = '未充值'
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CREDIT_USER) {
                             $scope.transactionList[i].statusToString = '系统赠款'
                         } else if ($scope.transactionList[i].status == YD.Transaction.STATUS_CLAIM_REWARD) {
@@ -4349,14 +4436,14 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.count({
             success: function (count) {
@@ -4441,6 +4528,19 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
         query.limit($scope.LIMIT_NUMBER);
         query.skip($scope.LIMIT_NUMBER * index);
         query.descending("createdAt");
+        if ($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
+        }
         query.find({
             success: function (list) {
                 $scope.transactions = list;
@@ -4471,6 +4571,19 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
         var query = new AV.Query(YD.Transaction);
         query.equalTo("user", $scope.currentUser);
         query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
+        if ($scope.searchDate) {
+            var date = new Date()
+            var hour = date.getHours()
+            var minute = date.getMinutes()
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
+        }
         query.count({
             success: function (count) {
                 $scope.tCount = count;
@@ -4483,6 +4596,8 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     }
     $scope.reloadRewardCount();
     $scope.$on('usercd', function () {
+        $scope.searchDate = false;
+        $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     });
     $scope.open1 = function ($event) {
@@ -4498,43 +4613,16 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     $scope.reloadSelectedTransaction = function () {
         if ($scope.currentUser.id != undefined) {
             if ($scope.dt1 != undefined && $scope.dt2 != undefined) {
-                var date = new Date()
-                var hour = date.getHours()
-                var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(0)
-                $scope.dt1.setMinutes(1)
-                $scope.dt2.setHours(23)
-                $scope.dt2.setMinutes(59)
-                var query = new AV.Query(YD.Transaction)
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
-                query.equalTo("user", $scope.currentUser)
-                query.equalTo("status", YD.Transaction.STATUS_CLAIM_REWARD);
-                query.find({
-                    success: function (tList) {
-                        $scope.transactions = tList
-                        for (var i = 0; i < tList.length; i++) {
-                            var tmp = $scope.transactions[i].createdAt
-                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                            if (tmp.getMinutes() < 10)
-                                tmp_date += "0" + tmp.getMinutes()
-                            else
-                                tmp_date += tmp.getMinutes();
-                            _
-                            $scope.transactions[i].createdAtToString = tmp_date
-                        }
-                        $scope.$apply()
-                    },
-                    error: function (tList, err) {
-                    }
-                })
+                $scope.searchName = false;
+                $scope.searchDate = true;
+                $scope.reloadRewardCount();
+                $scope.reloadRewardRecord(0);
             } else {
                 alert("请先选择日期")
             }
         }
     }
+
 }]);
 YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
     $scope.oneAtATime = true
@@ -4612,7 +4700,7 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $m
         query.include("user");
         query.limit($scope.LIMIT_NUMBER);
         query.skip($scope.LIMIT_NUMBER * index);
-        query.descending("createdAt");
+        query.descending("checkDate");
         if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);
@@ -4633,15 +4721,14 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $m
                             tmp_date += "0" + tmp.getMinutes()
                         else
                             tmp_date += tmp.getMinutes();
-                        if( $scope.freightIn[i].checkDate) {
+                        if( $scope.freightIn[i].checkDate != undefined) {
                         var tmp = $scope.freightIn[i].checkDate;
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
                             tmp_date += "0" + tmp.getMinutes()
                         else
                             tmp_date += tmp.getMinutes();
-                        __
-                        $scope.freightIn[i].checkDateToString = tmp_date;
+                            $scope.freightIn[i].checkDateToString = tmp_date;
                         }
                     }
                 })
@@ -5285,7 +5372,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
     }
     $scope.reloadFreightIn = function (index) {
         var query = new AV.Query(YD.FreightIn);
-        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED]);
+        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL]);
         query.equalTo("isHidden", false);
         query.notEqualTo("isSplit", true);
         query.notEqualTo("isSplitPremium", true);
@@ -5313,8 +5400,12 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                 $scope.freightIn = list;
                 $scope.$apply(function () {
                     for (var i = 0; i < $scope.freightIn.length; i++) {
-                        $scope.freightIn[i].selection = false
-                        var tmp = $scope.freightIn[i].createdAt;
+                        $scope.freightIn[i].selection = false;
+                        if($scope.freightIn[i].status  == 110) {
+                            var tmp = new Date(); //@todo add proper date
+                        } else {
+                            var tmp = $scope.freightIn[i].createdAt;
+                        }
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
                             tmp_date += "0" + tmp.getMinutes();
@@ -5322,15 +5413,26 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                             tmp_date += tmp.getMinutes();
                         _
                         $scope.freightIn[i].createdAtToString = tmp_date;
-                        if($scope.freightIn[i].confirmDate) {
-                            var tmp = $scope.freightIn[i].confirmDate;
+                        if($scope.freightIn[i].status  == 110) {
+                            var tmp = $scope.freightIn[i].createdAt;
                             var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                             if (tmp.getMinutes() < 10)
                                 tmp_date += "0" + tmp.getMinutes();
                             else
                                 tmp_date += tmp.getMinutes();
                             $scope.freightIn[i].confirmDateToString = tmp_date;
+                        } else {
+                            if($scope.freightIn[i].confirmDate) {
+                                var tmp = $scope.freightIn[i].confirmDate;
+                                var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                                if (tmp.getMinutes() < 10)
+                                    tmp_date += "0" + tmp.getMinutes();
+                                else
+                                    tmp_date += tmp.getMinutes();
+                                $scope.freightIn[i].confirmDateToString = tmp_date;
+                            }
                         }
+
                     }
                 });
             }
@@ -5340,7 +5442,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
     $scope.reloadFreightCount = function () {
         var isSkipK = false;
         var query = new AV.Query(YD.FreightIn);
-        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED]);
+        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL]);
         query.equalTo("isHidden", false);
         query.notEqualTo("isSplit", true);
         query.notEqualTo("isSplitPremium", true);
@@ -5367,12 +5469,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                 console.log("List length: " + list.length);
                 $scope.freightCount = list.length;
                 //$scope.adminBadge.B += list.length;
-                for (var i = 0; i < list.length; i++) {
-                    console.log("i: " + i + " | status: " + list[i].status + " | createdAt: " + list[i].createdAt);
-                    //if (list[i].status < 200 || list[i].status >= 300) {
-                    //    $scope.adminBadge.B--;
-                    //}
-                }
+
                 if (list.length >= 1000) {
                     isSkipK = true;
                     $scope.reloadFreightCount();
@@ -5495,6 +5592,9 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return false;
                 }
             },
             windowClass: 'center-modal'
@@ -6016,6 +6116,37 @@ YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $m
 }])
 YundaApp.controller('AdminSpeedManualCtrl', ["$scope", "$modal", function ($scope, $modal) {
     angular.extend($scope, {
+        showOperationDetails: function (f) {
+            var queryNumber = f.RKNumber;
+            var query = new AV.Query(YD.Freight);
+            query.equalTo("RKNumber", queryNumber);
+            query.find({
+                success: function (list) {
+                    if (list.length > 0) {
+                        var f = list[0];
+                        var modalInstance = $modal.open({
+                            templateUrl: 'partials/modal_freightFullDetail',
+                            controller: 'FreightFullDetailCtrl',
+                            scope: $scope,
+                            size: 'lg',
+                            resolve: {
+                                freight: function () {
+                                    return f;
+                                },
+                                isFromCustomer: function() {
+                                    return false;
+                                }
+                            },
+                            windowClass: 'center-modal'
+                        });
+                    } else {
+                        alert("找不到运单详情");
+                        return;
+                    }
+                }
+            });
+
+        },
         reloadSpeedFreight: function (index) {
             var query = new AV.Query(YD.FreightIn);
             query.equalTo("status", YD.FreightIn.STATUS_SPEED_MANUAL);
@@ -6165,6 +6296,9 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return false;
                 }
             },
             windowClass: 'center-modal'
@@ -6349,6 +6483,9 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return false;
                 }
             },
             windowClass: 'center-modal'
@@ -6544,6 +6681,9 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
             resolve: {
                 freight: function () {
                     return f;
+                },
+                isFromCustomer: function() {
+                    return false;
                 }
             },
             windowClass: 'center-modal'
@@ -6811,14 +6951,14 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
                 var date = new Date()
                 var hour = date.getHours()
                 var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(0);
-                $scope.dt1.setMinutes(1);
-                $scope.dt2.setHours(23);
-                $scope.dt2.setMinutes(59);
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1);
-                query.lessThanOrEqualTo("createdAt", $scope.dt2);
+                var d1 = new Date($scope.dt1);
+                var d2 = new Date($scope.dt2);
+                d1.setHours(0);
+                d1.setMinutes(1);
+                d2.setHours(23);
+                d2.setMinutes(59);
+                query.greaterThanOrEqualTo("createdAt", d1);
+                query.lessThanOrEqualTo("createdAt", d2);
             }
             query.find({
                 success: function (tList) {
@@ -6857,14 +6997,14 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.count({
             success: function (count) {
@@ -6885,6 +7025,7 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
     }
     ;
     $scope.$on('admindb', function () {
+        $scope.searchType = false;
         $scope.searchName = false;
         $scope.queryString = '';
         $scope.searchDate = false;
@@ -7446,14 +7587,14 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
                 var date = new Date()
                 var hour = date.getHours()
                 var minute = date.getMinutes()
-                $scope.dt1 = new Date($scope.dt1)
-                $scope.dt2 = new Date($scope.dt2)
-                $scope.dt1.setHours(0)
-                $scope.dt1.setMinutes(1)
-                $scope.dt2.setHours(23)
-                $scope.dt2.setMinutes(59)
-                query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-                query.lessThanOrEqualTo("createdAt", $scope.dt2)
+                var d1 = new Date($scope.dt1);
+                var d2 = new Date($scope.dt2);
+                d1.setHours(0);
+                d1.setMinutes(1);
+                d2.setHours(23);
+                d2.setMinutes(59);
+                query.greaterThanOrEqualTo("createdAt", d1);
+                query.lessThanOrEqualTo("createdAt", d2);
             }
             query.find({
                 success: function (tList) {
@@ -7515,14 +7656,14 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.count({
             success: function (count) {
@@ -7605,10 +7746,35 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
     }
 }]);
 YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
+    $scope.transactionType = [{
+        index: 0,
+        value: 'YD币兑换',
+        status: YD.Transaction.STATUS_CLAIM_REWARD
+    }, {
+        index: 1,
+        value: '消费YD币',
+        status: YD.Transaction.STATUS_CONSUME_YD_REWARD
+    }, {
+        index: 2,
+        value: 'YD币赠送',
+        status: YD.Transaction.STATUS_GET_YD_REWARD
+    }, {
+        index: 3,
+        value: '管理员增加',
+        status: YD.Transaction.STATUS_CREDIT_YD
+    }, {
+        index: 4,
+        value: '管理员减少',
+        status: YD.Transaction.STATUS_DEBIT_YD
+    }];
     $scope.reloadRewardRecord = function (index) {
         var query = new AV.Query(YD.Transaction);
         query.include("user");
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
+        if ($scope.searchType) {
+            query.equalTo("status", parseInt($scope.queryType));
+        } else {
+            query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
+        }
         query.limit($scope.LIMIT_NUMBER);
         query.skip($scope.LIMIT_NUMBER * index);
         query.descending("createdAt");
@@ -7621,14 +7787,22 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
+        }
+        if ($scope.searchRK) {
+            if($scope.queryNumber.startsWith('RK')) {
+                query.equalTo("RKNumber", $scope.queryNumber);
+
+            } else {
+                query.equalTo("YDNumber", $scope.queryNumber);
+            }
         }
         query.find({
             success: function (list) {
@@ -7658,8 +7832,12 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     };
     $scope.reloadRewardCount = function () {
         var query = new AV.Query(YD.Transaction);
-        query.include("user");
-        query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
+        if ($scope.searchType) {
+            query.equalTo("status", parseInt($scope.queryType));
+        } else {
+            query.containedIn("status", [YD.Transaction.STATUS_CLAIM_REWARD, YD.Transaction.STATUS_CONSUME_YD_REWARD, YD.Transaction.STATUS_GET_YD_REWARD, YD.Transaction.STATUS_CREDIT_YD, YD.Transaction.STATUS_DEBIT_YD]);
+        }
+
         if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
             innerQuery.equalTo("stringId", $scope.queryString);
@@ -7669,14 +7847,22 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
+        }
+        if ($scope.searchRK) {
+            if($scope.queryNumber.startsWith('RK')) {
+                query.equalTo("RKNumber", $scope.queryNumber);
+
+            } else {
+                query.equalTo("YDNumber", $scope.queryNumber);
+            }
         }
         query.count({
             success: function (count) {
@@ -7699,7 +7885,11 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
     $scope.$on('admindd', function () {
         $scope.searchName = false;
         $scope.queryString = '';
+        $scope.searchRK = false;
+        $scope.queryNumber = '';
         $scope.searchDate = false;
+        $scope.searchType = false;
+        $scope.queryType = undefined;
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     });
@@ -7708,8 +7898,10 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             alert("您没有权限");
             return;
         }
+        $scope.searchRK = false;
         $scope.searchName = true;
         $scope.searchDate = false;
+        $scope.searchType = false;
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     }
@@ -7718,8 +7910,10 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             alert("您没有权限");
             return;
         }
+        $scope.searchRK = false;
         $scope.searchName = false;
         $scope.searchDate = true;
+        $scope.searchType = false;
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     }
@@ -7744,6 +7938,18 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
                 alert("请先选择日期")
             }
         }
+    };
+    $scope.searchingType = function () {
+        if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_CONSUME) {
+            alert("您没有权限");
+            return;
+        }
+        $scope.searchRK = false;
+        $scope.searchName = false;
+        $scope.searchDate = false;
+        $scope.searchType = true;
+        $scope.reloadRewardCount();
+        $scope.reloadRewardRecord(0);
     }
 }])
 YundaApp.controller('AdminFinalDeliveryCtrl', function ($scope, $modal) {
@@ -7923,13 +8129,18 @@ YundaApp.controller('AdminManageFreightCtrl', ["$scope", "$modal", function ($sc
             resolve: {
                 freight: function () {
                     return freight;
+                },
+                isFromCustomer: function() {
+                    return false;
                 }
             },
             windowClass: 'center-modal'
         });
     }
 }]);
-YundaApp.controller("FreightFullDetailCtrl", ["$scope", "$modalInstance", "freight", function ($scope, $modalInstance, freight) {
+YundaApp.controller("FreightFullDetailCtrl", ["$scope", "$modalInstance", "freight", "isFromCustomer",function ($scope, $modalInstance, freight, isFromCustomer) {
+    $scope.isFromCustomer = isFromCustomer;
+    console.log(" sFromCustomer: " + $scope.isFromCustomer + " | " + isFromCustomer);
     $scope.freight = freight;
     $scope.isLoading = true;
     $scope.promote = "请等待...";
@@ -8092,7 +8303,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
             return
         } else {
             if (newVal === "" || newVal === undefined)
-                $scope.reloadUser()
+                $scope.reloadUser();
         }
     })
     $scope.$watch("queryNumber", function (newVal) {
@@ -8100,9 +8311,9 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
             return
         } else {
             if (newVal === "" || newVal === undefined)
-                $scope.reloadUser()
+                $scope.reloadUser();
         }
-    })
+    });
     $scope.showDetails = function (user) {
         $scope.isLoadingTrue = true;
         $scope.promote = "正在读取";
@@ -8110,17 +8321,26 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
         $scope.newAddress = null;
         var query = new AV.Query(YD.Address);
         var id = user.addressId;
-        query.get(id, {
-            success: function (a) {
-                $scope.$apply(function () {
-                    $scope.isLoadingTrue = false;
-                    $scope.promote = "";
-                    $scope.newAddress = a;
-                });
-            }
-        });
+        if(id != undefined) {
+            query.get(id, {
+                success: function (a) {
+                    $scope.$apply(function () {
+                        $scope.isLoadingTrue = false;
+                        $scope.promote = "";
+                        $scope.newAddress = a;
+                    });
+                },
+                error: function (a, error) {
+                    alert("找不到地址");
+                }
+            });
+        } else {
+            alert("找不到地址");
+                $scope.isLoadingTrue = false;
+                $scope.promote = "";
+        }
     }
-})
+});
 YundaApp.controller('AddInfoCtrl', function ($scope, $modalInstance, freight) {
     $scope.freight = freight
     $scope.chineseCourier;
@@ -8177,14 +8397,14 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.find({
             success: function (list) {
@@ -8221,14 +8441,14 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.find({
             success: function (list) {
@@ -8505,14 +8725,14 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.find({
             success: function (list) {
@@ -8559,14 +8779,14 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
             var date = new Date()
             var hour = date.getHours()
             var minute = date.getMinutes()
-            $scope.dt1 = new Date($scope.dt1)
-            $scope.dt2 = new Date($scope.dt2)
-            $scope.dt1.setHours(0)
-            $scope.dt1.setMinutes(1)
-            $scope.dt2.setHours(23)
-            $scope.dt2.setMinutes(59)
-            query.greaterThanOrEqualTo("createdAt", $scope.dt1)
-            query.lessThanOrEqualTo("createdAt", $scope.dt2)
+            var d1 = new Date($scope.dt1);
+            var d2 = new Date($scope.dt2);
+            d1.setHours(0);
+            d1.setMinutes(1);
+            d2.setHours(23);
+            d2.setMinutes(59);
+            query.greaterThanOrEqualTo("createdAt", d1);
+            query.lessThanOrEqualTo("createdAt", d2);
         }
         query.find({
             success: function (list) {
