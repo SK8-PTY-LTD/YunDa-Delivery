@@ -326,8 +326,7 @@ AV.Cloud.define("increaseUserBalance", function (request, response) {
             var transaction = t;
             amountInDollar = transaction.get("amount");
             user = transaction.get("user");
-            console.log("transaction status: " + t.get("status"));
-            console.log("transaction amount: " + t.get("amount"));
+            console.log("transaction status: " + t.get("status") + ", amount: " + t.get("amount"));
 
 
             if (transaction.get("status") != 700) {
@@ -922,7 +921,7 @@ AV.Cloud.afterUpdate('_User', function (request) {
  */
 AV.Cloud.beforeSave('_User', function (request, response) {
     var user = request.object;
-    console.log("In AfterUpdate -- username: " + user.id)
+    console.log("In beforeSave -- username: " + user.id)
 
     var charMatrix = {
         0: "J",
