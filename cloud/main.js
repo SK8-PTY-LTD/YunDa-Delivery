@@ -3,6 +3,7 @@ var YD = require('cloud/yunda');
 
 var STRIPE_SEC_KEY = 'sk_test_BQokikJOvBiI2HlWgH4olfQ2';
 var stripe = require('stripe')(STRIPE_SEC_KEY);
+var MINKA = '55b1cac1e4b02004c78dc1b1';
 
 var Mailgun = require('mailgun-js');
 var MAINGUN_KEY = "key-1abb9ac6b44ecb7982ddf76079fd38fc";
@@ -435,6 +436,9 @@ AV.Cloud.define("chargingUser", function (request, response) {
                     usedRewardBalance = 0;
                     //tnsSaveStatus = 1;
                 }
+                if(id == MINKA) {
+                    ydReward = 0;
+                }
                 user.set("balance", balance * 100);
                 user.set("rewardBalance", rewardBalance * 100);
                 console.log("user's total balance: " + rewardBalance);
@@ -546,10 +550,15 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
                 console.log("user's total balance: " + balance);
                 var yd = user.get("accumulatedReward");
                 var finalReward = parseFloat((yd + amount).toFixed(2));
-                user.set("accumulatedReward", finalReward);
+                if(id == MINKA) {
+                    //no rewards
+                } else {
+                    user.set("accumulatedReward", finalReward);
+                }
                 user.save(null, {
                     success: function (u) {
                         console.log("user saved");
+
                         var userPT = new User();
                         userPT.id = u.id;
                         var transaction = new Transaction();
@@ -563,33 +572,39 @@ AV.Cloud.define("chargingUserWithoutReward", function (request, response) {
                             transaction.set("YDNumber", YDNumber);
                         }
                         transaction.set("status", status);
-                        console.log("transaction set finished, ready to save");
                         transaction.save(null, {
                             // save this transaction
                             success: function (t) {
-                                var tns = new Transaction();
-                                tns.set("amount", amount);
-                                tns.set("notes", "YD币赠送 " + amount +  " 个: " + notes);
-                                tns.set("RKNumber", RKNumber);
-                                tns.set("user", userPT);
-                                if (!YDNumber) {
-
+                                if(id == MINKA) {
+                                    //no rewards transaction
+                                    console.log("User is Minka, no rewards transaction");
+                                    response.success();
                                 } else {
-                                    tns.set("YDNumber", YDNumber);
-                                }
-                                tns.set("status", 360); //STATUS  GET YD REWARD = 360
+                                    var tns = new Transaction();
+                                    tns.set("amount", amount);
+                                    tns.set("notes", "YD币赠送 " + amount +  " 个: " + notes);
+                                    tns.set("RKNumber", RKNumber);
+                                    tns.set("user", userPT);
+                                    if (!YDNumber) {
 
-                                tns.save(null, {
-                                    //save YD Reward transaction
-                                    success: function (newT) {
-                                        console.log("YD transaction saved");
-                                        response.success();
-                                    },
-                                    error: function (t, error) {
-                                        console.log("YD Transaction saved ERROR: " + error.message);
-                                        response.error(error.message);
+                                    } else {
+                                        tns.set("YDNumber", YDNumber);
                                     }
-                                });
+                                    tns.set("status", 360); //STATUS  GET YD REWARD = 360
+
+                                    tns.save(null, {
+                                        //save YD Reward transaction
+                                        success: function (newT) {
+                                            console.log("YD transaction saved");
+                                            response.success();
+                                        },
+                                        error: function (t, error) {
+                                            console.log("YD Transaction saved ERROR: " + error.message);
+                                            response.error(error.message);
+                                        }
+                                    });
+                                }
+
                             },
                             error: function (t, error) {
                                 console.log("transaction saved ERRORL: " + error.message);
