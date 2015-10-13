@@ -393,7 +393,7 @@ AV.Cloud.define("chargingUser", function (request, response) {
             console.log("admin role SDK: " + admin.role);
             console.log("admin role: " + admin.get("role"));
             if(admin.get("role") !== 190) {
-                request.error("ERROR: 没有权限操作");
+                response.error("ERROR: 没有权限操作");
                 return;
             }
             var rewardBalance = parseInt(user.get("rewardBalance")) / 100;
@@ -489,6 +489,8 @@ AV.Cloud.define("chargingUser", function (request, response) {
                                             response.error(error.message);
                                         }
                                     });
+                                } else {
+                                	response.success();
                                 }
                             },
                             error: function (t, error) {
