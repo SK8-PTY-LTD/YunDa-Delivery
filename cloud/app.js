@@ -30,7 +30,7 @@ app.use(morgan('dev'));
 app.use(bodyParser());
 app.use(methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.errorHandler());
+//app.use(express.errorHandler());
 
 
 /**

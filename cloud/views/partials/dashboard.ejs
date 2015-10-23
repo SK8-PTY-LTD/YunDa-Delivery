@@ -71,7 +71,8 @@
             <accordion-heading id="info">
                 会员信息
             </accordion-heading>
-            <p>登陆邮箱: <span ng-bind="currentUser.email"></span></p>
+            <p>登陆邮箱: <span ng-bind="currentUser.email"></span><span>({{currentUser.emailVerified ? '已验证邮箱' : '验证邮箱'}})</span></p>
+
             <p><a ng-click="updateLogin()">修改登录邮箱</a></p>
 
             <p><a ng-click="updatePassword()">修改密码</a></p>
@@ -432,7 +433,7 @@
         <div class="row">
             <div class="col-md-5">
                 <label>选择渠道: </label>
-                <select ng-model="channelSelection" ng-options="channel.name for channel in systemSetting.channelList">
+                <select ng-model="channelSelection" ng-options="channel.name for channel in systemSetting.pricing">
                 </select>
             </div>
             <div class="col-md-5">
@@ -750,7 +751,7 @@
                         <div class="col-md-5">
                             <label>选择渠道: </label>
                             <select ng-model="freightIn.channelSelection"
-                                    ng-options="channel.name for channel in systemSetting.channelList">
+                                    ng-options="channel.name for channel in systemSetting.pricing">
                             </select>
                         </div>
                         <div class="col-md-5">
@@ -1182,7 +1183,7 @@
             <p>
                 请将需要充值的金额打到”yunda“支付宝账号,支付宝即时到帐服务已开通, 只支持“即时到帐交易”充值, 不支持“担保交易”充值。<br>
                 <strong class="text-danger">必读！重要提示：<br><br>
-                充值后，务必请保持停留在该页面不要离开，直至系统自动跳转回Yunda主页面。<br><br></strong>
+                充值完成后，<span style="font-size:1.4em; text-decoration: underline">务必请保持停留在该页面不要离开(不要手动关闭页面)</span>，直至系统自动跳转回Yunda主页面。<br><br></strong>
                 过早关闭页面会导致信息传递被阻断，从而导致明明充值成功，但账户内却未到账的情况发生，所以当您在充值后请耐心等待几秒钟。谢谢支持！<br>
 
             </p>

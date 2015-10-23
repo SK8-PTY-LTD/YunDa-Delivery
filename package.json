@@ -1,18 +1,19 @@
 {
-    "name": "projectName",
-    "description": "projectDescription",
-    "version": "0.0.0",
-    "private": true,
-    "dependencies": {
-        "body-parser": "^1.0.2",
-        "error-handler": "^0.1.4",
-        "jade": "~0.31.2",
-        "debug": "^2.1.1",
-        "request": "^2.58.0",
-        "mailgun-js": "0.7.1",
-        "method-override": "^1.0.0",
-        "morgan": "^1.0.0",
-        "ng-route-it": "0.3.2",
-        "leanengine": "^0.1.4"
-    }
+  "name": "projectName",
+  "description": "projectDescription",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.0.2",
+    "debug": "^2.1.1",
+    "error-handler": "^0.1.4",
+    "express": "^4.13.3",
+    "jade": "~0.31.2",
+    "leanengine": "^0.1.4",
+    "mailgun-js": "0.7.1",
+    "method-override": "^1.0.0",
+    "morgan": "^1.0.0",
+    "ng-route-it": "0.3.2",
+    "request": "^2.58.0"
+  }
 }

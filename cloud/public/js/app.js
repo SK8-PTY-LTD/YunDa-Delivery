@@ -251,6 +251,8 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
     } else {
         $rootScope.currentUser = new YD.User();
     }
+    //$rootScope.currentUser = new YD.User();
+
     $scope.open = function () {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_login',
@@ -380,7 +382,7 @@ YundaApp.controller('LoginCtrl', function ($scope, $rootScope, $modalInstance, $
         $scope.promote = "Requesting password";
         YD.User.requestPasswordReset($scope.currentUser.username, {
             success: function () {
-                alert("密码重设成功，请查收email")
+                alert("请前往您的电子邮箱重置密码");
                 $scope.dismissViewController();
             },
             error: function (error) {
@@ -1834,7 +1836,7 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal, $wind
         });
         modalInstance.result.then(function () {
             alert("请前往邮箱验证账号");
-            $scope.logOut();            // Do stuff after successful login.
+            YD.User.logOut();            // Do stuff after successful login.
             $rootScope.currentUser = new YD.User();
             $window.location.href = '/';
         })
@@ -1843,14 +1845,29 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal, $wind
     $scope.searchPackage = function () {
         $scope.query.isSearch = !$scope.query.isSearch;
     }
+
     $scope.updatePassword = function () {
-        var modalInstance = $modal.open({
-            templateUrl: 'partials/modal_password',
-            controller: 'UpdatePasswordCtrl',
-            scope: $scope,
-            size: 'sm',
-            windowClass: 'center-modal'
-        })
+        var r = confirm('是否确认修改密码？');
+        if(!r) {
+
+        } else {
+            YD.User.requestPasswordReset($scope.currentUser.username, {
+                success: function () {
+                    alert("请前往您的电子邮箱重置密码");
+                    YD.User.logOut();
+                    $rootScope.currentUser = new YD.User;
+                    $window.location.href = '/';
+
+                },
+                error: function (error) {
+                    $scope.$apply(function () {
+                        $scope.isLoading = false;
+                        alert("请先提供电子邮箱地址");
+                    });
+                }
+            });
+        }
+
     }
     /* getting recipient */
     $scope.reloadAddress = function (index) {
@@ -5494,7 +5511,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
 
     }
     ;
-    $scope.$on('adminba', function () {
+    $scope.$on('adminbw', function () {
         $scope.searchName = false;
         $scope.queryString = '';
         $scope.searchTN = false;
