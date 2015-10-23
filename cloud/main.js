@@ -385,11 +385,11 @@ AV.Cloud.define("chargingUser", function(request, response) {
     var usedRewardBalance = 0;
 
     console.log("request.user is", admin);
-    console.log("admin role: " + admin.get("role"));
-    if (admin.get("role") !== 190) {
-        response.error("ERROR: 没有权限操作");
-        return;
-    }
+    // console.log("admin role: " + admin.get("role"));
+    // if (admin.get("role") !== 190) {
+    //     response.error("ERROR: 没有权限操作");
+    //     return;
+    // }
 
     var ydReward = 0;
     console.log("getting user now: " + id + " | " + amount);
@@ -531,11 +531,11 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
     var admin = request.user;
 
     console.log("getting user now: " + id + " | " + amount);
-    console.log("admin role: " + admin.get("role"));
-    if (admin.get("role") !== 190) {
-        response.error("ERROR: 没有权限操作");
-        return;
-    }
+    // console.log("admin role: " + admin.get("role"));
+    // if (admin.get("role") !== 190) {
+    //     response.error("ERROR: 没有权限操作");
+    //     return;
+    // }
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function(user) {
@@ -636,11 +636,11 @@ AV.Cloud.define("chargingUserReturn", function(request, response) {
     //query.equalTo("objectId", id);
     var admin = request.user;
 
-    console.log("admin role: " + admin.get("role"));
-    if (admin.get("role") !== 190) {
-        response.error("ERROR: 没有权限操作");
-        return;
-    }
+    // console.log("admin role: " + admin.get("role"));
+    // if (admin.get("role") !== 190) {
+    //     response.error("ERROR: 没有权限操作");
+    //     return;
+    // }
 
     query.get(id, {
         success: function(user) {
@@ -681,11 +681,11 @@ AV.Cloud.define("chargingUserReturnBalance", function(request, response) {
     var admin = request.user;
 
     //query.equalTo("objectId", id);
-    console.log("admin role: " + admin.get("role"));
-    if (admin.get("role") !== 190) {
-        response.error("ERROR: 没有权限操作");
-        return;
-    }
+    // console.log("admin role: " + admin.get("role"));
+    // if (admin.get("role") !== 190) {
+    //     response.error("ERROR: 没有权限操作");
+    //     return;
+    // }
     query.get(id, {
         success: function(user) {
             var balance = parseInt(user.get("pendingBalance")) / 100;
@@ -725,11 +725,11 @@ AV.Cloud.define("refuseUserReturnBalance", function(request, response) {
     var admin = request.user;
 
     //query.equalTo("objectId", id);
-    console.log("admin role: " + admin.get("role"));
-    if (admin.get("role") !== 190) {
-        response.error("ERROR: 没有权限操作");
-        return;
-    }
+    // console.log("admin role: " + admin.get("role"));
+    // if (admin.get("role") !== 190) {
+    //     response.error("ERROR: 没有权限操作");
+    //     return;
+    // }
     query.get(id, {
         success: function(user) {
             var balance = parseInt(user.get("pendingBalance")) / 100;
