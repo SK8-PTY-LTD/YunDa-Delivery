@@ -111,8 +111,10 @@
                 <span ng-bind="freight.address.recipient"></span>
             </div>
             <div class="col-md-5">
-                <label>联系方式: </label>
-                <span>{{freight.address.contactNumber || freight.address.mobileNumber}}</span>
+                <label>座机号码: </label>
+                <span>{{freight.address.contactNumber}}</span>
+                <label>手机号码: </label>
+                <span>{{freight.address.mobileNumber}}</span>
             </div>
         </div>
         <div class="row">
