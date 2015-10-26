@@ -11,24 +11,36 @@
 
         <accordion-group heading="物流管理" is-open="openTab.setF">
             <ul>
-                <li ng-class="{'accordion-focused' : view_tab=='by'}" ng-click="change_tab('by')">自助入库<span class="badge pull-right">{{adminBadge.Y}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='bx'}" ng-click="change_tab('bx')">原箱闪运<span class="badge pull-right">{{adminBadge.X}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='bz'}" ng-click="change_tab('bz')">验货<span class="badge pull-right">{{adminBadge.A}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">已入库<span class="badge pull-right">{{adminBadge.B}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">待处理运单<span class="badge pull-right">{{adminBadge.C}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='by'}" ng-click="change_tab('by')">自助入库<span
+                            class="badge pull-right">{{adminBadge.Y}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bx'}" ng-click="change_tab('bx')">原箱闪运<span
+                            class="badge pull-right">{{adminBadge.X}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bz'}" ng-click="change_tab('bz')">验货<span
+                            class="badge pull-right">{{adminBadge.A}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='ba'}" ng-click="change_tab('ba')">已入库<span
+                            class="badge pull-right">{{adminBadge.B}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bb'}" ng-click="change_tab('bb')">待处理运单<span
+                            class="badge pull-right">{{adminBadge.C}}</span></li>
                 <!--<li ng-class="{'accordion-focused' : view_tab=='bc'}" ng-click="change_tab('bc')">等待付款<span class="badge pull-right">{{adminBadge.D}}</span></li>-->
-                <li ng-class="{'accordion-focused' : view_tab=='bd'}" ng-click="change_tab('bd')">发货<span class="badge pull-right">{{adminBadge.E}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='be'}" ng-click="change_tab('be')">确认清关<span class="badge pull-right">{{adminBadge.F}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='bf'}" ng-click="change_tab('bf')">国内接收<span class="badge pull-right">{{adminBadge.G}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='bw'}" ng-click="change_tab('bw')">已入库存根<span class="badge pull-right"></span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bd'}" ng-click="change_tab('bd')">发货<span
+                            class="badge pull-right">{{adminBadge.E}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='be'}" ng-click="change_tab('be')">确认清关<span
+                            class="badge pull-right">{{adminBadge.F}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bf'}" ng-click="change_tab('bf')">国内接收<span
+                            class="badge pull-right">{{adminBadge.G}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='bw'}" ng-click="change_tab('bw')">已入库存根<span
+                            class="badge pull-right"></span></li>
             </ul>
         </accordion-group>
         <accordion-group heading="用户管理" is-open="openTab.setG">
             <ul>
                 <li ng-class="{'accordion-focused' : view_tab=='ca'}" ng-click="change_tab('ca')">用户信息</li>
-                <li ng-class="{'accordion-focused' : view_tab=='cb'}" ng-click="change_tab('cb')">退款处理<span class="badge pull-right">{{adminBadge.J}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='cc'}" ng-click="change_tab('cc')">退货处理<span class="badge pull-right">{{adminBadge.K}}</span></li>
-                <li ng-class="{'accordion-focused' : view_tab=='cd'}" ng-click="change_tab('cd')">包裹管理<span class="badge pull-right"></span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='cb'}" ng-click="change_tab('cb')">退款处理<span
+                            class="badge pull-right">{{adminBadge.J}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='cc'}" ng-click="change_tab('cc')">退货处理<span
+                            class="badge pull-right">{{adminBadge.K}}</span></li>
+                <li ng-class="{'accordion-focused' : view_tab=='cd'}" ng-click="change_tab('cd')">包裹管理<span
+                            class="badge pull-right"></span></li>
             </ul>
         </accordion-group>
         <accordion-group heading="用户财务管理" is-open="openTab.setH">
@@ -50,289 +62,292 @@
 
 <div class="col-sm-9">
 <div ng-show="view_tab=='aa'" ng-controller="AdminSystemCtrl">
-    <form>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-4">
-                    <label for="checking"> 开启小包裹渠道选择： <input class="form-control" type="checkbox" id="checking" ng-model="systemSetting.isSmallPackageAllowed"></label>
-
-                </div>
-            </div>
-            <hr>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>加固价格($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="systemSetting.addPackageCharge">
-                </div>
-                <div class="col-lg-6">
-                    <label>分箱价格($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="systemSetting.splitPackageCharge">
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>验货价格($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="systemSetting.checkPackageCharge">
-                </div>
-                <div class="col-lg-6">
-                    <label>退货价格($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="systemSetting.returnGoodsCharge">
-                </div>
-            </div><hr>
-        </div>
-        <div class="form-group" ng-repeat="channel in systemSetting.pricing track by channel.name">
-            <div class="row bottom-buffer-2">
-                <!--<div class="row">-->
-                    <!--<strong ng-bind="channel.name"></strong>-->
-                <!--</div>-->
-                <div class="col-md-4">
-                    <label>渠道名称: </label>
-                    <input class="form-control" type="text" ng-model="channel.name">
-                    <!--<span ng-bind="channel.name"></span>-->
-                </div>
-                <div class="col-lg-2">
-                    <label>首磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.initAt">
-                    <!--<span ng-bind="channel.initialPrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>首磅价(¥)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.rmbInitAt">
-                    <!--<span ng-bind="channel.initialPrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>续磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.contAt">
-                    <!--<span ng-bind="channel.continuePrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>续磅价(¥)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.rmbContAt">
-                    <!--<span ng-bind="channel.continuePrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>起运磅数: </label>
-                    <input class="form-control" type="number" step="any" ng-model="channel.startAt">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-2">
-                    <label>起点: </label>
-                    <input class="form-control" type="text" step="any" ng-model="channel.start">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-2">
-                    <label>终点: </label>
-                    <input class="form-control" type="text" step="any" ng-model="channel.end">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-1">
-                    <button class="btn btn-default btn-sm top-buffer-2" ng-click="deleteChannel(channel)">删除</button>
-                </div>
-                <div class="col-lg-1">
-                    <button class="btn btn-default btn-sm top-buffer-2" ng-click="confirm()">保存</button>
-                </div>
-
-            </div>
-            <hr>
+<form>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-4">
+            <label for="checking"> 开启小包裹渠道选择： <input class="form-control" type="checkbox" id="checking"
+                                                     ng-model="systemSetting.isSmallPackageAllowed"></label>
 
         </div>
-        <div class="form-group" style="border: 1px dashed #ddd; background-color: #eee">
-
-            <div class="row">
-                <div class="col-md-4">
-                    <label>新渠道名称: </label>
-                    <input class="form-control" type="text" ng-model="newChannel.name" placeholder="新渠道名称">
-                </div>
-                <div class="col-lg-2">
-                    <label>首磅价($): </label>
-                    <input class="form-control" type="number" step="any" ng-model="newChannel.initAt">
-                </div>
-                <div class="col-lg-2">
-                    <label>首磅价(¥)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="newChannel.rmbInitAt">
-                    <!--<span ng-bind="channel.initialPrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>续磅价($)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="newChannel.contAt">
-                    <!--<span ng-bind="channel.continuePrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>续磅价(¥)：</label>
-                    <input class="form-control" type="number" step="any" ng-model="newChannel.rmbContAt">
-                    <!--<span ng-bind="channel.continuePrice"></span>-->
-
-                </div>
-                <div class="col-lg-2">
-                    <label>起运磅数: </label>
-                    <input class="form-control" type="number" step="any" ng-model="newChannel.startAt">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-2">
-                    <label>起点: </label>
-                    <input class="form-control" type="text" step="any" ng-model="newChannel.start">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-2">
-                    <label>终点: </label>
-                    <input class="form-control" type="text" step="any" ng-model="newChannel.end">
-                    <!--<span ng-bind="channel.startAt"></span>-->
-                </div>
-                <div class="col-lg-2 top-buffer-2">
-                    <button class="btn btn-default btn-sm" ng-click="addNewChannel()">添加新渠道</button>
-                </div>
-            </div>
-
+    </div>
+    <hr>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-6">
+            <label>加固价格($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="systemSetting.addPackageCharge">
         </div>
-        <!--<div class="form-group">-->
-            <!--<div class="row">-->
-                <!--<div class="col-lg-6">-->
-                    <!--<label>普通渠道首磅价($)：</label>-->
-                    <!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageInitial">-->
-                <!--</div>-->
-
-                <!--<div class="col-lg-6">-->
-                    <!--<label>普通渠道续磅价($)：</label>-->
-                    <!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageContinue">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<hr>-->
+        <div class="col-lg-6">
+            <label>分箱价格($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="systemSetting.splitPackageCharge">
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-6">
+            <label>验货价格($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="systemSetting.checkPackageCharge">
+        </div>
+        <div class="col-lg-6">
+            <label>退货价格($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="systemSetting.returnGoodsCharge">
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="form-group" ng-repeat="channel in systemSetting.pricing track by channel.name">
+    <div class="row bottom-buffer-2">
+        <!--<div class="row">-->
+        <!--<strong ng-bind="channel.name"></strong>-->
         <!--</div>-->
+        <div class="col-md-4">
+            <label>渠道名称: </label>
+            <input class="form-control" type="text" ng-model="channel.name">
+            <!--<span ng-bind="channel.name"></span>-->
+        </div>
+        <div class="col-lg-2">
+            <label>首磅价($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="channel.initAt">
+            <!--<span ng-bind="channel.initialPrice"></span>-->
 
+        </div>
+        <div class="col-lg-2">
+            <label>首磅价(¥)：</label>
+            <input class="form-control" type="number" step="any" ng-model="channel.rmbInitAt">
+            <!--<span ng-bind="channel.initialPrice"></span>-->
 
-        <div class="form-group">
-            <hr>
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>美元对人民币汇率：</label>
-                    <input class="form-control" type="number" step="any" ng-model="systemSetting.rate">
-                </div>
+        </div>
+        <div class="col-lg-2">
+            <label>续磅价($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="channel.contAt">
+            <!--<span ng-bind="channel.continuePrice"></span>-->
 
-            </div>
-            <hr>
         </div>
-        <div class="form-group">
-            <h4>仓库地址:</h4>
+        <div class="col-lg-2">
+            <label>续磅价(¥)：</label>
+            <input class="form-control" type="number" step="any" ng-model="channel.rmbContAt">
+            <!--<span ng-bind="channel.continuePrice"></span>-->
+
         </div>
-        <div ng-repeat="address in systemSetting.addressList track by address.name">
-       <div class="form-group">
-           <div class="row">
-               [{{$index+1}}]
-           </div>
-           <div class="row">
-               <div class="col-lg-6">
-                   <label>仓库名</label>
-                   <input type="text" class="form-control" ng-model="address.name">
-               </div>
-               <div class="col-lg-6">
-                   <label>电话</label>
-                   <input type="text" class="form-control" ng-model="address.contact" >
-               </div>
-           </div>
-       </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>地址</label>
-                    <input type="text" class="form-control" ng-model="address.street" >
-                </div>
-                <div class="col-lg-6">
-                    <label>城市</label>
-                    <input type="text" class="form-control" ng-model="address.city" >
-                </div>
-            </div>
+        <div class="col-lg-2">
+            <label>起运磅数: </label>
+            <input class="form-control" type="number" step="any" ng-model="channel.startAt">
+            <!--<span ng-bind="channel.startAt"></span>-->
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>州/省</label>
-                    <input type="text" class="form-control" ng-model="address.state" >
-                </div>
-                <div class="col-lg-6">
-                    <label>邮编</label>
-                    <input type="text" class="form-control" ng-model="address.zipCode" >
-                </div>
-            </div>
+        <div class="col-lg-2">
+            <label>起点: </label>
+            <input class="form-control" type="text" step="any" ng-model="channel.start">
+            <!--<span ng-bind="channel.startAt"></span>-->
         </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-1">
-                        <!--<button class="btn btn-default" ng-click="saveAddress(address)">保存修改</button>-->
-                        <button class="btn btn-default" ng-click="deleteAddress(address)">删除</button>
-                    </div>
-                    <div class="col-lg-1">
-                        <button class="btn btn-default" ng-click="confirm()">保存</button>
-                    </div>
-                </div>
-            </div>
-            <br>
+        <div class="col-lg-2">
+            <label>终点: </label>
+            <input class="form-control" type="text" step="any" ng-model="channel.end">
+            <!--<span ng-bind="channel.startAt"></span>-->
         </div>
-        <div  style="border: 1px dashed #ddd; background-color: #eee">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>仓库名</label>
-                    <input type="text" class="form-control" ng-model="newAddress.name">
-                </div>
-                <div class="col-lg-6">
-                    <label>电话</label>
-                    <input type="text" class="form-control" ng-model="newAddress.contact" >
-                </div>
-            </div>
+        <div class="col-lg-1">
+            <button class="btn btn-default btn-sm top-buffer-2" ng-click="deleteChannel(channel)">删除</button>
         </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>地址</label>
-                    <input type="text" class="form-control" ng-model="newAddress.street">
-                </div>
-                <div class="col-lg-6">
-                    <label>城市</label>
-                    <input type="text" class="form-control" ng-model="newAddress.city">
-                </div>
-            </div>
-        </div>
-        <div class=form-group>
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>州/省</label>
-                    <input type="text" class="form-control" ng-model="newAddress.state">
-                </div>
-                <div class="col-lg-6">
-                    <label>邮编</label>
-                    <input type="text" class="form-control" ng-model="newAddress.zipCode">
-                </div>
-            </div>
-        </div>
-        <button class="btn btn-default" ng-click="addNewAddress()">添加</button>
-        </div>
-        <hr>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-6">
-                    <label>联系电话</label>
-                    <input type="text" class="form-control" ng-model="systemSetting.contactNumber">
-                </div>
-                <div class="col-lg-6">
-                    <label>邮箱</label>
-                    <input type="text" class="form-control" ng-model="systemSetting.contactEmail">
-                </div>
-            </div>
+        <div class="col-lg-1">
+            <button class="btn btn-default btn-sm top-buffer-2" ng-click="confirm()">保存</button>
         </div>
 
-    </form>
+    </div>
+    <hr>
+
+</div>
+<div class="form-group" style="border: 1px dashed #ddd; background-color: #eee">
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>新渠道名称: </label>
+            <input class="form-control" type="text" ng-model="newChannel.name" placeholder="新渠道名称">
+        </div>
+        <div class="col-lg-2">
+            <label>首磅价($): </label>
+            <input class="form-control" type="number" step="any" ng-model="newChannel.initAt">
+        </div>
+        <div class="col-lg-2">
+            <label>首磅价(¥)：</label>
+            <input class="form-control" type="number" step="any" ng-model="newChannel.rmbInitAt">
+            <!--<span ng-bind="channel.initialPrice"></span>-->
+
+        </div>
+        <div class="col-lg-2">
+            <label>续磅价($)：</label>
+            <input class="form-control" type="number" step="any" ng-model="newChannel.contAt">
+            <!--<span ng-bind="channel.continuePrice"></span>-->
+
+        </div>
+        <div class="col-lg-2">
+            <label>续磅价(¥)：</label>
+            <input class="form-control" type="number" step="any" ng-model="newChannel.rmbContAt">
+            <!--<span ng-bind="channel.continuePrice"></span>-->
+
+        </div>
+        <div class="col-lg-2">
+            <label>起运磅数: </label>
+            <input class="form-control" type="number" step="any" ng-model="newChannel.startAt">
+            <!--<span ng-bind="channel.startAt"></span>-->
+        </div>
+        <div class="col-lg-2">
+            <label>起点: </label>
+            <input class="form-control" type="text" step="any" ng-model="newChannel.start">
+            <!--<span ng-bind="channel.startAt"></span>-->
+        </div>
+        <div class="col-lg-2">
+            <label>终点: </label>
+            <input class="form-control" type="text" step="any" ng-model="newChannel.end">
+            <!--<span ng-bind="channel.startAt"></span>-->
+        </div>
+        <div class="col-lg-2 top-buffer-2">
+            <button class="btn btn-default btn-sm" ng-click="addNewChannel()">添加新渠道</button>
+        </div>
+    </div>
+
+</div>
+<!--<div class="form-group">-->
+<!--<div class="row">-->
+<!--<div class="col-lg-6">-->
+<!--<label>普通渠道首磅价($)：</label>-->
+<!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageInitial">-->
+<!--</div>-->
+
+<!--<div class="col-lg-6">-->
+<!--<label>普通渠道续磅价($)：</label>-->
+<!--<input class="form-control" type="number" step="any" ng-model="systemSetting.normalPackageContinue">-->
+<!--</div>-->
+<!--</div>-->
+<!--<hr>-->
+<!--</div>-->
+
+
+<div class="form-group">
+    <hr>
+    <div class="row">
+        <div class="col-lg-6">
+            <label>美元对人民币汇率：</label>
+            <input class="form-control" type="number" step="any" ng-model="systemSetting.rate">
+        </div>
+
+    </div>
+    <hr>
+</div>
+<div class="form-group">
+    <h4>仓库地址:</h4>
+</div>
+<div ng-repeat="address in systemSetting.addressList track by address.name">
+    <div class="form-group">
+        <div class="row">
+            [{{$index+1}}]
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <label>仓库名</label>
+                <input type="text" class="form-control" ng-model="address.name">
+            </div>
+            <div class="col-lg-6">
+                <label>电话</label>
+                <input type="text" class="form-control" ng-model="address.contact">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-6">
+                <label>地址</label>
+                <input type="text" class="form-control" ng-model="address.street">
+            </div>
+            <div class="col-lg-6">
+                <label>城市</label>
+                <input type="text" class="form-control" ng-model="address.city">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-6">
+                <label>州/省</label>
+                <input type="text" class="form-control" ng-model="address.state">
+            </div>
+            <div class="col-lg-6">
+                <label>邮编</label>
+                <input type="text" class="form-control" ng-model="address.zipCode">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-1">
+                <!--<button class="btn btn-default" ng-click="saveAddress(address)">保存修改</button>-->
+                <button class="btn btn-default" ng-click="deleteAddress(address)">删除</button>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-default" ng-click="confirm()">保存</button>
+            </div>
+        </div>
+    </div>
     <br>
-    <br>
+</div>
+<div style="border: 1px dashed #ddd; background-color: #eee">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-6">
+                <label>仓库名</label>
+                <input type="text" class="form-control" ng-model="newAddress.name">
+            </div>
+            <div class="col-lg-6">
+                <label>电话</label>
+                <input type="text" class="form-control" ng-model="newAddress.contact">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-6">
+                <label>地址</label>
+                <input type="text" class="form-control" ng-model="newAddress.street">
+            </div>
+            <div class="col-lg-6">
+                <label>城市</label>
+                <input type="text" class="form-control" ng-model="newAddress.city">
+            </div>
+        </div>
+    </div>
+    <div class=form-group>
+        <div class="row">
+            <div class="col-lg-6">
+                <label>州/省</label>
+                <input type="text" class="form-control" ng-model="newAddress.state">
+            </div>
+            <div class="col-lg-6">
+                <label>邮编</label>
+                <input type="text" class="form-control" ng-model="newAddress.zipCode">
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-default" ng-click="addNewAddress()">添加</button>
+</div>
+<hr>
+<div class="form-group">
+    <div class="row">
+        <div class="col-lg-6">
+            <label>联系电话</label>
+            <input type="text" class="form-control" ng-model="systemSetting.contactNumber">
+        </div>
+        <div class="col-lg-6">
+            <label>邮箱</label>
+            <input type="text" class="form-control" ng-model="systemSetting.contactEmail">
+        </div>
+    </div>
+</div>
+
+</form>
+<br>
+<br>
+
 <div class="form-group">
     <div class="row">
         <div class="col-md-12">
@@ -343,26 +358,32 @@
 </div>
 
 
-
 </div>
 <div ng-show="view_tab=='ab'" ng-controller="AdminNewsCtrl">
     <table class="table table-bordered small-table">
         <thead>
-            <th>标题</th>
-            <th>链接</th>
-            <th colspan="2">操作</th>
+        <th>标题</th>
+        <th>链接</th>
+        <th colspan="2">操作</th>
         </thead>
         <tr ng-repeat="news in newsList | orderBy: -createdAt">
             <td ng-bind="news.title"></td>
             <td><a target="_blank"><span ng-bind="news.link"></span></a></td>
-            <td><button class="btn btn-sm btn-default" ng-click="editNews(news)">编辑</button></td>
-            <td><button class="btn btn-sm btn-default" ng-click="confirmDeleteNews(news)">删除</button></td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="editNews(news)">编辑</button>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="confirmDeleteNews(news)">删除</button>
+            </td>
 
         </tr>
         <tr>
-            <td><input type="text" class="form-control" ng-model="newNews.title" placeholder="新的新闻标题"> </td>
-            <td><input type="text" value="http://" class="form-control" ng-model="newNews.link" placeholder="新的新闻链接"></td>
-            <td colspan="2"><button class="btn btn-default btn-sm" ng-click="addNews()">添加</button></td>
+            <td><input type="text" class="form-control" ng-model="newNews.title" placeholder="新的新闻标题"></td>
+            <td><input type="text" value="http://" class="form-control" ng-model="newNews.link" placeholder="新的新闻链接">
+            </td>
+            <td colspan="2">
+                <button class="btn btn-default btn-sm" ng-click="addNews()">添加</button>
+            </td>
         </tr>
     </table>
     <small>备注：请输入完整的新闻链接(如http://xxxx.com)</small>
@@ -382,7 +403,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -394,7 +416,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
@@ -422,14 +445,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadManual(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadManual(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -437,7 +461,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 
@@ -453,7 +478,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -465,7 +491,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
@@ -497,14 +524,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadSpeedFreight(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadSpeedFreight(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -512,11 +540,13 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='bz'" ng-controller="AdminFreightInArriveCtrl">
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                ng-bind="promote"></span></progressbar>
     <div class="row">
         <div class="col-md-4">
 
@@ -528,7 +558,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -540,11 +571,12 @@
         <button class="btn btn-default" type="button" ng-click="searchingRK()">入库号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
-        </div>
+    </div>
     <table class="table table-hover" style="font-size: 0.9em">
 
         <thead>
@@ -557,7 +589,7 @@
         <th>操作</th>
         </thead>
         <tr ng-repeat="f in freightIn">
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.RKNumber"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.RKNumber"></span></a></td>
             <td ng-bind="f.checkInfo.email"></td>
             <td>
                 <div ng-show="f.checkInfo.isTakingPhoto">
@@ -578,9 +610,13 @@
                 </div>
                 <div ng-if="f.status == 210">
                     <!--验货-->
-                    <button class="btn btn-sm btn-default" ng-click="chargingCheck(f)" ng-disabled="f.isCheckingCharged">收钱</button>
+                    <button class="btn btn-sm btn-default" ng-click="chargingCheck(f)"
+                            ng-disabled="f.isCheckingCharged">收钱
+                    </button>
 
-                    <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)" ng-disabled="!f.isChecking || !f.isCheckingCharged">确认验货</button>
+                    <button class="btn btn-sm btn-default" ng-click="freightInAddInfo(f)"
+                            ng-disabled="!f.isChecking || !f.isCheckingCharged">确认验货
+                    </button>
                 </div>
                 <div ng-if="f.status != 100 && f.status != 210 && f.status != 990">
                     <!--<button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>-->
@@ -595,14 +631,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightIn(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadFreightIn(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -610,7 +647,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 
@@ -627,7 +665,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -639,38 +678,39 @@
         <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
     </div>
-            <table class="table table-hover" style="font-size: 0.9em">
-                <thead>
-                <th>用户名</th>
-                <th>转运号</th>
-                <th>入库号</th>
-                <th>入库时间</th>
-                <th>重量</th>
-                <th>通知</th>
-                </thead>
-                <tr ng-repeat="f in freightIn | orderBy: 'status'">
-                    <!--<td ng-bind="f.user.realName"></td>-->
-                    <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
-                    <td ng-bind="f.trackingNumber"></td>
-                    <td ng-bind="f.RKNumber"></td>
-                    <td ng-bind="f.createdAtToString"></td>
-                    <td><span ng-bind="f.weight"></span>Lb</td>
-                    <td>
-                        <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
-                        <div ng-if="f.status >= 300">
-                            <button class="btn btn-sm btn-default" ng-disabled="true">用户已确认</button>
-                        </div>
-                        <div ng-if="f.status < 300">
-                            <button class="btn btn-sm btn-default" ng-click="deleteFreightIn(f)">删除运单</button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+    <table class="table table-hover" style="font-size: 0.9em">
+        <thead>
+        <th>用户名</th>
+        <th>转运号</th>
+        <th>入库号</th>
+        <th>入库时间</th>
+        <th>重量</th>
+        <th>通知</th>
+        </thead>
+        <tr ng-repeat="f in freightIn | orderBy: 'status'">
+            <!--<td ng-bind="f.user.realName"></td>-->
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
+            <td ng-bind="f.trackingNumber"></td>
+            <td ng-bind="f.RKNumber"></td>
+            <td ng-bind="f.createdAtToString"></td>
+            <td><span ng-bind="f.weight"></span>Lb</td>
+            <td>
+                <button class="btn btn-sm btn-default" ng-click="addNotes(f)">添加留言</button>
+                <div ng-if="f.status >= 300">
+                    <button class="btn btn-sm btn-default" ng-disabled="true">用户已确认</button>
+                </div>
+                <div ng-if="f.status < 300">
+                    <button class="btn btn-sm btn-default" ng-click="deleteFreightIn(f)">删除运单</button>
+                </div>
+            </td>
+        </tr>
+    </table>
 
 
     <!--pagination-->
@@ -678,14 +718,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightIn(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadFreightIn(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -693,13 +734,14 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 
 </div>
 <div ng-show="view_tab=='bb'" ng-controller="AdminFreightConfirmCtrl">
     <!--<h4>待处理运单</h4>-->
     <!--<progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span-->
-                <!--ng-bind="promote"></span></progressbar>-->
+    <!--ng-bind="promote"></span></progressbar>-->
     <div class="row">
         <div class="col-md-4">
 
@@ -711,7 +753,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
         <div class="col-md-6">
@@ -724,7 +767,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
     </div>
 
@@ -743,33 +787,38 @@
                 <tr ng-repeat="f in showNormal | orderBy:'-createdAt'">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
                     <td><a ng-click="showIdentityDetails(f)">查看</a></td>
 
                     <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                     <td ng-bind="f.createdAtToString"></td>
                     <td>
-                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
-                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)"
+                                ng-disabled="f.isOperated">确认操作
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a
+                                    ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
                     </td>
                 </tr>
             </table>
             <!--<div class="btn-group" ng-repeat="btn in count track by $index">-->
-                <!--<div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>-->
+            <!--<div class="btn btn-default btn-sm" ng-click="reloadFreight($index)">{{$index+1}}</div>-->
             <!--</div>-->
             <!--pagination-->
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageNormal" max-size="8" total-items="normalFreights.length" ng-change="reloadNormal(currentPageNormal-1)"
+                            <pagination ng-model="currentPage.Normal" max-size="8" total-items="normalFreights.length"
+                                        ng-change="reloadNormal(currentPage.Normal-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
                         </div>
                         <div class="col-md-3" style="padding-top:20px;">
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"
+                                       placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPageNormal()">跳转</button>
                           </span>
@@ -777,7 +826,8 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- END PAGINATION-->
+            </div>
+            <!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
@@ -796,13 +846,16 @@
                 <tr ng-repeat="f in showMerge | orderBy:'-createdAt'">
                     <td><input type="checkbox" ng-model="f.selection"></td>
 
-                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
                     <td><a ng-click="showIdentityDetails(f)">查看</a></td>
                     <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
                     <td ng-bind="f.createdAtToString"></td>
                     <td>
-                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
-                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)"
+                                ng-disabled="f.isOperated">确认操作
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a
+                                    ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
                     </td>
                 </tr>
             </table>
@@ -811,14 +864,16 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageMerge" max-size="8" total-items="mergeFreights.length" ng-change="reloadMerge(currentPageMerge-1)"
+                            <pagination ng-model="currentPage.Merge" max-size="8" total-items="mergeFreights.length"
+                                        ng-change="reloadMerge(currentPage.Merge-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
                         </div>
                         <div class="col-md-3" style="padding-top:20px;">
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"
+                                       placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPageMerge()">跳转</button>
                           </span>
@@ -826,49 +881,55 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- END PAGINATION-->
+            </div>
+            <!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
         </tab>
         <tab heading="分包">
 
-                <table class="table small-table">
-                    <thead>
-                    <th>选择</th>
-                    <th>用户名</th>
-                    <th>收件人身份证</th>
-                    <th>YD运单号</th>
-                    <th>生成时间</th>
-                    <th>操作</th>
-                    </thead>
-                    <tr ng-repeat="f in showSplit | orderBy:'-createdAt'">
-                        <td><input type="checkbox" ng-model="f.selection"></td>
+            <table class="table small-table">
+                <thead>
+                <th>选择</th>
+                <th>用户名</th>
+                <th>收件人身份证</th>
+                <th>YD运单号</th>
+                <th>生成时间</th>
+                <th>操作</th>
+                </thead>
+                <tr ng-repeat="f in showSplit | orderBy:'-createdAt'">
+                    <td><input type="checkbox" ng-model="f.selection"></td>
 
-                        <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a>  </td>
-                        <td><a ng-click="showIdentityDetails(f)">查看</a></td>
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
+                    <td><a ng-click="showIdentityDetails(f)">查看</a></td>
 
-                        <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
-                        <td ng-bind="f.createdAtToString"></td>
-                        <td>
-                            <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)" ng-disabled="f.isOperated">确认操作</button>
-                            <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
-                        </td>
-                    </tr>
-                </table>
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td ng-bind="f.createdAtToString"></td>
+                    <td>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)"
+                                ng-disabled="f.isOperated">确认操作
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a
+                                    ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                    </td>
+                </tr>
+            </table>
             <!--pagination-->
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-9">
-                            <pagination ng-model="currentPageSplit" max-size="8" total-items="splitFreights.length" ng-change="reloadSplit(currentPageSplit-1)"
+                            <pagination ng-model="currentPage.Split" max-size="8" total-items="splitFreights.length"
+                                        ng-change="reloadSplit(currentPage.Split-1)"
                                         class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                         last-text="&raquo;"></pagination>
                         </div>
                         <div class="col-md-3" style="padding-top:20px;">
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"
+                                       placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPageSplit()">跳转</button>
                           </span>
@@ -876,7 +937,8 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- END PAGINATION-->
+            </div>
+            <!-- END PAGINATION-->
             <div class="row">
                 <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
             </div>
@@ -900,7 +962,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
         <div class="col-md-6">
@@ -913,7 +976,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
@@ -926,24 +990,21 @@
         <th>重量</th>
         <th>消费明细</th>
         <th>处理时间</th>
-        <th>重量</th>
         <!--<th>状态</th>-->
         <th>操作</th>
         </thead>
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.weight + 'Lb'"></td>
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
             <td ng-bind="f.operateDateToString"></td>
-            <td><span ng-bind="f.weight"></span>Lb</td>
-            <!--<td>等待付款</td>-->
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmDelivery(f)" ng-disabled="f.status == 400">
-                <div ng-show="f.status == 400">
-                    拒绝发货
-                </div>
+                    <div ng-show="f.status == 400">
+                        拒绝发货
+                    </div>
                     <div ng-show="f.status != 400">
                         确认发货
                     </div>
@@ -956,14 +1017,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadPaidFreight(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadPaidFreight(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -971,7 +1033,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='be'" ng-controller="AdminFreightClearCtrl">
@@ -989,7 +1052,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -1001,7 +1065,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
@@ -1018,7 +1083,7 @@
         <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
             <td ng-bind="f.shipping.delivering"></td>
             <td>
@@ -1031,14 +1096,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadDeliveryFreight(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadDeliveryFreight(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1046,38 +1112,41 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
     <!--<button class="btn btn-info" ng-click="deliver()">确认清关</button>-->
 </div>
 
 <div ng-show="view_tab=='bf'" ng-controller="AdminChineseFreightCtrl">
     <!--<h4>国内接收</h4>-->
-<div class="row">
-    <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
-    <div class="col-md-6">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <div class="col-md-6">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
-        </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
+        </div>
     </div>
-</div>
     <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
                 ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
@@ -1099,17 +1168,17 @@
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
 
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.address.recipient + ' - ' + f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
 
             <td ng-bind="f.shipping.clear"></td>
 
 
             <!--<td>-->
-                <!--<button class="btn btn-sm btn-info" ng-click="addInfo(f)">-->
-                <!--<div ng-if="!f.isAdded">添加</div>-->
-                    <!--<div ng-if="f.isAdded">已添加</div>-->
-                <!--</button>-->
+            <!--<button class="btn btn-sm btn-info" ng-click="addInfo(f)">-->
+            <!--<div ng-if="!f.isAdded">添加</div>-->
+            <!--<div ng-if="f.isAdded">已添加</div>-->
+            <!--</button>-->
             <!--</td>-->
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认接收</button>
@@ -1121,14 +1190,15 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadChineseFreight(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadChineseFreight(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1136,7 +1206,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
     <!--<button class="btn btn-info" ng-click="finalDeliver()">已出关</button>-->
 </div>
 
@@ -1153,7 +1224,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -1165,7 +1237,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
 
@@ -1182,7 +1255,7 @@
         </thead>
         <tr ng-repeat="f in freightIn | orderBy: 'status'">
             <!--<td ng-bind="f.user.realName"></td>-->
-            <td><a ng-click="showDetails(f)"><span  ng-bind="f.user.stringId"></span></a></td>
+            <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.RKNumber"></td>
             <td ng-bind="f.createdAtToString"></td>
@@ -1206,14 +1279,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreightIn(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadFreightIn(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1221,7 +1295,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 
 </div>
 
@@ -1230,7 +1305,8 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-8">
-                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                            ng-bind="promote"></span></progressbar>
 
             </div>
         </div>
@@ -1245,7 +1321,8 @@
       </span>
                     <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入数字ID" required>
 
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
 
             <div class="col-md-4">
@@ -1258,7 +1335,8 @@
         <button class="btn btn-default" type="button" ng-click="searchForUser('string')">搜索</button>
 
       </span>
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
         </div>
     </div>
@@ -1272,14 +1350,23 @@
             <th>数字ID</th>
             <!--<th>字母ID</th>-->
             <th>创建时间</th>
+            <th>验证邮箱</th>
             </thead>
             <div>
-                <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
-                    <td ng-bind="user.email"></td>
+                <tr ng-repeat="user in users | orderBy: '-updatedAt'">
+                    <td ng-click="showDetails(user)"><a ng-bind="user.username"></a></td>
                     <td ng-bind="user.stringId"></td>
 
                     <td ng-bind="user.numberId"></td>
                     <td ng-bind="user.createdAt"></td>
+                    <td>
+                        <div ng-if="user.emailVerified">
+                            <button class="btn btn-default btn-sm" disabled>已验证</button>
+                        </div>
+                        <div ng-if="!user.emailVerified">
+                            <a ng-click="verifyUserEmail(user)"><i style="cursor:pointer;" class="fa fa-envelope-o"></i></a>
+                        </div>
+                    </td>
                 </tr>
             </div>
         </table>
@@ -1288,14 +1375,15 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-9">
-                        <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
+                        <pagination ng-model="currentPage" max-size="8" total-items="userCount"
+                                    ng-change="reloadUser(currentPage-1)"
                                     class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                     previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                     last-text="&raquo;"></pagination>
                     </div>
                     <div class="col-md-3" style="padding-top:20px;">
                         <div class="input-group">
-                            <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                            <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1303,13 +1391,15 @@
                     </div>
                 </div>
             </div>
-        </div><!-- END PAGINATION-->
+        </div>
+        <!-- END PAGINATION-->
 
     </div>
     <div class="col-md-3 info-area">
         <form>
             <legend>详细信息:</legend>
-            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
+            <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span
+                        ng-bind="promote"></span></progressbar>
             <div class="form-group">
                 <label class="control-label">用户</label>
                 <span class="form-control">{{newUser ? newUser.stringId : ""}}</span>
@@ -1324,6 +1414,7 @@
             </div>
             <div class="form-group">
                 <label class=" control-label">手机号</label>
+
                 <div ng-show="newUser.contactNumber && newUser.mobile">
                     <span class="form-control" ng-bind="newUser.contactNumber"></span>
                 </div>
@@ -1334,7 +1425,7 @@
                     <span class="form-control" ng-bind="newUser.mobile"></span>
                 </div>
                 <div ng-show="!newUser.contactNumber && !newUser.mobile">
-                    <span class="form-control" ></span>
+                    <span class="form-control"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -1381,7 +1472,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
-                current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1394,7 +1486,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1406,52 +1499,55 @@
         </div>
     </div>
     <br>
+
     <div class="row">
 
 
-    <div class="col-md-4">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
-    <div class="col-md-6">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <div class="col-md-6">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryNumber" placeholder="退款号" required>
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="退款号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingTK()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
+            </div>
+            <!-- /input-group -->
+        </div>
     </div>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
-        <th width="6%">用户名</th>
-        <th>退款单号</th>
+        <th>用户名</th>
+        <th width="25%">退款单号</th>
         <th>申请时间</th>
         <th>支付宝</th>
-        <th width="30%">申请金额</th>
-        <th width="15%">手续费</th>
+        <th>申请金额</th>
+        <th>手续费</th>
         <th>实退</th>
-        <th width="20%">理由</th>
-        <th >处理</th>
+        <th>理由</th>
+        <th>处理</th>
         <th>凭证</th>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.stringId"></td>
             <td ng-bind="t.TKNumber"></td>
             <td ng-bind="t.createdAtToString"></td>
-            <td><a ng-click="zhifubaoDetails(t)" >查看</a></td>
+            <td><a ng-click="zhifubaoDetails(t)">查看</a></td>
             <td ng-bind="'$'+t.amount"></td>
             <td ng-bind="'$'+t.amount*0.02"></td>
             <td>¥{{(t.amount*0.98*systemSetting.rate).toFixed(2)}}</td>
@@ -1485,14 +1581,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadReturnBalance(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadReturnBalance(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1500,7 +1597,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='cc'" ng-controller="AdminReturnGoodsCtrl">
@@ -1512,7 +1610,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1525,7 +1624,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1537,38 +1637,42 @@
         </div>
     </div>
     <br>
+
     <div class="row">
 
 
-    <div class="col-md-4">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名或邮箱" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
+            </div>
+            <!-- /input-group -->
+        </div>
 
-    <div class="col-md-6">
+        <div class="col-md-6">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryNumber" placeholder="入库号" required>
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="入库号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingRK()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
+            </div>
+            <!-- /input-group -->
+        </div>
     </div>
 
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
-    <table class="table table-hover small-table" >
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                ng-bind="promote"></span></progressbar>
+    <table class="table table-hover small-table">
         <thead>
         <th>用户名</th>
         <th>申请时间</th>
@@ -1583,7 +1687,7 @@
         <tr ng-repeat="f in goodsList | orderBy:'-createdAt'">
             <td ng-bind="f.user.stringId"></td>
             <td ng-bind="f.createdAtToString"></td>
-            <td><a ng-click="showFreightInDetail(f)"><span  ng-bind="f.RKNumber"></span></a></td>
+            <td><a ng-click="showFreightInDetail(f)"><span ng-bind="f.RKNumber"></span></a></td>
             <td ng-bind="f.address"></td>
             <td>
                 <div ng-show="f.identityFirst">
@@ -1632,14 +1736,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadReturnGoods(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadReturnGoods(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1647,65 +1752,70 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='cd'" ng-controller="AdminManageFreightCtrl">
     <!--<h4>包裹管理</h4>-->
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
-<div class="row">
-    <div class="col-md-4">
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span
+                ng-bind="promote"></span></progressbar>
+    <div class="row">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
-    <div class="col-md-6">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <div class="col-md-6">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="YD运单号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingYD()">YD运单号搜索</button>
 
       </span>
-        </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
+        </div>
     </div>
-</div>
     <table class="table table-striped small-table">
-       <thead>
-       <th>用户名</th>
-       <th>YD运单号</th>
-       <th>创建时间</th>
-       <th>包裹详情</th>
-       </thead>
-       <tr ng-repeat="freight in freights | orderBy: '-createdAt'">
+        <thead>
+        <th>用户名</th>
+        <th>YD运单号</th>
+        <th>创建时间</th>
+        <th>包裹详情</th>
+        </thead>
+        <tr ng-repeat="freight in freights | orderBy: '-createdAt'">
             <td ng-bind="freight.user.stringId"></td>
             <td ng-bind="freight.YDNumber"></td>
-           <td ng-bind="freight.createdAtToString"></td>
-           <td><a ng-click="showFreightDetail(freight)">查看</a></td>
-       </tr>
-   </table>
+            <td ng-bind="freight.createdAtToString"></td>
+            <td><a ng-click="showFreightDetail(freight)">查看</a></td>
+        </tr>
+    </table>
     <!--pagination-->
     <div class="row">
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadFreight(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadFreight(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1713,7 +1823,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='da'" ng-controller="AdminZhifubaoCtrl">
@@ -1724,12 +1835,14 @@
             <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
-        <button class="btn btn-default" type= "button" ng-click="searching()">搜索</button>
+        <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
+        </div>
+        <!-- /input-group -->
     </div>
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                ng-bind="promote"></span></progressbar>
     <table class="table table-hover" style="font-size: 0.9em">
         <thead>
         <th>用户名</th>
@@ -1741,7 +1854,9 @@
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.id"></td>
             <td ng-bind="t.record"></td>
-            <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
+            <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$'
+                + (t.amount).toFixed(2)}}
+            </td>
             <td ng-bind="t.createdAtToString"></td>
             <td>
                 <button class="btn btn-sm btn-default" ng-click="confirmRecharge(t)">确认</button>
@@ -1754,7 +1869,8 @@
 </div>
 
 <div ng-show="view_tab=='db'" ng-controller="AdminRechargeRecordCtrl">
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span ng-bind="promote"></span></progressbar>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoadingTrue"><span
+                ng-bind="promote"></span></progressbar>
 
     <div class="row">
 
@@ -1763,7 +1879,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1776,7 +1893,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1788,6 +1906,7 @@
         </div>
     </div>
     <br>
+
     <div class="row">
         <div class="col-md-4">
 
@@ -1799,13 +1918,16 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
         <div class="col-md-5">
             <select ng-model="queryType">
-                <option value="">---充值类型--</option> <!-- not selected / blank option -->
-                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option> <!-- interpolation -->
+                <option value="">---充值类型--</option>
+                <!-- not selected / blank option -->
+                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option>
+                <!-- interpolation -->
             </select>
             <button class="btn btn-default" type="button" ng-click="searchingType()">类型搜索</button>
         </div>
@@ -1828,7 +1950,9 @@
             <!--<td ng-bind="t.id"></td>-->
             <td ng-bind="t.user.stringId"></td>
             <td ng-bind="t.record"></td>
-            <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
+            <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$'
+                + (t.amount).toFixed(2)}}
+            </td>
             <td>{{t.status == 99 ? '支付宝(未充值)' : t.notes}}</td>
             <td ng-bind="t.createdAtToString"></td>
             <!--<td ng-bind="t.status"></td>-->
@@ -1846,14 +1970,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount"
+                                ng-change="reloadTransaction(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1861,7 +1986,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='dc'" ng-controller="AdminConsumeRecordCtrl">
     <div class="row">
@@ -1871,7 +1997,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
-                       current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1884,7 +2011,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
-                       current-text="今天" clear-text="清除" close-text="关闭"      date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -1896,36 +2024,41 @@
         </div>
     </div>
     <br>
+
     <div class="row">
-    <div class="col-md-4">
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
+                <input type="text" class="form-control" ng-model="queryString" placeholder="输入用户名" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searching()">用户搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
-    <div class="col-md-4">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <div class="col-md-4">
 
-        <div class="input-group">
+            <div class="input-group">
 
-            <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入入库/YD运单号" required>
+                <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入入库/YD运单号" required>
    <span class="input-group-btn">
 
         <button class="btn btn-default" type="button" ng-click="searchingRK()">搜索</button>
 
       </span>
-        </div><!-- /input-group -->
-    </div>
+            </div>
+            <!-- /input-group -->
+        </div>
 
         <div class="col-md-4">
             <select ng-model="queryType">
-                <option value="">---消费类型--</option> <!-- not selected / blank option -->
-                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option> <!-- interpolation -->
+                <option value="">---消费类型--</option>
+                <!-- not selected / blank option -->
+                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option>
+                <!-- interpolation -->
             </select>
             <button class="btn btn-default" type="button" ng-click="searchingType()">类型搜索</button>
         </div>
@@ -1948,10 +2081,10 @@
             <td ng-bind="t.user.stringId"></td>
             <td>
                 <!--<div ng-show="t.RKNumber && !t.YDNumber">-->
-                    <!--<span ng-bind="'入库号:' + t.RKNumber"></span>-->
+                <!--<span ng-bind="'入库号:' + t.RKNumber"></span>-->
                 <!--</div>-->
                 <!--<div ng-show="t.YDNumber || (t.YDNumber && t.RKNumber)">-->
-                    <!--<span ng-show="t.YDNumber"></span>-->
+                <!--<span ng-show="t.YDNumber"></span>-->
                 <!--</div>-->
                 {{t.YDNumber ? t.YDNumber : '入库号:' + t.RKNumber }}
             </td>
@@ -1967,14 +2100,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadTransaction(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount"
+                                ng-change="reloadTransaction(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -1982,7 +2116,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 <div ng-show="view_tab=='dd'" ng-controller="AdminYDRewardRecordCtrl">
     <div class="row">
@@ -1992,7 +2127,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt1" is-open="opened1"
-                       current-text="今天" clear-text="清除" close-text="关闭"       date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true" close-text="Close"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open1($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -2005,7 +2141,8 @@
 
             <p class="input-group">
                 <input type="text" datepicker-popup="yyyy-MM-dd" ng-model="dt2" is-open="opened2"
-                       current-text="今天" clear-text="清除" close-text="关闭"        date-disabled="disabled(date, mode)" ng-required="true"/>
+                       current-text="今天" clear-text="清除" close-text="关闭" date-disabled="disabled(date, mode)"
+                       ng-required="true"/>
     <span class="input-group-btn">
     <button type="button" class="btn btn-default" ng-click="open2($event)"><i
                 class="glyphicon glyphicon-calendar"></i></button>
@@ -2018,6 +2155,7 @@
     </div>
 
     <br>
+
     <div class="row">
         <div class="col-md-4">
 
@@ -2029,7 +2167,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">用户搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-4">
 
@@ -2041,13 +2180,16 @@
         <button class="btn btn-default" type="button" ng-click="searchingRK()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
 
         <div class="col-md-4">
             <select ng-model="queryType">
-                <option value="">---消费类型--</option> <!-- not selected / blank option -->
-                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option> <!-- interpolation -->
+                <option value="">---消费类型--</option>
+                <!-- not selected / blank option -->
+                <option ng-repeat="option in transactionType" value="{{option.status}}">{{option.value}}</option>
+                <!-- interpolation -->
             </select>
             <button class="btn btn-default" type="button" ng-click="searchingType()">类型搜索</button>
         </div>
@@ -2094,14 +2236,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="tCount" ng-change="reloadRewardRecord(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="tCount"
+                                ng-change="reloadRewardRecord(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -2109,14 +2252,16 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='de'" ng-controller="AdminCreditUserCtrl">
     <div class="form-group">
         <div class="row">
             <div class="col-md-8">
-                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                            ng-bind="promote"></span></progressbar>
 
             </div>
         </div>
@@ -2131,7 +2276,8 @@
       </span>
                     <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入数字ID" required>
 
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
 
             <div class="col-md-4">
@@ -2144,35 +2290,36 @@
         <button class="btn btn-default" type="button" ng-click="searchForUser('string')">搜索</button>
 
       </span>
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
         </div>
     </div>
 
     <table class="table table-hover small-table">
-            <thead>
-            <th>登录邮箱</th>
-            <th>用户名</th>
-            <th>数字ID</th>
-            <!--<th>字母ID</th>-->
-            <th>上次操作时间</th>
-            <th>操作</th>
-            </thead>
-            <div>
-                <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
-                    <td ng-bind="user.email"></td>
-                    <td ng-bind="user.stringId"></td>
+        <thead>
+        <th>登录邮箱</th>
+        <th>用户名</th>
+        <th>数字ID</th>
+        <!--<th>字母ID</th>-->
+        <th>上次操作时间</th>
+        <th>操作</th>
+        </thead>
+        <div>
+            <tr ng-repeat="user in users | orderBy: '-updatedAt'" ng-click="showDetails(user)">
+                <td ng-bind="user.email"></td>
+                <td ng-bind="user.stringId"></td>
 
-                    <td ng-bind="user.numberId"></td>
-                    <td ng-bind="user.updatedAtToString"></td>
-                    <td>
-                        <button class="btn btn-default btn-sm" ng-click="increaseBalance(user)">增加金额</button>
-                        <button class="btn btn-default btn-sm" ng-click="decreaseBalance(user)">减少金额</button>
+                <td ng-bind="user.numberId"></td>
+                <td ng-bind="user.updatedAtToString"></td>
+                <td>
+                    <button class="btn btn-default btn-sm" ng-click="increaseBalance(user)">增加金额</button>
+                    <button class="btn btn-default btn-sm" ng-click="decreaseBalance(user)">减少金额</button>
 
-                    </td>
-                </tr>
-            </div>
-        </table>
+                </td>
+            </tr>
+        </div>
+    </table>
 
 
     <!--pagination-->
@@ -2180,14 +2327,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="userCount"
+                                ng-change="reloadUser(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -2195,7 +2343,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 
@@ -2203,7 +2352,8 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-8">
-                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+                <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                            ng-bind="promote"></span></progressbar>
 
             </div>
         </div>
@@ -2218,7 +2368,8 @@
       </span>
                     <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入数字ID" required>
 
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
 
             <div class="col-md-4">
@@ -2231,7 +2382,8 @@
         <button class="btn btn-default" type="button" ng-click="searchForUser('string')">搜索</button>
 
       </span>
-                </div><!-- /input-group -->
+                </div>
+                <!-- /input-group -->
             </div>
         </div>
     </div>
@@ -2267,14 +2419,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="userCount" ng-change="reloadUser(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="userCount"
+                                ng-change="reloadUser(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -2282,7 +2435,8 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
 
 <div ng-show="view_tab=='df'" ng-controller="AdminDeletePackageCtrl">
@@ -2297,7 +2451,8 @@
         <button class="btn btn-default" type="button" ng-click="searching()">搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
         <div class="col-md-6">
 
@@ -2309,7 +2464,8 @@
         <button class="btn btn-default" type="button" ng-click="searchingTN()">转运号搜索</button>
 
       </span>
-            </div><!-- /input-group -->
+            </div>
+            <!-- /input-group -->
         </div>
     </div>
     <br>
@@ -2335,14 +2491,15 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-9">
-                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount" ng-change="reloadDelete(currentPage-1)"
+                    <pagination ng-model="currentPage" max-size="8" total-items="freightCount"
+                                ng-change="reloadDelete(currentPage-1)"
                                 class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
                                 previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                                 last-text="&raquo;"></pagination>
                 </div>
                 <div class="col-md-3" style="padding-top:20px;">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" ng-model="inputPage"  placeholder="页数..">
+                        <input type="text" class="form-control input-sm" ng-model="inputPage" placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPage()">跳转</button>
                           </span>
@@ -2350,11 +2507,9 @@
                 </div>
             </div>
         </div>
-    </div><!-- END PAGINATION-->
+    </div>
+    <!-- END PAGINATION-->
 </div>
-
-
-
 
 
 </div>

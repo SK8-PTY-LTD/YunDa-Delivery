@@ -585,6 +585,22 @@
             this.set("freightIn", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "RKCombine", {
+        get: function () {
+            return this.get("RKCombine");
+        },
+        set: function (value) {
+            this.set("RKCombine", value);
+        }
+    });
+    Object.defineProperty(YD.Freight.prototype, "TNCombine", {
+        get: function () {
+            return this.get("TNCombine");
+        },
+        set: function (value) {
+            this.set("TNCombine", value);
+        }
+    });
     Object.defineProperty(YD.Freight.prototype, "addressNew", {
         get: function () {
             return this.get("addressNew");
@@ -1109,6 +1125,22 @@
             this.set("isChargeSplit", value);
         }
     });
+    Object.defineProperty(YD.FreightIn.prototype, "RKCombine", {
+        get: function () {
+            return this.get("RKCombine");
+        },
+        set: function (value) {
+            this.set("RKCombine", value);
+        }
+    });
+    Object.defineProperty(YD.FreightIn.prototype, "TNCombine", {
+        get: function () {
+            return this.get("TNCombine");
+        },
+        set: function (value) {
+            this.set("TNCombine", value);
+        }
+    });
     Object.defineProperty(YD.FreightIn.prototype, "isOperating", {
         get: function () {
             return this.get("isOperating");
@@ -1485,6 +1517,7 @@
             this.set("email", value);
         }
     });
+
 
 
     Object.defineProperty(YD.User.prototype, "pendingBalance", {

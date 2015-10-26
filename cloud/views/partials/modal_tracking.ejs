@@ -6,7 +6,7 @@
         <div ng-repeat="freight in freights">
             <accordion-group is-open="true">
                 <accordion-heading>
-                    运单号: {{freight.YDNumber}}
+                    运单号: {{freight.YDNumber}} {{freight.isSplit || freight.isSplitPremium ? '(' + freight.trackingNumber+')' : freight.isMerged ? '（合包，原包裹转运号：）' + freight.TNCombine : ''}}
                 </accordion-heading>
                 <table class="table table-bordered table-striped">
                     <thead>

@@ -206,7 +206,7 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
     $scope.LIMIT_NUMBER = 10;
 
     $rootScope.logOutAndRedirect = function () {
-        $rootScope.currentUser.isLoggedIn = false;
+        //$rootScope.currentUser.isLoggedIn = false;
         $rootScope.currentUser.save(null, {
             success: function () {
                 YD.User.logOut();
@@ -239,15 +239,17 @@ YundaApp.controller('AppCtrl', function ($scope, $rootScope, $location, $http, $
             $rootScope.currentUser.lastLoginDate = new Date();
 
         }
-        $rootScope.currentUser.isLoggedIn = true;
+        //$rootScope.currentUser.isLoggedIn = true;
         $rootScope.currentUser.save();
 
     }
 });
 YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window) {
     if (YD.User.current() != undefined) {
-        $rootScope.currentUser = YD.User.current();
-        $rootScope.currentUser.fetch();
+        //$rootScope.currentUser = YD.User.current();
+        //$rootScope.currentUser.fetch();
+        AV.User.logOut();
+        $rootScope.currentUser = new YD.User();
     } else {
         $rootScope.currentUser = new YD.User();
     }
@@ -265,14 +267,14 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
         modalInstance.result.then(function (user) {
             if (user != undefined) {
                 $rootScope.currentUser = user;
-                if($rootScope.currentUser.isLoggedIn) {
-                    YD.User.logOut();
-                    $rootScope.currentUser = new YD.User();
-                    alert("此帐号已在其他地方登录");
-                    $window.location.href = '/';
-
-                }
-                $scope.checkUserAfterLogIn();
+                //if($rootScope.currentUser.isLoggedIn) {
+                //    YD.User.logOut();
+                //    $rootScope.currentUser = new YD.User();
+                //    alert("此帐号已在其他地方登录");
+                //    $window.location.href = '/';
+                //
+                //}
+                //$scope.checkUserAfterLogIn();
 
                 if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
                     $rootScope.isAdmin = false;
@@ -507,8 +509,11 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
             windowClass: 'center-modal'
         })
     }
+    $scope.isSearching = false;
     $scope.trackingInfo = function () {
-        $scope.trackingList = $scope.trackingNumber.split("\n")
+        $scope.isSearching = true;
+        $scope.trackingList = $scope.trackingNumber.split("\n");
+
         var query1 = new AV.Query(YD.Freight);
         query1.containedIn("trackingNumber", $scope.trackingList);
         var query2 = new AV.Query(YD.Freight);
@@ -519,9 +524,9 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
         query.include("address");
         query.include("shipping");
         query.include("user");
-        query.find({
+        query.find({ //find normal package
             success: function (list) {
-                if (list.length != 0) {
+                if (list.length >= $scope.trackingList.length) {
                     var modalInstance = $modal.open({
                         templateUrl: 'partials/modal_tracking',
                         controller: 'TrackingCtrl',
@@ -534,16 +539,139 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                             }
                         }
                     });
+                    $scope.$apply(function () {
+                        $scope.isSearching = false;
+                    });
                 } else {
-                    alert("没有结果！");
-                    return
+                    // find split package
+                    var query1 = new AV.Query(YD.Freight);
+                    query1.equalTo("id", "dummyIdForDummyQuery");
+                    for (var i = 0; i < $scope.trackingList.length; i++) {
+                        var number = $scope.trackingList[i];
+                        var pattern = "(" + number + ")";
+                        console.log("pattern: " + pattern);
+                        var query2 = new AV.Query(YD.Freight);
+                        query2.matches('trackingNumber', new RegExp(pattern, 'g'));
+                        query1 = AV.Query.or(query1, query2);
+                    }
+                    var query3 = new AV.Query(YD.Freight);
+                    query3.equalTo("id", "dummyIdForDummyQuery");
+
+                    for (var i = 0; i < $scope.trackingList.length; i++) {
+                        var number = $scope.trackingList[i];
+                        var pattern = "(" + number + ")";
+                        var query4 = new AV.Query(YD.Freight);
+                        query4.matches('RKNumber', new RegExp(pattern, 'g'));
+                        query3 = AV.Query.or(query3, query4);
+                    }
+                    var query = AV.Query.or(query1, query3);
+                    query.include("address");
+                    query.include("shipping");
+                    query.include("user");
+                    query.find({
+                        success: function (splitList) {
+
+                            if (splitList.length != 0) {
+                                var modalInstance = $modal.open({
+                                    templateUrl: 'partials/modal_tracking',
+                                    controller: 'TrackingCtrl',
+                                    scope: $scope,
+                                    windowClass: 'center-modal',
+                                    size: 'lg',
+                                    resolve: {
+                                        resultList: function () {
+                                            return splitList;
+                                        }
+                                    }
+                                });
+                                $scope.$apply(function () {
+                                    $scope.isSearching = false;
+
+                                });
+                            } else {
+                                // find merge package
+                                var query1 = new AV.Query(YD.Freight);
+                                query1.equalTo("id", "dummyIdForDummyQuery");
+                                for (var i = 0; i < $scope.trackingList.length; i++) {
+                                    var number = $scope.trackingList[i];
+                                    var pattern = "(" + number + ")";
+                                    console.log("pattern: " + pattern);
+                                    var query2 = new AV.Query(YD.Freight);
+                                    query2.matches('RKCombine', new RegExp(pattern, 'g'));
+                                    query1 = AV.Query.or(query1, query2);
+                                }
+                                var query3 = new AV.Query(YD.Freight);
+                                query3.equalTo("id", "dummyIdForDummyQuery");
+
+                                for (var i = 0; i < $scope.trackingList.length; i++) {
+                                    var number = $scope.trackingList[i];
+                                    var pattern = "(" + number + ")";
+                                    var query4 = new AV.Query(YD.Freight);
+                                    query4.matches('TNCombine', new RegExp(pattern, 'g'));
+                                    query3 = AV.Query.or(query3, query4);
+                                }
+                                var query = AV.Query.or(query1, query3);
+                                query.include("address");
+                                query.include("shipping");
+                                query.include("user");
+                                query.find({
+                                    success: function (mergeList) {
+                                        if (mergeList.length != 0) {
+                                            var modalInstance = $modal.open({
+                                                templateUrl: 'partials/modal_tracking',
+                                                controller: 'TrackingCtrl',
+                                                scope: $scope,
+                                                windowClass: 'center-modal',
+                                                size: 'lg',
+                                                resolve: {
+                                                    resultList: function () {
+                                                        return splitList;
+                                                    }
+                                                }
+                                            });
+                                            $scope.$apply(function () {
+                                                $scope.isSearching = false;
+
+                                            });
+                                        } else {
+                                            alert("找不到结果!");
+                                            $scope.$apply(function () {
+                                                $scope.isSearching = false;
+
+                                            });
+                                            return;
+                                        }
+                                    },
+                                    error: function(error) {
+                                        console.log("merge list finding ERROR: " + error.message);
+                                        $scope.$apply(function () {
+                                            $scope.isSearching = false;
+
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.log("split list finding ERROR: " + error.message);
+                            $scope.$apply(function () {
+                                $scope.isSearching = false;
+
+                            });
+                        }
+                    });
                 }
             },
             error: function (error) {
+                console.log("1st level tracking ERROR: " + error.message);
+                $scope.$apply(function () {
+                    $scope.isSearching = false;
+
+                });
             }
-        })
-        //@todo combine these two
+        });
     }
+
     $scope.login = function () {
         $scope.isLoading = true;
         $scope.promote = "Logging in";
@@ -551,14 +679,14 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
             success: function (user) {
                 $rootScope.currentUser = user;
 
-                if($rootScope.currentUser.isLoggedIn) {
-                    YD.User.logOut();
-                    $rootScope.currentUser = new YD.User();
-                    alert("此帐号已在其他地方登录");
-                    $window.location.href = '/';
-
-                }
-                $scope.checkUserAfterLogIn();
+                //if($rootScope.currentUser.isLoggedIn) {
+                //    YD.User.logOut();
+                //    $rootScope.currentUser = new YD.User();
+                //    alert("此帐号已在其他地方登录");
+                //    $window.location.href = '/';
+                //
+                //}
+                //$scope.checkUserAfterLogIn();
 
                 if ($rootScope.currentUser.role != YD.User.ROLE_ADMIN) {
                     $rootScope.isAdmin = false
@@ -828,6 +956,8 @@ YundaApp.controller('MyTrackingCtrl', function ($scope, $modal) {
     $scope.$on('userbd', function (event, data) {
         $scope.searchYD = false;
         $scope.queryNumber = ''
+        $scope.currentPage = 1;
+
         $scope.reloadTracking(0);
         $scope.reloadTrackingCount();
     });
@@ -912,6 +1042,9 @@ YundaApp.controller('ManualCtrl', function ($scope) {
     };
     $scope.reloadCount();
     $scope.$on('userba', function (event, data) {
+        $scope.currentPage = 1;
+        $scope.reloadCount();
+
         $scope.reloadManual(0);
     });
     $scope.deleteFreight = function (f) {
@@ -974,6 +1107,9 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
     $scope.isLoading = false;
     $scope.promote = "";
     $scope.$on('userbe', function (event, args) {
+        $scope.currentPage = 1;
+        $scope.reloadCount();
+
         $scope.reloadSpeedManual(0);
     });
     $scope.rewriteFreight = function () {
@@ -1381,6 +1517,8 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
     $scope.reloadFreightCount();
     //$scope.reloadFreightReturn();
     $scope.$on('userdb', function () {
+        $scope.currentPage = 1;
+        $scope.reloadFreightCount();
         $scope.reloadFreightReturn(0);
     });
     //$scope.returnFreight = new YD.FreightReturn()
@@ -1685,6 +1823,8 @@ YundaApp.controller('ReturnBalanceCtrl', function ($scope, $modal) {
     $scope.$on('userda', function () {
         $scope.searchTK = false;
         $scope.query = '';
+        $scope.currentPage = 1;
+
         $scope.reloadReturnCount();
         $scope.reloadReturnBalance(0);
     });
@@ -1930,6 +2070,8 @@ YundaApp.controller('DashboardCtrl', function ($scope, $rootScope, $modal, $wind
     $scope.$on('userab', function () {
         $scope.searchName = false;
         $scope.recipientLookup = '';
+        $scope.currentPage = 1;
+
         $scope.reloadAddressCount();
         $scope.reloadAddress(0);
     });
@@ -2087,6 +2229,8 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $modal
         }
     };
     $scope.$watch("query.isSearch", function (newVal) {
+        $scope.reloadFreightCount();
+
         $scope.reloadFreightInArrived(0);
     });
     $scope.reloadFreightCount = function () {
@@ -2095,7 +2239,8 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $modal
         query.containedIn("status", [YD.FreightIn.STATUS_ARRIVED, YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE, YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE])
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.badge.A = count;
+                $scope.freightCount =  count;
+                $scope.badge.A = count;
             }
         });
     };
@@ -2106,6 +2251,10 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $modal
     }
     $scope.$on('userbb', function (event, args) {
         $scope.query.number = undefined;
+        $scope.currentPage = 1;
+
+        $scope.reloadFreightCount();
+
         $scope.reloadFreightInArrived(0);
     });
     $scope.searchForFreightIn = function () {
@@ -2312,6 +2461,8 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         var freightInList = []
         var totalWeight = 0;
         var newNumber = "";
+        var RKCombine = "";
+        var TNCombine = "";
         var idList = [];
         var referenceList = [];
         var isSplit = false;
@@ -2324,6 +2475,8 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
                 freightInList.push($scope.freightIns[i]);
                 totalWeight += $scope.freightIns[i].weight;
                 newNumber += ($scope.freightIns[i].trackingNumber + ';\n');
+                RKCombine += ($scope.freightIns[i].RKNumber + ';');
+                TNCombine += ($scope.freightIns[i].trackingNumber + ';');
                 idList.push($scope.freightIns[i].id);
                 referenceList.push($scope.freightIns[i].RKNumber);
             }
@@ -2340,6 +2493,8 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             freightIn.user = $scope.currentUser;
             freightIn.weight = totalWeight;
             freightIn.trackingNumber = newNumber;
+            freightIn.RKCombine = RKCombine;
+            freightIn.TNCombine = TNCombine;
             freightIn.generateRKNumberWithCallback(function (success, reply) {
                 if (!success) {
                     alert("错误！: " + reply);
@@ -2487,9 +2642,13 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             query.limit($scope.LIMIT_NUMBER);
             query.skip($scope.LIMIT_NUMBER * index);
             query.descending("createdAt");
+            if($scope.query.isSearch) {
+                query.equalTo("trackingNumber", $scope.query.number);
+            }
             query.find({
                 success: function (results) {
-                    $scope.freightIns = $filter('packageSearchFilter')(results, $scope.query.number);
+                    //$scope.freightIns = $filter('packageSearchFilter')(results, $scope.query.number);
+                    $scope.freightIns = results;
                     for (var i = 0; i < $scope.freightIns.length; i++) {
                         $scope.freightIns[i].checkboxModel = {
                             delivery: false,
@@ -2530,19 +2689,27 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         var query = new AV.Query(YD.FreightIn);
         query.equalTo("user", $scope.currentUser);
         query.equalTo("status", YD.FreightIn.STATUS_CONFIRMED);
+        if($scope.query.isSearch) {
+            query.equalTo("trackingNumber", $scope.query.number);
+        }
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.badge.B = count;
+                $scope.freightCount = count;
+                $scope.badge.B = count;
                 $scope.$apply();
             }
         });
     };
     $scope.reloadFreightCount();
     $scope.$watch("query.isSearch", function (newVal) {
+        $scope.reloadFreightCount();
         $scope.reloadFreightInConfirmed(0);
     });
     $scope.$on('userbb', function (event, args) {
         $scope.query.number = undefined;
+        $scope.currentPage = 1;
+
+        $scope.reloadFreightCount();
         $scope.reloadFreightInConfirmed(0);
     });
     $scope.chooseSplitType = function (freightIn) {
@@ -3036,6 +3203,8 @@ YundaApp.controller('FreightPendingCtrl', function ($scope, $modal, $rootScope, 
     });
     $scope.$on('userbb', function (event, args) {
         $scope.query.number = undefined;
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadFreight(0);
     });
@@ -3391,10 +3560,7 @@ YundaApp.controller('mergePackageCtrl', function ($scope, $modalInstance, freigh
         freight.isMerge = true
         freight.save(null, {
             success: function (freight) {
-                for (var i = 0; i < freight.statusGroup.length; i++) {
-                }
-                for (var i = 0; i < freight.freightInGroup.length; i++) {
-                }
+
                 for (var i = 0; i < freightInList.length; i++) {
                     freightInList[i].status = YD.FreightIn.STATUS_FINISHED
                 }
@@ -3662,6 +3828,12 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
             query.include("shipping");
             query.include("user");
             query.containedIn("status", [YD.Freight.STATUS_PENDING_DELIVERY, YD.Freight.STATUS_DELIVERING, YD.Freight.STATUS_PASSING_CUSTOM, YD.Freight.STATUS_FINAL_DELIVERY, YD.Freight.STATUS_DELIVERED])
+            console.log("$scope.query.isSearch: ", $scope.query.isSearch);
+            console.log("$scope.query.number: " + $scope.query.number);
+            if($scope.query.isSearch) {
+                query.equalTo("trackingNumber", $scope.query.number);
+
+            }
             query.find({
                 success: function (results) {
                     $scope.freights = $filter('packageSearchFilter')(results, $scope.query.number);
@@ -3703,27 +3875,28 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
     $scope.reloadFreight = function (index) {
         console.log("indeX: " + index);
         var amount = index * $scope.LIMIT_NUMBER;
-        console.log("indeX * $scope.LIMIT_NUMBERL " + amount);
-        console.log(" | length: " + $scope.freights.length)
-
-        $scope.freightList = [];
-        console.log("freightList is empty now");
-        for (var i = amount; i < $scope.LIMIT_NUMBER*(index+1); i++) {
-            console.log(":index: " + i);
-            if($scope.freights[i] != undefined) {
-                $scope.freightList.push($scope.freights[i]);
-                console.log("$scope:" + i + ": " + $scope.freights[i].id);
+        $scope.$apply(function () {
+            $scope.freightList = [];
+            console.log("freightList is empty now");
+            for (var i = amount; i < $scope.LIMIT_NUMBER * (index + 1); i++) {
+                if ($scope.freights[i] != undefined) {
+                    $scope.freightList.push($scope.freights[i]);
+                    console.log("$scope:" + i + ": " + $scope.freights[i].id);
+                }
             }
-        }
+        });
     };
     $scope.reloadFreightCount = function () {
         var query = new AV.Query(YD.Freight);
         query.equalTo("user", $scope.currentUser);
         query.containedIn("status", [YD.Freight.STATUS_PENDING_DELIVERY, YD.Freight.STATUS_DELIVERING, YD.Freight.STATUS_PASSING_CUSTOM, YD.Freight.STATUS_FINAL_DELIVERY, YD.Freight.STATUS_DELIVERED])
+        if($scope.query.isSearch) {
+            query.equalTo("trackingNumber", $scope.query.number);
+        }
         query.count({
             success: function (count) {
-                $scope.freightCount = $scope.badge.D = count;
-                $scope.freightCount = $scope.badge.D = count;
+                $scope.freightCount  = count;
+                //$scope.badge.D = count;
             }
         })
     };
@@ -3733,11 +3906,15 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
     }
     //$scope.reloadFreightCount();
     //$scope.reloadFreight(0);
-    //$scope.$watch("query.isSearch", function (newVal) {
-    //    $scope.reloadFreight(0);
-    //});
+    $scope.$watch("query.isSearch", function (newVal) {
+        if(newVal == true) {
+            $scope.reloadAllFreight(0);
+        }
+    });
     $scope.$on('userbb', function (event, args) {
         $scope.query.number = undefined;
+        $scope.currentPage = 1;
+
         $scope.reloadAllFreight(0);
 
         //$scope.reloadFreightCount();
@@ -3907,10 +4084,11 @@ YundaApp.controller('ChangeAddressCtrl', function ($scope, $modal) {
     }
 })
 YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
+    $scope.isSearching = false;
     $scope.trackingInfo = function () {
+        $scope.isSearching = true;
         $scope.trackingList = $scope.trackingNumber.split("\n")
-        for (var i = 0; i < $scope.trackingList.length; i++) {
-        }
+
         var query1 = new AV.Query(YD.Freight);
         query1.containedIn("trackingNumber", $scope.trackingList);
         var query2 = new AV.Query(YD.Freight);
@@ -3922,9 +4100,10 @@ YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
         query.include("address");
         query.include("shipping");
         query.include("user");
-        query.find({
+        query.find({ //find normal package
             success: function (list) {
-                if (list.length != 0) {
+                console.log("lvl1 find: " + list.length);
+                if (list.length >= $scope.trackingList.length) {
                     var modalInstance = $modal.open({
                         templateUrl: 'partials/modal_tracking',
                         controller: 'TrackingCtrl',
@@ -3937,14 +4116,136 @@ YundaApp.controller('DashboardSearchCtrl', function ($scope, $modal) {
                             }
                         }
                     });
+                    $scope.isSearching = false;
+
                 } else {
-                    alert("没有结果！")
-                    return
+                    // find split package
+                    var query1 = new AV.Query(YD.Freight);
+                    query1.equalTo("id", "dummyIdForDummyQuery");
+                    for (var i = 0; i < $scope.trackingList.length; i++) {
+                        var number = $scope.trackingList[i];
+                        var pattern = "(" + number + ")";
+                        console.log("pattern: " + pattern);
+                        var query2 = new AV.Query(YD.Freight);
+                        query2.matches('trackingNumber', new RegExp(pattern, 'g'));
+                        query1 = AV.Query.or(query1, query2);
+                    }
+                    var query3 = new AV.Query(YD.Freight);
+                    query3.equalTo("id", "dummyIdForDummyQuery");
+
+                    for (var i = 0; i < $scope.trackingList.length; i++) {
+                        var number = $scope.trackingList[i];
+                        var pattern = "(" + number + ")";
+                        var query4 = new AV.Query(YD.Freight);
+                        query4.matches('RKNumber', new RegExp(pattern, 'g'));
+                        query3 = AV.Query.or(query3, query4);
+                    }
+                    var query = AV.Query.or(query1, query3);
+                    query.equalTo("user", $scope.currentUser);
+
+                    query.include("address");
+                    query.include("shipping");
+                    query.include("user");
+                    query.find({
+                        success: function (splitList) {
+
+                            if (splitList.length != 0) {
+                                var modalInstance = $modal.open({
+                                    templateUrl: 'partials/modal_tracking',
+                                    controller: 'TrackingCtrl',
+                                    scope: $scope,
+                                    windowClass: 'center-modal',
+                                    size: 'lg',
+                                    resolve: {
+                                        resultList: function () {
+                                            return splitList;
+                                        }
+                                    }
+                                });
+                                $scope.isSearching = false;
+
+                            } else {
+                                // find merge package
+                                var query1 = new AV.Query(YD.Freight);
+                                query1.equalTo("id", "dummyIdForDummyQuery");
+                                for (var i = 0; i < $scope.trackingList.length; i++) {
+                                    var number = $scope.trackingList[i];
+                                    var pattern = "(" + number + ")";
+                                    console.log("pattern: " + pattern);
+                                    var query2 = new AV.Query(YD.Freight);
+                                    query2.matches('RKCombine', new RegExp(pattern, 'g'));
+                                    query1 = AV.Query.or(query1, query2);
+                                }
+                                var query3 = new AV.Query(YD.Freight);
+                                query3.equalTo("id", "dummyIdForDummyQuery");
+
+                                for (var i = 0; i < $scope.trackingList.length; i++) {
+                                    var number = $scope.trackingList[i];
+                                    var pattern = "(" + number + ")";
+                                    var query4 = new AV.Query(YD.Freight);
+                                    query4.matches('TNCombine', new RegExp(pattern, 'g'));
+                                    query3 = AV.Query.or(query3, query4);
+                                }
+                                var query = AV.Query.or(query1, query3);
+                                query.equalTo("user", $scope.currentUser);
+
+                                query.include("address");
+                                query.include("shipping");
+                                query.include("user");
+                                query.find({
+                                    success: function (mergeList) {
+                                        if (mergeList.length != 0) {
+                                            var modalInstance = $modal.open({
+                                                templateUrl: 'partials/modal_tracking',
+                                                controller: 'TrackingCtrl',
+                                                scope: $scope,
+                                                windowClass: 'center-modal',
+                                                size: 'lg',
+                                                resolve: {
+                                                    resultList: function () {
+                                                        return splitList;
+                                                    }
+                                                }
+                                            });
+                                            $scope.isSearching = false;
+
+                                        } else {
+                                            alert("找不到结果!");
+                                            $scope.$apply(function () {
+                                                $scope.isSearching = false;
+
+                                            });
+                                            return;
+                                        }
+                                    },
+                                    error: function(error) {
+                                        $scope.$apply(function () {
+                                            $scope.isSearching = false;
+
+                                        });
+                                        console.log("merge list finding ERROR: " + error.message);
+                                    }
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            $scope.$apply(function () {
+                                $scope.isSearching = false;
+
+                            });
+                            console.log("split list finding ERROR: " + error.message);
+                        }
+                    });
                 }
             },
             error: function (error) {
+                $scope.$apply(function () {
+                    $scope.isSearching = false;
+
+                });
+                console.log("1st level tracking ERROR: " + error.message);
             }
-        })
+        });
     }
 })
 YundaApp.controller('EditAddressCtrl', function ($scope, $modalInstance, address) {
@@ -4358,6 +4659,8 @@ YundaApp.controller('ConsumeRecordCtrl', function ($scope) {
     }
     $scope.reloadTransactionCount();
     $scope.$on('usercc', function (event, args) {
+        $scope.currentPage = 1;
+
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
@@ -4475,6 +4778,8 @@ YundaApp.controller('RechargeRecordCtrl', function ($scope) {
     $scope.reloadTransactionCount();
     $scope.$on('usercb', function (event, args) {
         $scope.searchDate = false;
+        $scope.currentPage = 1;
+
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
@@ -4614,6 +4919,8 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     $scope.reloadRewardCount();
     $scope.$on('usercd', function () {
         $scope.searchDate = false;
+        $scope.currentPage = 1;
+
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     });
@@ -4757,11 +5064,13 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $m
         $scope.queryString = '';
         $scope.searchRK = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadCount();
         $scope.reloadFreightIn(0);
     });
     $scope.reloadCount = function () {
-        var query = new AV.Query("FreightIn")
+        var query = new AV.Query("FreightIn");
         query.exists("checkInfo");
         if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
@@ -5303,6 +5612,8 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
         $scope.queryNumber = '';
         $scope.freightCount = 0;
         $scope.adminBadge.B = 0;
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadFreightIn(0);
     });
@@ -5518,6 +5829,8 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
         $scope.queryNumber = '';
         $scope.freightCount = 0;
         $scope.adminBadge.B = 0;
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadFreightIn(0);
     });
@@ -5586,6 +5899,12 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
 });
 
 YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $window, $modal, $filter) {
+    $scope.currentPage = {
+        Normal: 0,
+        Merge: 0,
+        Split: 0
+
+    };
     $scope.showDetails = function (freight) {
         var modalInstance = $modal.open({
             templateUrl: 'partials/modal_showDetails',
@@ -5719,16 +6038,16 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
         });
     };
     $scope.setPageNormal = function () {
-        $scope.currentPageNormal = $scope.inputPage;
-        $scope.reloadNormal($scope.currentPageNormal - 1);
+        $scope.currentPage.Normal = $scope.inputPage;
+        $scope.reloadNormal($scope.currentPage.Normal - 1);
     };
     $scope.setPageSplit = function () {
-        $scope.currentPageSplit = $scope.inputPage;
-        $scope.reloadSplit($scope.currentPageSplit - 1);
+        $scope.currentPage.Split = $scope.inputPage;
+        $scope.reloadSplit($scope.currentPage.Split - 1);
     };
     $scope.setPageMerge = function () {
-        $scope.currentPageMerge = $scope.inputPage;
-        $scope.reloadMerge($scope.currentPageMerge - 1);
+        $scope.currentPage.Merge = $scope.inputPage;
+        $scope.reloadMerge($scope.currentPage.Merge - 1);
     };
     $scope.reloadNormal = function (index) {
         $scope.showNormal = [];
@@ -5768,6 +6087,10 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
         $scope.queryString = '';
         $scope.searchYD = false;
         $scope.queryNumber = '';
+        $scope.currentPage.Normal = 1;
+        $scope.currentPage.Merge = 1;
+        $scope.currentPage.Split = 1;
+
         $scope.reloadFreight();
     });
     $scope.searchingYD = function () {
@@ -6036,7 +6359,6 @@ YundaApp.controller('ShowConsumeDetailsCtrl', ["$scope", "$modalInstance", "frei
 YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $modal) {
     $scope.reloadManual = function (index) {
         var query = new AV.Query(YD.FreightIn);
-        query.equalTo("user", $scope.currentUser);
         query.equalTo("status", YD.FreightIn.STATUS_MANUAL);
         query.include("user");
         query.limit($scope.LIMIT_NUMBER);
@@ -6073,7 +6395,6 @@ YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $m
     }
     $scope.reloadCount = function () {
         var query = new AV.Query(YD.FreightIn);
-        query.equalTo("user", $scope.currentUser);
         query.equalTo("status", YD.FreightIn.STATUS_MANUAL);
         if ($scope.searchName) {
             var innerQuery = new AV.Query(YD.User);
@@ -6111,6 +6432,8 @@ YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $m
         $scope.reloadManual(0);
     },
         $scope.$on('adminby', function (event, data) {
+            $scope.currentPage = 1;
+
             $scope.reloadCount();
             $scope.reloadManual(0);
         });
@@ -6278,6 +6601,8 @@ YundaApp.controller('AdminSpeedManualCtrl', ["$scope", "$modal", function ($scop
         $scope.queryString = '';
         $scope.searchTN = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadSpeedFreight(0);
     });
@@ -6410,6 +6735,8 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
         $scope.queryString = '';
         $scope.searchYD = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadPaidFreight(0);
     });
@@ -6597,6 +6924,8 @@ YundaApp.controller('AdminFreightClearCtrl', function ($scope, $modal) {
         $scope.queryString = '';
         $scope.searchYD = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadCount();
         $scope.reloadDeliveryFreight(0);
     });
@@ -6785,6 +7114,7 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
         $scope.queryString = '';
         $scope.searchYD = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
         $scope.reloadCount();
         $scope.reloadChineseFreight(0);
     });
@@ -7047,6 +7377,8 @@ YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
         $scope.queryString = '';
         $scope.searchDate = false;
         $scope.queryType = undefined;
+        $scope.currentPage = 1;
+
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
@@ -7115,7 +7447,11 @@ YundaApp.controller('AdminCreditUserCtrl', ["$scope", "$modal", function ($scope
     }
     ;
     $scope.$on('adminde', function () {
+        $scope.reloadCount();
+
         $scope.reloadUser(0);
+        $scope.currentPage = 1;
+
     });
     $scope.reloadCount = function () {
         var query = new AV.Query("_User");
@@ -7288,6 +7624,9 @@ YundaApp.controller('AdminCreditYDCtrl', ["$scope", "$modal", function ($scope, 
     }
     ;
     $scope.$on('adminde', function () {
+        $scope.currentPage = 1;
+        $scope.reloadCount();
+
         $scope.reloadUser(0);
     });
     $scope.reloadCount = function () {
@@ -7710,6 +8049,8 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         $scope.searchDate = false;
         $scope.searchType = false;
         $scope.queryType = undefined;
+        $scope.currentPage = 1;
+
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
     });
@@ -7767,11 +8108,7 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
         index: 0,
         value: 'YD币兑换',
         status: YD.Transaction.STATUS_CLAIM_REWARD
-    }, {
-        index: 1,
-        value: '消费YD币',
-        status: YD.Transaction.STATUS_CONSUME_YD_REWARD
-    }, {
+    },  {
         index: 2,
         value: 'YD币赠送',
         status: YD.Transaction.STATUS_GET_YD_REWARD
@@ -7907,6 +8244,8 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
         $scope.searchDate = false;
         $scope.searchType = false;
         $scope.queryType = undefined;
+        $scope.currentPage = 1;
+
         $scope.reloadRewardCount();
         $scope.reloadRewardRecord(0);
     });
@@ -8134,6 +8473,8 @@ YundaApp.controller('AdminManageFreightCtrl', ["$scope", "$modal", function ($sc
         $scope.queryString = '';
         $scope.searchYD = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadFreightCount();
         $scope.reloadFreight(0);
     });
@@ -8210,6 +8551,7 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
                 $scope.$apply(function () {
                     $scope.users = users
                     for (var i = 0; i < $scope.users.length; i++) {
+                        console.log("$user: ", $scope.users[i].emailVerified);
                         var tmp = $scope.users[i].createdAt
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
@@ -8246,8 +8588,21 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
     }
     ;
     $scope.$on('adminca', function () {
+        $scope.currentPage = 1;
+        $scope.reloadUserCount();
+
         $scope.reloadUser(0);
     });
+    $scope.verifyUserEmail = function(user) {
+        AV.User.requestEmailVerify(user.username, {
+            success: function () {
+                alert("发送验证邮箱请求成功");
+            },
+            error: function (u, error) {
+                alert("错误！" + error.message);
+            }
+        });
+    }
     $scope.searchForUser = function (type) {
         if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER && $scope.currentUser.role != YD.User.ROLE_ADMIN_CUSTOMER_INFO) {
             alert("您没有权限");
@@ -8513,6 +8868,8 @@ YundaApp.controller('AdminReturnBalanceCtrl', function ($scope, $modal) {
         $scope.queryString = '';
         $scope.searchTK = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadReturnCount();
         $scope.reloadReturnBalance(0);
     });
@@ -8863,6 +9220,8 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
         $scope.queryString = '';
         $scope.searchRK = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadReturnCount();
         $scope.reloadReturnGoods(0);
     });
@@ -9166,7 +9525,10 @@ YundaApp.controller('AdminZhifubaoCtrl', function ($scope) {
     }
     ;
     $scope.$on('adminda', function () {
+        $scope.currentPage = 1;
+
         $scope.reloadZhifubao();
+
     });
     $scope.searching = function () {
         if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_ZHIFUBAO) {
@@ -9335,6 +9697,8 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
         $scope.queryString = '';
         $scope.searchTN = false;
         $scope.queryNumber = '';
+        $scope.currentPage = 1;
+
         $scope.reloadDelete(0);
         $scope.reloadCount();
     });

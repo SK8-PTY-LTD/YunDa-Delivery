@@ -1112,7 +1112,7 @@
             <input type="text" class="form-control" ng-model="queryNumber" placeholder="输入YD运单号" required>
    <span class="input-group-btn">
 
-        <button class="btn btn-default" type="button" ng-click="searchingYD()">搜索</button>
+        <button class="btn btn-default" type="button" ng-click="searchingYD()" ng-disabled="isSearching">搜索</button>
 
       </span>
         </div><!-- /input-group -->

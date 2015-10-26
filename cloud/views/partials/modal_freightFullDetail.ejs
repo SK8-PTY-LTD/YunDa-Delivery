@@ -19,6 +19,9 @@
             <td ng-bind="'最终重量: ' + (freight.finalWeight).toFixed(2) + ' Lb'"></td>
         </tr>
         <tr>
+            <td colspan="2" ng-bind="'留言: ' + freight.comments"></td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <span>去除购物收据</span> <input type="checkbox" ng-model="freight.isReduceWeight" disabled>
                 <span>加固</span><input type="checkbox" ng-model="freight.isAddPackage" disabled>
