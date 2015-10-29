@@ -248,8 +248,13 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
     if (YD.User.current() != undefined) {
         //$rootScope.currentUser = YD.User.current();
         //$rootScope.currentUser.fetch();
-        AV.User.logOut();
-        $rootScope.currentUser = new YD.User();
+        if (YD.User.current().role != YD.User.ROLE_ADMIN && YD.User.current().role != 190) {
+            $rootScope.currentUser = new YD.User();
+        } else {
+            $rootScope.currentUser = YD.User.current();
+            //Admin logged in, do nothing
+        }
+        
     } else {
         $rootScope.currentUser = new YD.User();
     }
@@ -4948,7 +4953,8 @@ YundaApp.controller('RewardCtrl', ["$scope", function ($scope) {
     }
 
 }]);
-YundaApp.controller('AdminCtrl', function ($scope, $rootScope) {
+YundaApp.controller('AdminCtrl', function ($scope, $rootScope, $location) {
+    
     $scope.oneAtATime = true
     $scope.openTab = {
         setE: false,
