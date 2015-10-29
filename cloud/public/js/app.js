@@ -1571,7 +1571,10 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
                 id: function () {
                     return id;
                 }
-            }
+            },
+            backdrop: 'static',
+            keyboard: false
+
         })
         modalInstance.result.then(function (returnFreight) {
             //$scope.freightIn.address = chosenAddress
@@ -1849,7 +1852,9 @@ YundaApp.controller('ReturnBalanceCtrl', function ($scope, $modal) {
             controller: 'ReturnBalanceModalCtrl',
             scope: $scope,
             size: 'md',
-            windowClass: 'center-modal'
+            windowClass: 'center-modal',
+            backdrop: 'static',
+            keyboard: false
         })
         modalInstance.result.then(function (transaction) {
             transaction.status = YD.Transaction.STATUS_PENDING_RETURN_BALANCE;
