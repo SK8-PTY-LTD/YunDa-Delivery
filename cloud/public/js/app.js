@@ -5700,7 +5700,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
     }
     $scope.reloadFreightIn = function (index) {
         var query = new AV.Query(YD.FreightIn);
-        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL]);
+        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL,YD.FreightIn.STATUS_CANCELED]);
         query.equalTo("isHidden", false);
         query.notEqualTo("isSplit", true);
         query.notEqualTo("isSplitPremium", true);
@@ -5741,7 +5741,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                             tmp_date += tmp.getMinutes();
                         _
                         $scope.freightIn[i].createdAtToString = tmp_date;
-                        if($scope.freightIn[i].status  == 110) {
+                        if($scope.freightIn[i].status  == 110 || $scope.freightIn[i].status == 990) {
                             var tmp = $scope.freightIn[i].createdAt;
                             var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                             if (tmp.getMinutes() < 10)
@@ -5770,7 +5770,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
     $scope.reloadFreightCount = function () {
         var isSkipK = false;
         var query = new AV.Query(YD.FreightIn);
-        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL]);
+        query.containedIn("status", [ YD.FreightIn.STATUS_CONFIRMED, YD.FreightIn.STATUS_FINISHED, YD.FreightIn.STATUS_SPEED_MANUAL,YD.FreightIn.STATUS_CANCELED]);
         query.equalTo("isHidden", false);
         query.notEqualTo("isSplit", true);
         query.notEqualTo("isSplitPremium", true);
