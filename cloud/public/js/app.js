@@ -1610,7 +1610,25 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
         });
     };
     $scope.returnAgain = function (f) {
-        $scope.applyReturn(f.id);
+        var RKNumber = f.RKNumber;
+        var query = new AV.Query(YD.FreightIn);
+        query.equalTo("RKNumber", RKNumber);
+        query.find({
+            success: function (list) {
+                var freightIn = list[0];
+                freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                freightIn.save(null, {
+                    success: function () {
+                        $scope.applyReturn(f.id);
+                    },
+                    error: function (f, error) {
+                        alert("错误!请重试");
+                        console.log("ERROR: " + error.message);
+                    }
+                });
+            }
+        });
+
         //f.status = YD.FreightReturn.STATUS_REAPPLY;
         //f.save(null, {
         //    success: function () {
@@ -1728,16 +1746,26 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", functio
                     newQ.find({
                         success: function (list) {
                             if (list) {
-                                list[0].status = YD.FreightIn.STATUS_CANCELED;
-                                list[0].save(null, {
-                                    success: function () {
-                                        var userPt = new YD.User();
-                                        userPt.id = $scope.currentUser.id;
-                                        $scope.return.user = userPt;
-                                        $scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                        $modalInstance.close($scope.return);
-                                    }
-                                });
+                                var freightIn = list[0];
+                                if(freightIn.isMerged) {
+                                    alert("此包裹已经被合包，无法退货");
+                                    return;
+                                } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED) {
+                                    alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                    return;
+                                } else {
+                                    list[0].status = YD.FreightIn.STATUS_CANCELED;
+                                    list[0].save(null, {
+                                        success: function () {
+                                            var userPt = new YD.User();
+                                            userPt.id = $scope.currentUser.id;
+                                            $scope.return.user = userPt;
+                                            $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                            $modalInstance.close($scope.return);
+                                        }
+                                    });
+                                }
+
                             } else {
                                 alert("找不到包裹！操作失败");
                             }
@@ -2541,7 +2569,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
                         };
                         freightIn.mergeReference.push(obj);
                         // change freightIn status to finised, so no need to write for loop twice
-                        freightInList[i].status = YD.FreightIn.STATUS_FINISHED;
+                        freightInList[i].status = YD.FreightIn.STATUS_CANCELED;
                     }
                     freightIn.status = YD.FreightIn.STATUS_CONFIRMED;
                     freightIn.save(null, {
@@ -2827,7 +2855,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             windowClass: 'center-modal'
         })
         modalInstance.result.then(function () {
-            freightIn.status = YD.FreightIn.STATUS_FINISHED
+            freightIn.status = YD.FreightIn.STATUS_CANCELED;
             freightIn.save(null, {
                 success: function (f) {
                     alert("分箱完成！")
@@ -2859,7 +2887,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             windowClass: 'center-modal'
         })
         modalInstance.result.then(function () {
-            freightIn.status = YD.FreightIn.STATUS_FINISHED
+            freightIn.status = YD.FreightIn.STATUS_CANCELED
             freightIn.save(null, {
                 success: function (f) {
                     $scope.reloadFreightInConfirmed()
