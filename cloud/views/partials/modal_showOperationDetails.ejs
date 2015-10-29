@@ -13,6 +13,10 @@
                     <label>原包裹转运单号: </label>
                     <span ng-bind="freight.trackingNumber"></span>
                 </div>
+                <div class="col-md-5">
+                    <label>原包裹入库号:</label>
+                    <span ng-repeat="set in freight.mergeReference track by set.id">{{set.RKNumber}}; </span>
+                </div>
             </div>
         </div>
 

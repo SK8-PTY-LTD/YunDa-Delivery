@@ -1,5 +1,6 @@
 <div class="modal-body">
-    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span ng-bind="promote"></span></progressbar>
+    <progressbar class="progress-striped active" value="100" type="success" ng-show="isLoading"><span
+                ng-bind="promote"></span></progressbar>
 
     <table class="table table-bordered small-table">
         <tr>
@@ -10,6 +11,17 @@
             <td ng-bind="'YD运单号: ' + freight.YDNumber"></td>
             <td ng-bind="'渠道: ' + freight.channel.name"></td>
         </tr>
+        <div ng-if="freight.isMerge">
+            <tr>
+                <td colspan="2">
+                    <label>原包裹转运单号: </label>
+                    <span ng-bind="freight.trackingNumber"></span><br>
+                    <label>原包裹入库号:</label>
+                    <span ng-repeat="set in freight.mergeReference track by set.id">{{set.RKNumber}}; </span>
+                </td>
+            </tr>
+        </div>
+
         <tr>
             <td ng-bind="'用户名: ' + freight.user.stringId"></td>
             <td ng-bind="'数字ID: ' + freight.user.numberId"></td>
@@ -27,7 +39,7 @@
                 <span>加固</span><input type="checkbox" ng-model="freight.isAddPackage" disabled>
                 <span>普通分包</span> <input type="checkbox" ng-model="freight.isSplit" disabled>
                 <span>精确分包</span><input type="checkbox" ng-model="freight.isSplitPremium" disabled>
-                <span>合包</span><input type="checkbox" ng-model="freight.isMerged" disabled>
+                <span>合包</span><input type="checkbox" ng-model="freight.isMerge" disabled>
             </td>
         </tr>
         <tr>
@@ -37,7 +49,7 @@
             <td colspan="2" ng-bind="'物品详情: ' + freight.packageComments"></td>
         </tr>
         <tr ng-repeat="t in transactions">
-            <td >
+            <td>
                 <span ng-bind="t.notes"></span>
             </td>
             <td ng-bind="'$' + t.amount"></td>
@@ -64,8 +76,10 @@
         <tr>
             <!--<td ng-bind="'物流公司: ' + freight.chineseCourier"></td>-->
             <!--<td ng-bind="'快递号: ' + freight.chineseTrackingNumber"></td>-->
-            <td>物流公司: <input type="text" class="form-control" ng-model="freight.chineseCourier" ng-disabled="isFromCustomer"></td>
-            <td>快递号: <input type="text" class="form-control" ng-model="freight.chineseTrackingNumber" ng-disabled="isFromCustomer"></td>
+            <td>物流公司: <input type="text" class="form-control" ng-model="freight.chineseCourier"
+                             ng-disabled="isFromCustomer"></td>
+            <td>快递号: <input type="text" class="form-control" ng-model="freight.chineseTrackingNumber"
+                            ng-disabled="isFromCustomer"></td>
         </tr>
     </table>
 </div>

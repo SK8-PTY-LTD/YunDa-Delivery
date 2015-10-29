@@ -758,6 +758,14 @@
         }
     });
 
+    Object.defineProperty(YD.Freight.prototype, "isMerge", {
+        get: function () {
+            return this.get("isMerge");
+        },
+        set: function (value) {
+            this.set("isMerge", value);
+        }
+    });
     Object.defineProperty(YD.Freight.prototype, "mergeReference", {
         get: function () {
             return this.get("mergeReference");
