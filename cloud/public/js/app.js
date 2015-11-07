@@ -252,6 +252,7 @@ YundaApp.controller('NavbarCtrl', function ($scope, $rootScope, $modal, $window)
             $rootScope.currentUser = new YD.User();
         } else {
             $rootScope.currentUser = YD.User.current();
+            $rootScope.currentUser.fetch();
             //Admin logged in, do nothing
         }
 
