@@ -1718,7 +1718,7 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", functio
             alert("请提供退货地址");
             return;
         } else if (!$scope.return.reason) {
-            alert("请提供退货原因");
+            alert("请提供退货备注");
             return;
         }
         var query = new AV.Query(YD.Freight);
