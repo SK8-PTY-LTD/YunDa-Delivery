@@ -290,6 +290,9 @@ exports.alipayReturn = function(req, res) {
     //Validate purchase
     var status = transaction.get("status");
     if (status == 100) {
+      console.log("3. Transaction already saved");
+      console.log("--------支付宝充值回调 End--------");
+    } else {
       var totalFromTransaction = transaction.get("amount");
       if (totalFromTransaction == totalInDollar) {
         console.log("3. Transaction validate");
@@ -324,9 +327,6 @@ exports.alipayReturn = function(req, res) {
           }
         });
       }
-    } else {
-      console.log("3. Transaction already saved");
-      console.log("--------支付宝充值回调 End--------");
     }
   }
 
