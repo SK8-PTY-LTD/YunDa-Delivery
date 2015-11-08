@@ -78,7 +78,7 @@ exports.alipayReturn = function(req, res) {
                         console.log("--------支付宝充值回调 End--------");
                         //Send Email Notify Admin
                         var data = {
-                          from: user.get("email"),
+                          from: "feedback@sk8.asia",
                           to: "sk8tech@163.com",
                           subject: "Yunda充值错误",
                           text: "7. Attempt 5: User Saved Failed, End. userId: " + user.id
@@ -167,7 +167,7 @@ exports.alipayReturn = function(req, res) {
                         console.log("--------支付宝充值回调 End--------");
                         //Send Email Notify Admin
                         var data = {
-                          from: "app@sk8.asia",
+                          from: "feedback@sk8.asiaa",
                           to: "sk8tech@163.com",
                           subject: "Yunda充值错误",
                           text: "5. Attempt 5: Get user failed, End. userId: " + userId
@@ -249,7 +249,7 @@ exports.alipayReturn = function(req, res) {
                         console.log("--------支付宝充值回调 End--------");
                         //Send Email Notify Admin
                         var data = {
-                          from: "app@sk8.asia",
+                          from: "feedback@sk8.asia",
                           to: "sk8tech@163.com",
                           subject: "Yunda充值错误",
                           text: "4. Attempt 5: Transaction Saved Failed, End. transactionId: " + transaction.id +
@@ -299,7 +299,7 @@ exports.alipayReturn = function(req, res) {
         console.log("--------支付宝充值回调 End--------");
         //Send Email Notify Admin
         var data = {
-          from: "app@sk8.asia",
+          from: "feedback@sk8.asia",
           to: "sk8tech@163.com",
           subject: "Yunda充值错误",
           text: "3. Transaction is not validate, suspected hacking. transactionId: " + transaction.id + ". userId: " + userId
