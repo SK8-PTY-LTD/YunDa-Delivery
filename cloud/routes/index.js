@@ -350,14 +350,13 @@ exports.alipayReturn = function(req, res) {
   var userId = body.substring(0, 24);
   console.log("--------支付宝充值回调 Start--------")
   console.log("1. body: " + body + " | " + body.length);
-  console.log("1. userId: " + userId);
   var rate = parseFloat(body.substring(25, body.length));
   var totalInDollar = Math.floor(parseFloat(req.query.total_fee) / rate * 100); //actually this is totalInCent because user.balance is amount in cent.
   console.log("1. " + isSuccess + " | " + userId + " | " + totalInDollar + " | " + rate + typeof rate);
 
   if (isSuccess == "T") {
     var transId = req.query.out_trade_no;
-    console.log("2. transId: " + transId);
+    console.log("2. Getting Transaction, transId: " + transId);
     var query = new AV.Query("Transaction");
     query.get(transId, {
       success: function(fetchedTransaction) {
