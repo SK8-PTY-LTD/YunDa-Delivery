@@ -294,7 +294,7 @@ exports.alipayReturn = function(req, res) {
       console.log("--------支付宝充值回调 End--------");
     } else {
       var totalFromTransaction = parseInt(transaction.get("amount") * 100);
-      if (totalFromTransaction == totalInCenttotal) {
+      if (totalFromTransaction == totalInCent) {
         console.log("3. Transaction validate");
         updateTransaction(transaction, userId);
       } else {
