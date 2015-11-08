@@ -11,6 +11,17 @@ var AV_MASTER_KEY = "oepybbiejpca2afdunnc0s8z35tkiwub5zvrrqomydfsej32";
 AV.initialize(AV_App_Id, AV_App_Key, AV_MASTER_KEY);
 AV.Cloud.useMasterKey();
 
+
+var Mailgun = require('mailgun-js');
+var MAINGUN_KEY = "key-1abb9ac6b44ecb7982ddf76079fd38fc";
+var MAINGUN_DOMAIN = "sk8.asia";
+
+//We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+var mailgun = new Mailgun({
+  apiKey: MAINGUN_KEY,
+  domain: MAINGUN_DOMAIN
+});
+
 exports.index = function(req, res) {
   res.render('index');
 };
@@ -33,7 +44,6 @@ exports.alipayReturn = function(req, res) {
       success: function(savedUser) {
         console.log("7. Attempt 1: User Saved. New Balance: " + savedUser.get("balance"));
         console.log("--------支付宝充值回调 End--------");
-        res.render('partials/payReturn');
       },
       error: function(u, error) {
         console.log("7. Attempt 1: User Saved Failed, Retry");
@@ -41,7 +51,6 @@ exports.alipayReturn = function(req, res) {
           success: function(savedUser) {
             console.log("7. Attempt 2: User Saved. New Balance: " + savedUser.get("balance"));
             console.log("--------支付宝充值回调 End--------");
-            res.render('partials/payReturn');
           },
           error: function(u, error) {
             console.log("7. Attempt 2: User Saved Failed, Retry");
@@ -49,7 +58,6 @@ exports.alipayReturn = function(req, res) {
               success: function(savedUser) {
                 console.log("7. Attempt 3: User Saved. New Balance: " + savedUser.get("balance"));
                 console.log("--------支付宝充值回调 End--------");
-                res.render('partials/payReturn');
               },
               error: function(u, error) {
                 console.log("7. Attempt 3: User Saved Failed, Retry");
@@ -57,7 +65,6 @@ exports.alipayReturn = function(req, res) {
                   success: function(savedUser) {
                     console.log("7. Attempt 4: User Saved. New Balance: " + savedUser.get("balance"));
                     console.log("--------支付宝充值回调 End--------");
-                    res.render('partials/payReturn');
                   },
                   error: function(u, error) {
                     console.log("7. Attempt 4: User Saved Failed, Retry");
@@ -65,12 +72,36 @@ exports.alipayReturn = function(req, res) {
                       success: function(savedUser) {
                         console.log("7. Attempt 5: User Saved. New Balance: " + savedUser.get("balance"));
                         console.log("--------支付宝充值回调 End--------");
-                        res.render('partials/payReturn');
                       },
                       error: function(u, error) {
                         console.log("7. Attempt 5: User Saved Failed, End");
                         console.log("--------支付宝充值回调 End--------");
-                        res.render('partials/payReturnFail');
+                        //Send Email Notify Admin
+                        var data = {
+                          from: user.get("email"),
+                          to: "sk8tech@163.com",
+                          subject: "Yunda充值错误",
+                          text: "7. Attempt 5: User Saved Failed, End. userId: " + user.id
+                        }
+                        mailgun.messages().send(data, function(err, body) {
+                          if (err) {
+                            console.log("Email failed to send: ", body);
+                          } else {
+                            mailgun.messages().send(data, function(err, body) {
+                              if (err) {
+                                console.log("Email failed to send: ", body);
+                              } else {
+                                mailgun.messages().send(data, function(err, body) {
+                                  if (err) {
+                                    console.log("Email failed to send: ", body);
+                                  } else {
+                                    //Email failed to send
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
                       }
                     });
                   }
@@ -134,7 +165,32 @@ exports.alipayReturn = function(req, res) {
                       error: function(u, error) {
                         console.log("5. Attempt 5: Get user failed, End");
                         console.log("--------支付宝充值回调 End--------");
-                        res.render('partials/payReturnFail');
+                        //Send Email Notify Admin
+                        var data = {
+                          from: "app@sk8.asia",
+                          to: "sk8tech@163.com",
+                          subject: "Yunda充值错误",
+                          text: "5. Attempt 5: Get user failed, End. userId: " + userId
+                        }
+                        mailgun.messages().send(data, function(err, body) {
+                          if (err) {
+                            console.log("Email failed to send: ", body);
+                          } else {
+                            mailgun.messages().send(data, function(err, body) {
+                              if (err) {
+                                console.log("Email failed to send: ", body);
+                              } else {
+                                mailgun.messages().send(data, function(err, body) {
+                                  if (err) {
+                                    console.log("Email failed to send: ", body);
+                                  } else {
+                                    //Email failed to send
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
                       }
                     });
                   }
@@ -191,7 +247,33 @@ exports.alipayReturn = function(req, res) {
                       error: function(t, error) {
                         console.log("4. Attempt 5: Transaction Saved Failed, End");
                         console.log("--------支付宝充值回调 End--------");
-                        res.render('partials/payReturnFail');
+                        //Send Email Notify Admin
+                        var data = {
+                          from: "app@sk8.asia",
+                          to: "sk8tech@163.com",
+                          subject: "Yunda充值错误",
+                          text: "4. Attempt 5: Transaction Saved Failed, End. transactionId: " + transaction.id +
+                            ". Status should be 100, record should be " + alipayId + ", notes should be '支付宝充值'. user.balance should increment: " + transaction.get("amount") + ". userId: " + userId
+                        }
+                        mailgun.messages().send(data, function(err, body) {
+                          if (err) {
+                            console.log("Email failed to send: ", body);
+                          } else {
+                            mailgun.messages().send(data, function(err, body) {
+                              if (err) {
+                                console.log("Email failed to send: ", body);
+                              } else {
+                                mailgun.messages().send(data, function(err, body) {
+                                  if (err) {
+                                    console.log("Email failed to send: ", body);
+                                  } else {
+                                    //Email failed to send
+                                  }
+                                });
+                              }
+                            });
+                          }
+                        });
                       }
                     });
                   }
@@ -215,17 +297,44 @@ exports.alipayReturn = function(req, res) {
       } else {
         console.log("3. Transaction is not validate, suspected hacking");
         console.log("--------支付宝充值回调 End--------");
-        res.render('partials/payReturnFail');
+        //Send Email Notify Admin
+        var data = {
+          from: "app@sk8.asia",
+          to: "sk8tech@163.com",
+          subject: "Yunda充值错误",
+          text: "3. Transaction is not validate, suspected hacking. transactionId: " + transaction.id + ". userId: " + userId
+        }
+        mailgun.messages().send(data, function(err, body) {
+          if (err) {
+            console.log("Email failed to send: ", body);
+          } else {
+            mailgun.messages().send(data, function(err, body) {
+              if (err) {
+                console.log("Email failed to send: ", body);
+              } else {
+                mailgun.messages().send(data, function(err, body) {
+                  if (err) {
+                    console.log("Email failed to send: ", body);
+                  } else {
+                    //Email failed to send
+                  }
+                });
+              }
+            });
+          }
+        });
       }
     } else {
       console.log("3. Transaction already saved");
       console.log("--------支付宝充值回调 End--------");
-      res.render('partials/payReturn');
     }
   }
 
   /**
-   * Cloud function starts here
+   * Cloud function starts here <br>
+   * For maximum load speed, page is returned instantly.
+   * However wheather the charge is really processsed correctly, it depends on various factors.
+   * Either way, the logs are very clear. 
    * 1. Get Params
    * 2. Get Transaction
    * 3. Validate Transaction Status
@@ -256,7 +365,7 @@ exports.alipayReturn = function(req, res) {
         validateTransaction(fetchedTransaction, totalInDollar, userId);
       },
       error: function(t, error) {
-        console.log("2. Attempt 1: Failed, Retrying");
+        console.log("2. Attempt 1: Get transaction Failed, Retrying");
         var query = new AV.Query("Transaction");
         query.get(transId, {
           success: function(fetchedTransaction) {
@@ -264,7 +373,7 @@ exports.alipayReturn = function(req, res) {
             validateTransaction(fetchedTransaction, totalInDollar, userId);
           },
           error: function(t, error) {
-            console.log("2. Attempt 2: Failed, Retrying");
+            console.log("2. Attempt 2: Get transaction Failed, Retrying");
             //Get transaction failed, third attempt
             var query = new AV.Query("Transaction");
             query.get(transId, {
@@ -273,19 +382,46 @@ exports.alipayReturn = function(req, res) {
                 validateTransaction(fetchedTransaction, totalInDollar, userId);
               },
               error: function(t, error) {
-                console.log("2. Attempt 3: Failed. Error: ", error);
+                console.log("2. Attempt 3: Get transaction Failed. Error: ", error);
                 console.log("--------支付宝充值回调 End--------");
-                res.render('partials/payReturnFail');
+                //Send Email Notify Admin
+                var data = {
+                  from: "app@sk8.asia",
+                  to: "sk8tech@163.com",
+                  subject: "Yunda充值错误",
+                  text: "2. Attempt 3: Get transaction Failed. End. transactionId: " + transId +
+                    ". Status should be 100, record should be " + req.query.trade_no + ", notes should be '支付宝充值'. user.balance should increment: " + totalInDollar + ". userId: " + userId
+                }
+                mailgun.messages().send(data, function(err, body) {
+                  if (err) {
+                    console.log("Email failed to send: ", body);
+                  } else {
+                    mailgun.messages().send(data, function(err, body) {
+                      if (err) {
+                        console.log("Email failed to send: ", body);
+                      } else {
+                        mailgun.messages().send(data, function(err, body) {
+                          if (err) {
+                            console.log("Email failed to send: ", body);
+                          } else {
+                            //Email failed to send
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
               }
             });
           }
         });
       }
     });
+    res.render('partials/payReturn');
   } else {
     res.render('partials/payReturnFail');
   }
-};
+}
 
 exports.alipayNotify = function(req, res) {
   //var isSuccess = req.query.is_success;
