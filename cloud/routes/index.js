@@ -115,10 +115,10 @@ exports.alipayReturn = function(req, res) {
   }
 
   var updateUserBalance = function(transaction, user) {
-    var totalInDollar = transaction.get("amount");
+    var totalInCent = parseInt(transaction.get("amount") * 100);
     var userBalance = parseFloat(user.get("balance"));
-    console.log("6. Update User Balance, Old Balance: " + userBalance + ", increment: " + totalInDollar);
-    user.increment("balance", totalInDollar);
+    console.log("6. Update User Balance, Old Balance: " + userBalance + ", increment: " + totalInCent);
+    user.increment("balance", totalInCent);
     saveUpdatedUser(user);
   }
 
@@ -286,15 +286,15 @@ exports.alipayReturn = function(req, res) {
     });
   }
 
-  var validateTransaction = function(transaction, totalInDollar, userId) {
+  var validateTransaction = function(transaction, totalInCent, userId) {
     //Validate purchase
     var status = transaction.get("status");
     if (status == 100) {
       console.log("3. Transaction already saved");
       console.log("--------支付宝充值回调 End--------");
     } else {
-      var totalFromTransaction = transaction.get("amount");
-      if (totalFromTransaction == totalInDollar) {
+      var totalFromTransaction = parseInt(transaction.get("amount") * 100);
+      if (totalFromTransaction == totalInCenttotal) {
         console.log("3. Transaction validate");
         updateTransaction(transaction, userId);
       } else {
@@ -351,8 +351,8 @@ exports.alipayReturn = function(req, res) {
   console.log("--------支付宝充值回调 Start--------")
   console.log("1. body: " + body + " | " + body.length);
   var rate = parseFloat(body.substring(25, body.length));
-  var totalInDollar = Math.floor(parseFloat(req.query.total_fee) / rate * 100); //actually this is totalInCent because user.balance is amount in cent.
-  console.log("1. " + isSuccess + " | " + userId + " | " + totalInDollar + " | " + rate + typeof rate);
+  var totalInCent = Math.floor(parseFloat(req.query.total_fee) / rate * 100); //actually this is totalInCent because user.balance is amount in cent.
+  console.log("1. " + isSuccess + " | " + userId + " | " + totalInCent + " | " + rate + typeof rate);
 
   if (isSuccess == "T") {
     var transId = req.query.out_trade_no;
@@ -361,7 +361,7 @@ exports.alipayReturn = function(req, res) {
     query.get(transId, {
       success: function(fetchedTransaction) {
         console.log("2. Attempt 1: Get transaction successful");
-        validateTransaction(fetchedTransaction, totalInDollar, userId);
+        validateTransaction(fetchedTransaction, totalInCent, userId);
       },
       error: function(t, error) {
         console.log("2. Attempt 1: Get transaction Failed, Retrying");
@@ -369,7 +369,7 @@ exports.alipayReturn = function(req, res) {
         query.get(transId, {
           success: function(fetchedTransaction) {
             console.log("2. Attempt 2: Get transaction successful");
-            validateTransaction(fetchedTransaction, totalInDollar, userId);
+            validateTransaction(fetchedTransaction, totalInCent, userId);
           },
           error: function(t, error) {
             console.log("2. Attempt 2: Get transaction Failed, Retrying");
@@ -378,7 +378,7 @@ exports.alipayReturn = function(req, res) {
             query.get(transId, {
               success: function(fetchedTransaction) {
                 console.log("2. Attempt 3: Get transaction successful");
-                validateTransaction(fetchedTransaction, totalInDollar, userId);
+                validateTransaction(fetchedTransaction, totalInCent, userId);
               },
               error: function(t, error) {
                 console.log("2. Attempt 3: Get transaction Failed. Error: ", error);
