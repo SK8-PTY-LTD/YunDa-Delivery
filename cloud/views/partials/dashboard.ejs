@@ -420,7 +420,7 @@
                 </div>
                 <div class="col-md-5">
                     <label for="weight">重量*(Lb)</label>
-                    <input type="number" step="any" class="form-control" ng-model="freightIn.weight" placeholder="重量"
+                    <input type="number" step="any" min="0" class="form-control" ng-model="freightIn.weight" placeholder="重量"
                            required>
                 </div>
             </div>
@@ -574,11 +574,11 @@
         <div class="col-md-4 col-md-offset-8">
             <div style="font-size:1.5em; color: red; font-weight:bold;">
                 预估价:${{(freightIn.trackingNumber && freightIn.weight && channelSelection && freightIn.address) ?
-                ((freightIn.weight < channelSelection.startAt) ? channelSelection.initialPrice * 1 +
-                (channelSelection.startAt-1)* channelSelection.continuePrice + insurance.amount+(checkBox.isAddPackage ?
+                ((freightIn.weight < channelSelection.startAt) ? channelSelection.initAt * 1 +
+                (channelSelection.startAt-1) * channelSelection.contAt + insurance.amount+(checkBox.isAddPackage ?
                 systemSetting.addPackageCharge : 0) :
-                channelSelection.initialPrice * 1 + ((freightIn.weight - Math.floor(freightIn.weight) <= 0.11 ?
-                Math.floor(freightIn.weight) : freightIn.weight) - 1) * channelSelection.continuePrice +
+                channelSelection.initAt * 1 + ((freightIn.weight - Math.floor(freightIn.weight) <= 0.11 ?
+                Math.floor(freightIn.weight) : freightIn.weight) - 1) * channelSelection.contAt +
                 (freightIn.exceedWeight > freightIn.weight ?
                 freightIn.exceedWeight - freightIn.weight : 0) + insurance.amount +
                 (checkBox.isAddPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) : 0}}
@@ -907,14 +907,14 @@
                         <div style="font-size:1.5em; color: red; font-weight:bold;">
                             预估价: $ {{(freightIn.channelSelection && freightIn.address) ?
                             ((freightIn.weight < freightIn.channelSelection.startAt) ?
-                            freightIn.channelSelection.initialPrice +
-                            (freightIn.channelSelection.startAt - 1) * freightIn.channelSelection.continuePrice +
+                            freightIn.channelSelection.initAt +
+                            (freightIn.channelSelection.startAt - 1) * freightIn.channelSelection.contAt +
                             freightIn.insurance.value *0.02 + (freightIn.checkboxModel.addPackage ?
                             systemSetting.addPackageCharge : 0) :
-                            freightIn.channelSelection.initialPrice
+                            freightIn.channelSelection.initAt
                             + ((freightIn.weight - Math.floor(freightIn.weight) <= 0.11 ? Math.floor(freightIn.weight) :
                             freightIn.weight)
-                            - 1) * freightIn.channelSelection.continuePrice +(freightIn.exceedWeight >
+                            - 1) * freightIn.channelSelection.contAt +(freightIn.exceedWeight >
                             freightIn.weight ? freightIn.exceedWeight - freightIn.weight : 0) +
                             freightIn.insurance.value *0.02
                             + (freightIn.checkboxModel.addPackage ? systemSetting.addPackageCharge : 0)).toFixed(2) :
