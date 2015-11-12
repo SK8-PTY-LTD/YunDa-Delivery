@@ -4603,6 +4603,7 @@ YundaApp.controller('ZhifubaoCtrl', function ($scope, $rootScope, $http, $locati
                         // when the response is available
                         //tabWindowId.location.href = headers('Location');
                         $rootScope.alipayData = data;
+                        alert("充值完成后，务必请保持停留在该页面不要离开(不要手动关闭页面)，直至系统自动跳转回Yunda主页面。");
                         $location.path('/pay');
                     });
                 },

@@ -24,7 +24,7 @@
             //change below target URL to your own
             var targetURL = "http://www.yundawl.com"
             //change the second to start counting down from
-            var countdownfrom = 3
+            var countdownfrom = 5;
 
 
             var currentsecond = document.redirect.redirect2.value = countdownfrom + 1
@@ -40,7 +40,10 @@
                 setTimeout("countredirect()", 1000)
             }
 
-            countredirect()
+            countredirect();
+            window.addEventListener("beforeunload", function (event) {
+                event.returnValue = "跳转过程中，请耐心等待。强行离开可能会导致充值失败。请确认倒计时是否已经结束？";
+            });
             //-->
         </script>
 </div>
