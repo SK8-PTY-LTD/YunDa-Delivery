@@ -376,7 +376,7 @@ AV.Cloud.define("chargingUser", function(request, response) {
     var Transaction = AV.Object.extend("Transaction");
     var query = new AV.Query(User);
     var id = request.params.userId;
-    var amount = parseFloat(request.params.amount);
+    var amount = parseInt(request.params.amount * 100);
     var notes = request.params.notes;
     var RKNumber = request.params.RKNumber;
     var YDNumber = request.params.YDNumber;
@@ -396,8 +396,8 @@ AV.Cloud.define("chargingUser", function(request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function(user) {
-            var rewardBalance = parseInt(user.get("rewardBalance")) / 100;
-            var balance = parseInt(user.get("balance")) / 100;
+            var rewardBalance = parseInt(user.get("rewardBalance"));
+            var balance = parseInt(user.get("balance"));
             var totalBalance = rewardBalance + balance;
             console.log("user's total balance: " + totalBalance);
             console.log("user's total balance: " + rewardBalance);
@@ -439,12 +439,13 @@ AV.Cloud.define("chargingUser", function(request, response) {
                 if (id == MINKA) {
                     ydReward = 0;
                 }
-                user.set("balance", balance * 100);
-                user.set("rewardBalance", rewardBalance * 100);
+                user.set("balance", parseInt(balance));
+                user.set("rewardBalance", parseInt(rewardBalance));
                 console.log("user's total balance: " + rewardBalance);
                 console.log("user's total balance: " + balance);
                 var yd = user.get("accumulatedReward");
-                var finalReward = parseFloat((yd + ydReward).toFixed(2));
+                var ydRewardInDollar = parseFloat(parseFloat(ydReward/100.0).toFixed(2));
+                var finalReward = parseFloat(yd + ydRewardInDollar);
                 user.set("accumulatedReward", finalReward);
                 user.save(null, {
                     success: function(u) {
@@ -452,8 +453,9 @@ AV.Cloud.define("chargingUser", function(request, response) {
                         var userPT = new User();
                         userPT.id = u.id;
                         var transaction = new Transaction();
-                        transaction.set("amount", amount);
-                        transaction.set("notes", notes + ', 使用YD币兑换钱数: $' + (usedRewardBalance).toFixed(2));
+                        transaction.set("amountInCent", amount);
+                        transaction.set("amount", parseFloat(amount/100.0).toFixed(2));
+                        transaction.set("notes", notes + ', 使用YD币兑换钱数: $' + parseFloat(usedRewardBalance/100.0).toFixed(2));
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
                         if (!YDNumber) {
@@ -468,8 +470,9 @@ AV.Cloud.define("chargingUser", function(request, response) {
 
                                 if (ydReward > 0) {
                                     var tns = new Transaction();
-                                    tns.set("amount", ydReward);
-                                    tns.set("notes", "YD币赠送 " + ydReward + " 个: " + notes);
+                                    tns.set("amountInCent", amount);
+                                    tns.set("amount", parseFloat(amount/100.0).toFixed(2));
+                                    tns.set("notes", "YD币赠送 " + ydRewardInDollar + " 个: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
                                     if (!YDNumber) {
@@ -527,7 +530,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
     var YDNumber = request.params.YDNumber;
     var status = request.params.status;
     console.log("CC -- userid: " + id);
-    var amount = parseFloat(request.params.amount);
+    var amount = parseInt(request.params.amount * 100);
     var admin = request.user;
 
     console.log("getting user now: " + id + " | " + amount);
@@ -539,22 +542,22 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
     //query.equalTo("objectId", id);
     query.get(id, {
         success: function(user) {
-            var balance = parseInt(user.get("balance")) / 100;
+            var balance = parseInt(user.get("balance"));
             console.log("user's total balance: " + balance);
             if (balance < amount) {
                 response.error("用户金额不足$" + amount);
             } else {
-
                 balance -= amount;
-                user.set("balance", balance * 100);
                 console.log("user's total balance: " + balance);
                 var yd = user.get("accumulatedReward");
-                var finalReward = parseFloat((yd + amount).toFixed(2));
+                var ydRewardInDollar = parseFloat(parseFloat(amount/100.0).toFixed(2));
+                var finalReward = parseFloat((yd + ydRewardInDollar).toFixed(2));
                 if (id == MINKA) {
                     //no rewards
                 } else {
                     user.set("accumulatedReward", finalReward);
                 }
+                console.log("user's total balance: " + balance);
                 user.save(null, {
                     success: function(u) {
                         console.log("user saved");
@@ -562,7 +565,8 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                         var userPT = new User();
                         userPT.id = u.id;
                         var transaction = new Transaction();
-                        transaction.set("amount", amount);
+                        transaction.set("amountInCent", amount);
+                        transaction.set("amount", parseFloat(amount/100.0).toFixed(2));
                         transaction.set("notes", notes);
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
@@ -581,8 +585,9 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                                     response.success();
                                 } else {
                                     var tns = new Transaction();
-                                    tns.set("amount", amount);
-                                    tns.set("notes", "YD币赠送 " + amount + " 个: " + notes);
+                                    tns.set("amountInCent", amount);
+                                    tns.set("amount", parseFloat(amount/100.0).toFixed(2));
+                                    tns.set("notes", "YD币赠送 " + parseFloat(amount/100.0).toFixed(2) + " 个: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
                                     if (!YDNumber) {
