@@ -21,6 +21,12 @@ html *
     font-family:"Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
 
+ul li:hover {
+    cursor: pointer;
+    text-decoration: underline;
+
+}
+
 h4.help-title  {
     color: #013086;
 }
