@@ -1546,7 +1546,7 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
                     else if ($scope.returnList[i].status == YD.FreightReturn.STATUS_REFUSED)
                         $scope.returnList[i].statusToString = "昀達拒绝退货"
                     else if ($scope.returnList[i].status == YD.FreightReturn.STATUS_REAPPLY)
-                        $scope.returnList[i].statusToString = "已重新申请退货"
+                        $scope.returnList[i].statusToString = "重新申请中"
                     else if ($scope.returnList[i].status == YD.FreightReturn.STATUS_FREIGHTIN)
                         $scope.returnList[i].statusToString = "已重新入库"
                     var tmp = $scope.returnList[i].createdAt
@@ -6439,7 +6439,7 @@ YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $m
             windowClass: 'center-modal'
         });
     };
-    
+
     $scope.reloadManual = function (index) {
         var query = new AV.Query(YD.FreightIn);
         query.equalTo("status", YD.FreightIn.STATUS_MANUAL);
