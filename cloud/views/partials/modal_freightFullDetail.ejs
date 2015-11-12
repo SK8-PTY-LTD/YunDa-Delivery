@@ -14,7 +14,7 @@
         <div ng-if="freight.isMerge">
             <tr>
                 <td colspan="2">
-                    <label>原包裹转运单号: </label>
+                    <label>原包裹转运号: </label>
                     <span ng-bind="freight.trackingNumber"></span><br>
                     <label>原包裹入库号:</label>
                     <span ng-repeat="set in freight.mergeReference track by set.id">{{set.RKNumber}}; </span>

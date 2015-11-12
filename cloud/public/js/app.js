@@ -6425,6 +6425,21 @@ YundaApp.controller('ShowConsumeDetailsCtrl', ["$scope", "$modalInstance", "frei
     }
 }]);
 YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $modal) {
+    $scope.showDetails = function (freight) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_showDetails',
+            controller: 'ShowDetailsCtrl',
+            scope: $scope,
+            size: 'sm',
+            resolve: {
+                freight: function () {
+                    return freight
+                }
+            },
+            windowClass: 'center-modal'
+        });
+    };
+    
     $scope.reloadManual = function (index) {
         var query = new AV.Query(YD.FreightIn);
         query.equalTo("status", YD.FreightIn.STATUS_MANUAL);
@@ -6455,7 +6470,7 @@ YundaApp.controller('AdminManualCtrl', ["$scope", "$modal", function ($scope, $m
                 $scope.$apply();
             }
         });
-    }
+    };
     $scope.reloadManual(0);
     $scope.setPage = function () {
         $scope.currentPage = $scope.inputPage;
@@ -8252,6 +8267,19 @@ YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
             }
         })
     };
+    $scope.searchingRK = function () {
+        if ($scope.currentUser.role != YD.User.ROLE_ADMIN && $scope.currentUser.role != YD.User.ROLE_DEVELOPER && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE && $scope.currentUser.role != YD.User.ROLE_ADMIN_FINANCE_YD) {
+            //alert("您没有权限");
+            return;
+        }
+        $scope.searchRK = true;
+        $scope.searchName = false;
+        $scope.searchDate = false;
+        $scope.searchType = false;
+        $scope.queryType = undefined;
+        $scope.reloadRewardCount();
+        $scope.reloadRewardRecord(0);
+    }
     $scope.reloadRewardCount = function () {
         var query = new AV.Query(YD.Transaction);
         if ($scope.searchType) {
