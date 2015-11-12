@@ -2261,6 +2261,9 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $modal
             query.limit($scope.LIMIT_NUMBER);
             query.skip($scope.LIMIT_NUMBER * index);
             query.descending("createdAt");
+            if($scope.query.number != undefined) {
+                query.equalTo("trackingNumber", $scope.query.number);
+            }
             query.find({
                 success: function (results) {
                     $scope.$apply(function () {
@@ -2297,6 +2300,9 @@ YundaApp.controller('freightInArrivedCtrl', function ($scope, $rootScope, $modal
         var query = new AV.Query(YD.FreightIn);
         query.equalTo("user", $scope.currentUser);
         query.containedIn("status", [YD.FreightIn.STATUS_ARRIVED, YD.FreightIn.STATUS_PENDING_CHECK_PACKAGE, YD.FreightIn.STATUS_FINISHED_CHECK_PACKAGE])
+        if($scope.query.number != undefined) {
+            query.equalTo("trackingNumber", $scope.query.number);
+        }
         query.count({
             success: function (count) {
                 $scope.freightCount = count;
