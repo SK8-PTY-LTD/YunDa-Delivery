@@ -454,7 +454,7 @@ AV.Cloud.define("chargingUser", function(request, response) {
                         userPT.id = u.id;
                         var transaction = new Transaction();
                         transaction.set("amountInCent", amount);
-                        transaction.set("amount", parseFloat(amount/100.0).toFixed(2));
+                        transaction.set("amount", parseFloat(parseFloat(amount/100.0).toFixed(2)));
                         transaction.set("notes", notes + ', 使用YD币兑换钱数: $' + parseFloat(usedRewardBalance/100.0).toFixed(2));
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
@@ -467,11 +467,10 @@ AV.Cloud.define("chargingUser", function(request, response) {
                         console.log("transaction set finished, ready to save");
                         transaction.save(null, {
                             success: function() {
-
                                 if (ydReward > 0) {
                                     var tns = new Transaction();
                                     tns.set("amountInCent", amount);
-                                    tns.set("amount", parseFloat(amount/100.0).toFixed(2));
+                                    tns.set("amount", parseFloat(parseFloat(amount/100.0).toFixed(2)));
                                     tns.set("notes", "YD币赠送 " + ydRewardInDollar + " 个: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
@@ -489,6 +488,7 @@ AV.Cloud.define("chargingUser", function(request, response) {
                                             response.success();
                                         },
                                         error: function(t, error) {
+                                            console.log("1. tns saved error: ", error);
                                             response.error(error.message);
                                         }
                                     });
@@ -497,12 +497,13 @@ AV.Cloud.define("chargingUser", function(request, response) {
                                 }
                             },
                             error: function(t, error) {
+                                console.log("1. transaction saved error: ", error);
                                 response.error(error.message);
-
                             }
                         });
                     },
                     error: function(u, error) {
+                        console.log("1. user saved error: ", error);
                         response.error(error.message);
                     }
                 });
@@ -566,7 +567,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                         userPT.id = u.id;
                         var transaction = new Transaction();
                         transaction.set("amountInCent", amount);
-                        transaction.set("amount", parseFloat(amount/100.0).toFixed(2));
+                        transaction.set("amount", parseFloat(parseFloat(amount/100.0).toFixed(2)));
                         transaction.set("notes", notes);
                         transaction.set("RKNumber", RKNumber);
                         transaction.set("user", userPT);
@@ -586,7 +587,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                                 } else {
                                     var tns = new Transaction();
                                     tns.set("amountInCent", amount);
-                                    tns.set("amount", parseFloat(amount/100.0).toFixed(2));
+                                    tns.set("amount", parseFloat(parseFloat(amount/100.0).toFixed(2)));
                                     tns.set("notes", "YD币赠送 " + parseFloat(amount/100.0).toFixed(2) + " 个: " + notes);
                                     tns.set("RKNumber", RKNumber);
                                     tns.set("user", userPT);
@@ -618,7 +619,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                         });
                     },
                     error: function(u, error) {
-                        response.error(error.message);
+                        console.log("2. user saved error: ", error);
                         response.error(error.message);
                     }
                 });
