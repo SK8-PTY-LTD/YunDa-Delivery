@@ -2086,7 +2086,16 @@
                 <!--<div ng-show="t.YDNumber || (t.YDNumber && t.RKNumber)">-->
                 <!--<span ng-show="t.YDNumber"></span>-->
                 <!--</div>-->
-                {{t.YDNumber ? t.YDNumber : '入库号:' + t.RKNumber }}
+                <!--{{t.YDNumber ? t.YDNumber : t.RKNumber ? '入库号:' + t.RKNumber : '无'}}-->
+                <div ng-if="t.YDNumber != undefined">
+                    {{t.YDNumber}}
+                </div>
+                <div ng-if="t.YDNumber == undefined && t.RKNumber != undefined">
+                    <a style="cursor:pointer;" ng-click="showFreightInDetail(t)">{{'入库号:' + t.RKNumber}}</a>
+                </div>
+                <div ng-if="t.YDNumber == undefined && t.RKNumber == undefined">
+                    无
+                </div>
             </td>
             <td ng-bind="'$ ' + t.amount"></td>
             <td ng-bind="t.status"></td>

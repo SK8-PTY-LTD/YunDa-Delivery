@@ -3943,11 +3943,10 @@ YundaApp.controller('FreightDeliveryCtrl', function ($scope, $rootScope, $filter
         var amount = index * $scope.LIMIT_NUMBER;
         $scope.$apply(function () {
             $scope.freightList = [];
-            console.log("freightList is empty now");
             for (var i = amount; i < $scope.LIMIT_NUMBER * (index + 1); i++) {
                 if ($scope.freights[i] != undefined) {
                     $scope.freightList.push($scope.freights[i]);
-                    console.log("$scope:" + i + ": " + $scope.freights[i].id);
+                    //console.log("$scope:" + i + ": " + $scope.freights[i].id);
                 }
             }
         });
@@ -7332,7 +7331,7 @@ YundaApp.controller('AdminChineseFreightCtrl', function ($scope, $modal) {
 YundaApp.controller('AdminRechargeRecordCtrl', ["$scope", function ($scope) {
     $scope.transactionType = [{
         index: 0,
-        value: '支付宝充值（未完成）',
+        value: '支付宝充值（未充值）',
         status: YD.Transaction.STATUS_ZHIFUBAO_PENDING
     }, {
         index: 1,
@@ -7957,7 +7956,7 @@ YundaApp.controller('DecreaseUserYD', ["$scope", "$modalInstance", "user", funct
     }
 }]);
 
-YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
+YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", "$modal", function ($scope, $modal) {
     $scope.transactionType = [{
         index: 0,
         value: '运费',
@@ -8184,6 +8183,35 @@ YundaApp.controller('AdminConsumeRecordCtrl', ["$scope", function ($scope) {
         $scope.searchType = true;
         $scope.reloadTransactionCount();
         $scope.reloadTransaction(0);
+    };
+    $scope.showFreightInDetail = function (t) {
+        var RKNumber = t.RKNumber;
+        console.log("RKNUmber: " + RKNumber);
+        var freightInQuery = new AV.Query(YD.FreightIn);
+        freightInQuery.equalTo("RKNumber", RKNumber);
+        freightInQuery.first({
+            success: function (f) {
+                $scope.$apply(function () {
+                    console.log("fetched f: ", f);
+                    var modalInstance = $modal.open({
+                        templateUrl: 'partials/modal_freightInDetail',
+                        controller: 'FreightInDetailCtrl',
+                        scope: $scope,
+                        size: 'md',
+                        windowClass: 'center-modal',
+                        resolve: {
+                            freight: function () {
+                                return f;
+                            }
+                        }
+                    });
+                });
+            },
+            error: function (error) {
+                console.log("ERROR: ", error);
+            }
+        });
+
     }
 }]);
 YundaApp.controller('AdminYDRewardRecordCtrl', ["$scope", function ($scope) {
@@ -9457,13 +9485,13 @@ YundaApp.controller('FreightInDetailCtrl', ["$scope", "$modalInstance", "freight
         success: function (list) {
             if (list.length == 1) {
                 $scope.freightIn = list[0];
-                var tmp = $scope.freightIn.updatedAt
+                var tmp = $scope.freightIn.createdAt
                 var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                 if (tmp.getMinutes() < 10)
                     tmp_date += "0" + tmp.getMinutes()
                 else
                     tmp_date += tmp.getMinutes();
-                $scope.freightIn.updatedAtToString = tmp_date
+                $scope.freightIn.createdAtToString = tmp_date
                 $scope.isLoading = false;
                 $scope.promote = '';
                 $scope.$apply();
