@@ -6,43 +6,54 @@
         <div ng-repeat="freight in freights">
             <accordion-group is-open="true">
                 <accordion-heading>
-                    运单号: {{freight.YDNumber}} {{freight.isSplit || freight.isSplitPremium ? '(' + freight.trackingNumber+')' : freight.isMerged ? '（合包，原包裹转运号：）' + freight.TNCombine : ''}}
+                    运单号: {{freight.YDNumber}} {{freight.isSplit || freight.isSplitPremium ? '(' +
+                    freight.trackingNumber+')' : freight.isMerged ? '（合包，原包裹转运号：）' + freight.TNCombine : ''}}
                 </accordion-heading>
                 <table class="table table-bordered table-striped">
                     <thead>
                     <th>时间</th>
                     <th>状态</th>
                     </thead>
-
-                    <tr ng-show="freight.status <= 400">
-                        <td ng-bind="freight.updatedAtToString"></td>
-                        <td>当前状态: 等待发出</td>
+                    <tr ng-if="freight.status == 0 && freight.confirmDate == undefined">
+                        <td ng-bind="freight.createdAtToString"></td>
+                        <td>运单已提交，等待审核</td>
                     </tr>
-                        <tr ng-show="freight.status > 400">
-                            <td ng-bind="freight.shipping.delivery"></td>
-                            <td>美国仓库发出，送往机场途中</td>
-                        </tr>
-                        <tr ng-show="freight.status >= 500">
-                            <td ng-bind="freight.shipping.delivering"></td>
-                            <td>离境飞往中国</td>
-                        </tr>
-                        <tr ng-show="freight.status >= 600">
-                            <td ng-bind="freight.shipping.clear"></td>
-                            <td>抵达清关口岸，包裹清关中</td>
-                        </tr>
-                        <tr ng-show="freight.status >= 610">
-                            <td ng-bind="freight.shipping.atChina"></td>
-                            <td>已转入国内{{freight.chineseCourier}}派送</td>
-                        </tr>
-                        <tr ng-show="freight.status >= 610">
-                            <td></td>
-                            <td>运单当前状态：已转入国内{{freight.chineseCourier}}派送</td>
-                        </tr>
-                        <tr ng-show="freight.status >= 610">
-                            <td></td>
-                            <td>转运单号: {{freight.chineseTrackingNumber}}</td>
-                        </tr>
-
+                    <tr ng-if="freight.status == 0 && freight.confirmDate != undefined">
+                        <td ng-bind="freight.confirmDateToString"></td>
+                        <td>包裹处理</td>
+                    </tr>
+                    <!--<tr ng-show="freight.status <= 400">-->
+                        <!--<td ng-bind="freight.updatedAtToString"></td>-->
+                        <!--<td>当前状态: 等待发出</td>-->
+                    <!--</tr>-->
+                    <tr ng-if="freight.status >= 400">
+                        <td ng-bind="freight.operateDateToString"></td>
+                        <td>等待美国仓库发出</td>
+                    </tr>
+                    <!--<tr ng-show="freight.status > 400">-->
+                        <!--<td ng-bind="freight.shipping.delivery"></td>-->
+                        <!--<td>美国仓库发出，送往机场途中</td>-->
+                    <!--</tr>-->
+                    <tr ng-show="freight.status >= 510">
+                        <td ng-bind="freight.shipping.delivering"></td>
+                        <td>离境飞往中国</td>
+                    </tr>
+                    <tr ng-show="freight.status >= 600">
+                        <td ng-bind="freight.shipping.clear"></td>
+                        <td>抵达清关口岸，包裹清关中</td>
+                    </tr>
+                    <tr ng-show="freight.status >= 610">
+                        <td ng-bind="freight.shipping.atChina"></td>
+                        <td>已转入国内{{freight.chineseCourier}}派送</td>
+                    </tr>
+                    <tr ng-show="freight.status >= 610">
+                        <td></td>
+                        <td>运单当前状态：已转入国内{{freight.chineseCourier}}派送</td>
+                    </tr>
+                    <tr ng-show="freight.status >= 610">
+                        <td></td>
+                        <td>转运单号: {{freight.chineseTrackingNumber}}</td>
+                    </tr>
                 </table>
             </accordion-group>
         </div>

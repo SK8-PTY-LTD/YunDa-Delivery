@@ -609,6 +609,14 @@
             this.set("addressNew", value);
         }
     });
+    Object.defineProperty(YD.Freight.prototype, "confirmDate", {
+        get: function () {
+            return this.get("confirmDate");
+        },
+        set: function (value) {
+            this.set("confirmDate", value);
+        }
+    });
     Object.defineProperty(YD.Freight.prototype, "estimatedPrice", {
         get: function () {
             return this.get("estimatedPrice");

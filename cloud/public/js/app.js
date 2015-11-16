@@ -826,14 +826,32 @@ YundaApp.controller('TrackingCtrl', function ($scope, $modal, $modalInstance, re
     $scope.freights = resultList;
     for (var i = 0; i < resultList.length; i++) {
         var f = $scope.freights[i];
-        var tmp = $scope.freights[i].updatedAt;
+        var tmp = $scope.freights[i].createdAt;
         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
         if (tmp.getMinutes() < 10)
             tmp_date += "0" + tmp.getMinutes();
         else
             tmp_date += tmp.getMinutes();
-        $scope.freights[i].updatedAtToString = tmp_date;
-        var statusList = $scope.freights[i].statusGroup
+        $scope.freights[i].createdAtToString = tmp_date;
+        var tmp = $scope.freights[i].confirmDate;
+        if(tmp != undefined) {
+            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+            if (tmp.getMinutes() < 10)
+                tmp_date += "0" + tmp.getMinutes();
+            else
+                tmp_date += tmp.getMinutes();
+            $scope.freights[i].confirmDateToString = tmp_date;
+        }
+        var tmp = $scope.freights[i].operateDate;
+        if(tmp != undefined) {
+            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+            if (tmp.getMinutes() < 10)
+                tmp_date += "0" + tmp.getMinutes();
+            else
+                tmp_date += tmp.getMinutes();
+            $scope.freights[i].operateDateToString = tmp_date;
+        }
+        var statusList = $scope.freights[i].statusGroup;
         var statusString = ' '
         if ($scope.freights[i].statusGroup != undefined) {
             for (var j = 0; j < statusList.length; j++) {
@@ -1653,30 +1671,35 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
         //});
     };
     $scope.recoverFreightIn = function (f) {
-        var RKNumber = f.RKNumber;
-        var query = new AV.Query(YD.FreightIn);
-        query.equalTo("RKNumber", RKNumber);
-        query.find({
-            success: function (list) {
-                for (var i = 0; i < list.length; i++) {
-                    var fIn = list[i];
-                    fIn.recoverFreightIn();
-                }
-                AV.Object.saveAll(list, {
-                    success: function (list) {
-                        f.status = YD.FreightReturn.STATUS_FREIGHTIN;
-                        f.save(null, {
-                            success: function () {
-                                $scope.reloadFreightReturn();
-                                alert("请前往[包裹管理]重新处理包裹");
-                            }
-                        });
-                    },
-                    error: function (error) {
+        var r = confirm("是否确认重新入库?");
+        if(!r) {
+
+        } else {
+            var RKNumber = f.RKNumber;
+            var query = new AV.Query(YD.FreightIn);
+            query.equalTo("RKNumber", RKNumber);
+            query.find({
+                success: function (list) {
+                    for (var i = 0; i < list.length; i++) {
+                        var fIn = list[i];
+                        fIn.recoverFreightIn();
                     }
-                });
-            }
-        });
+                    AV.Object.saveAll(list, {
+                        success: function (list) {
+                            f.status = YD.FreightReturn.STATUS_FREIGHTIN;
+                            f.save(null, {
+                                success: function () {
+                                    $scope.reloadFreightReturn();
+                                    alert("请前往[包裹管理]重新处理包裹");
+                                }
+                            });
+                        },
+                        error: function (error) {
+                        }
+                    });
+                }
+            });
+        }
     }
 });
 YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", function ($scope, $modalInstance) {
@@ -1744,7 +1767,7 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", functio
                     if (list[0].isOperated) {
                         alert("此包裹已被打包，无法退货");
                         return;
-                    }
+                    } else {
                     list[0].destroy({
                         success: function () {
                             var userPt = new YD.User();
@@ -1754,23 +1777,23 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", functio
                             $modalInstance.close($scope.return);
                         }
                     });
-                } else {
+                }} else {
                     var newQ = new AV.Query(YD.FreightIn);
                     newQ.equalTo("RKNumber", $scope.return.RKNumber);
                     newQ.equalTo("user", $scope.currentUser);
-                    newQ.find({
-                        success: function (list) {
-                            if (list) {
-                                var freightIn = list[0];
+                    newQ.first({
+                        success: function (f) {
+                            if (f) {
+                                var freightIn = f;
                                 if(freightIn.isMerged) {
                                     alert("此包裹已经被合包，无法退货");
                                     return;
                                 } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED) {
                                     alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
                                     return;
-                                } else {
-                                    list[0].status = YD.FreightIn.STATUS_CANCELED;
-                                    list[0].save(null, {
+                                }  else {
+                                    freightIn.status = YD.FreightIn.STATUS_CANCELED;
+                                    freightIn.save(null, {
                                         success: function () {
                                             var userPt = new YD.User();
                                             userPt.id = $scope.currentUser.id;
@@ -6294,6 +6317,7 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
     $scope.confirmFreightOpt = function (freight) {
         freight.isOperated = true;
         freight.printDisabled = false;
+        freight.confirmDate = new Date();
         if (freight.isSplit || freight.isSplitPremium) {
             var RKNumber = freight.RKNumber.substr(0, 12);
             var query = new AV.Query(YD.FreightIn);
@@ -6334,6 +6358,7 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
             if ($scope.freight[i].selection) {
                 $scope.freight[i].isOperated = true;
                 $scope.freight[i].printDisabled = false;
+                $scope.freight[i].confirmDate = new Date();
                 list.push($scope.freight[i]);
             }
         }
