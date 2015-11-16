@@ -987,7 +987,7 @@
         <!--<th>选择</th>-->
         <th>YD单号</th>
         <th>发件人</th>
-        <th>重量</th>
+        <th>最终重量</th>
         <th>消费明细</th>
         <th>处理时间</th>
         <!--<th>状态</th>-->
@@ -997,7 +997,7 @@
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
             <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
-            <td ng-bind="f.weight + 'Lb'"></td>
+            <td ng-bind="f.finalWeight + 'Lb'"></td>
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
             <td ng-bind="f.operateDateToString"></td>
             <td>
