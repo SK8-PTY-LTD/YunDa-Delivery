@@ -447,6 +447,7 @@ AV.Cloud.define("chargingUser", function(request, response) {
                 var ydRewardInDollar = parseFloat(parseFloat(ydReward/100.0).toFixed(2));
                 var finalReward = parseFloat(yd + ydRewardInDollar);
                 user.set("accumulatedReward", finalReward);
+                user.set("moneyUpdatedAt", new Date());
                 user.save(null, {
                     success: function(u) {
                         console.log("user saved");
@@ -550,6 +551,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
             } else {
                 balance -= amount;
                 console.log("user's total balance: " + balance);
+                user.set("balance", parseInt(balance));
                 var yd = user.get("accumulatedReward");
                 var ydRewardInDollar = parseFloat(parseFloat(amount/100.0).toFixed(2));
                 var finalReward = parseFloat((yd + ydRewardInDollar).toFixed(2));
@@ -559,6 +561,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                     user.set("accumulatedReward", finalReward);
                 }
                 console.log("user's total balance: " + balance);
+                user.set("moneyUpdatedAt", new Date());
                 user.save(null, {
                     success: function(u) {
                         console.log("user saved");

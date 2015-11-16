@@ -384,6 +384,16 @@ Object.defineProperty(YDUser.prototype, "stringId", {
   }
 });
 
+
+Object.defineProperty(YDUser.prototype, "moneyUpdatedAt", {
+  get: function () {
+    return this.get("moneyUpdatedAt");
+  },
+  set: function (value) {
+    this.set("moneyUpdatedAt", value);
+  }
+});
+
 YDUser.ROLE_ADMIN = 100;
 YDUser.ROLE_USER = 200;
 YDUser.ROLE_DEVELOPER = 190;

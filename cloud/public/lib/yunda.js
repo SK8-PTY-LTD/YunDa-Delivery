@@ -1744,6 +1744,14 @@
             this.set("lastLoginDate", value);
         }
     });
+    Object.defineProperty(YD.User.prototype, "moneyUpdatedAt", {
+        get: function () {
+            return this.get("moneyUpdatedAt");
+        },
+        set: function (value) {
+            this.set("moneyUpdatedAt", value);
+        }
+    });
 
 
 
