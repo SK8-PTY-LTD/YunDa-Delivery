@@ -507,13 +507,27 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
     }
 
     $scope.updatePassword = function () {
-        var modalInstance = $modal.open({
-            templateUrl: 'partials/modal_password',
-            controller: 'UpdatePasswordCtrl',
-            scope: $scope,
-            size: 'sm',
-            windowClass: 'center-modal'
-        })
+        var r = confirm('是否确认修改密码？');
+        if (!r) {
+
+        } else {
+            YD.User.requestPasswordReset($scope.currentUser.username, {
+                success: function () {
+                    alert("请前往您的电子邮箱重置密码");
+                    YD.User.logOut();
+                    $rootScope.currentUser = new YD.User;
+                    $window.location.href = '/';
+
+                },
+                error: function (error) {
+                    $scope.$apply(function () {
+                        $scope.isLoading = false;
+                        alert("请先提供电子邮箱地址");
+                    });
+                }
+            });
+        }
+
     }
     $scope.isSearching = false;
     $scope.trackingInfo = function () {
@@ -5462,8 +5476,8 @@ YundaApp.controller("AdminNewsCtrl", ["$scope", "$rootScope", "$modal", function
     }
     $scope.newNews = new YD.News()
     $scope.addNews = function () {
-        if ($scope.newNews.title == undefined || $scope.newNews.link == undefined) {
-            alert("请先填写好新闻的标题和链接")
+        if ($scope.newNews.title == undefined || $scope.newNews.link == undefined || $scope.newNews.title == '' || $scope.newNews.link == '') {
+            alert("请先填写好新闻的标题和链接");
             return
         } else {
             $scope.newNews.save(null, {
