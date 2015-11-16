@@ -3042,7 +3042,7 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_PREMIUM)
         }
         if (freightIn.isMerged) {
-            freight.isMerged = true
+            freight.isMerge = true
             freight.mergeReference = freightIn.mergeReference
             freight.add("statusGroup", YD.Freight.STATUS_PENDING_MERGE_PACKAGE)
         }
@@ -3053,7 +3053,6 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
                 return;
             } else {
                 freight.YDNumber = reply;
-                freight.submitDate
                 freight.save(null, {
                     success: function (freight) {
                         freightIn.status = YD.FreightIn.STATUS_FINISHED;
@@ -6093,7 +6092,7 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
                     $scope.normalFreights = $filter('normalPackageFilter')($scope.freight);
                     $scope.splitFreights = $filter('splitPackageFilter')($scope.freight);
                     $scope.mergeFreights = $filter('filter')($scope.freight, {
-                        isMerged: true
+                        isMerge: true
                     }, true);
                     $scope.reloadNormal(0);
                     $scope.reloadSplit(0);
@@ -9947,7 +9946,7 @@ YundaApp.filter('normalPackageFilter', function () {
         } else {
             for (var i = 0; i < freights.length; i++) {
                 var f = freights[i];
-                if (!f.isSplit && !f.isSplitPremium && !f.isMerged) {
+                if (!f.isSplit && !f.isSplitPremium && !f.isMerge) {
                     filtered.push(f);
                 }
             }

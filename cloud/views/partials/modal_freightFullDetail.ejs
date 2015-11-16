@@ -4,15 +4,14 @@
 
     <table class="table table-bordered small-table">
         <tr>
-            <td ng-bind="'入库单号: ' + freight.RKNumber"></td>
-            <td ng-bind="'转运号: ' + freight.trackingNumber"></td>
+            <td><label>入库单号: </label> {{freight.RKNumber}}</td>
+            <td><label>转运号: </label> {{freight.trackingNumber}}</td>
         </tr>
         <tr>
-            <td ng-bind="'YD运单号: ' + freight.YDNumber"></td>
-            <td ng-bind="'渠道: ' + freight.channel.name"></td>
+            <td><label>YD运单号: </label> {{freight.YDNumber}}</td>
+            <td><label>渠道: </label> {{freight.channel.name}}</td>
         </tr>
-        <div ng-if="freight.isMerge">
-            <tr>
+            <tr ng-if="freight.isMerge == true">
                 <td colspan="2">
                     <label>原包裹转运号: </label>
                     <span ng-bind="freight.trackingNumber"></span><br>
@@ -20,18 +19,17 @@
                     <span ng-repeat="set in freight.mergeReference track by set.id">{{set.RKNumber}}; </span>
                 </td>
             </tr>
-        </div>
 
         <tr>
-            <td ng-bind="'用户名: ' + freight.user.stringId"></td>
-            <td ng-bind="'数字ID: ' + freight.user.numberId"></td>
+            <td><label>用户名: </label> {{freight.user.stringId}}</td>
+            <td><label>数字ID: </label> {{freight.user.numberId}}</td>
         </tr>
         <tr>
-            <td ng-bind="'重量: ' + (freight.weight).toFixed(2) + ' Lb'"></td>
-            <td ng-bind="'最终重量: ' + (freight.finalWeight).toFixed(2) + ' Lb'"></td>
+            <td><label>重量: </label> {{(freight.weight).toFixed(2) + ' Lb'}}</td>
+            <td><label>最终重量: </label> {{(freight.finalWeight).toFixed(2) + ' Lb'}}</td>
         </tr>
         <tr>
-            <td colspan="2" ng-bind="'留言: ' + freight.comments"></td>
+            <td colspan="2"><label>留言: </label> {{freight.comments}}</td>
         </tr>
         <tr>
             <td colspan="2">
@@ -46,7 +44,7 @@
             <td colspan="2">{{freight.isSplit || freight.isSplitPremiumt ? '分包要求: ' + freight.comments : ''}}</td>
         </tr>
         <tr>
-            <td colspan="2" ng-bind="'物品详情: ' + freight.packageComments"></td>
+            <td colspan="2"><label>物品详情: </label>{{freight.packageComments}}</td>
         </tr>
         <tr ng-repeat="t in transactions">
             <td>
@@ -55,23 +53,23 @@
             <td ng-bind="'$' + t.amount"></td>
         </tr>
         <tr>
-            <td>保价</td>
+            <td><label>保价</label></td>
             <td ng-bind="freight.insurance"></td>
         </tr>
         <tr>
-            <td ng-bind="'收件人: ' + freight.address.recipient"></td>
-            <td>座机号码: {{freight.address.contactNumber}}</td>
+            <td><label>收件人: </label> {{freight.address.recipient}}</td>
+            <td><label>座机号码: </label> {{freight.address.contactNumber}}</td>
         </tr>
         <tr>
-            <td ng-bind="freight.address.country + freight.address.state + freight.address.city
-            + freight.address.street1 + freight.address.street2 + ' 邮编:' + freight.address.postalCode"></td>
-            <td>手机号码: {{freight.address.mobileNumber}}</td>
+            <td><label>地址: </label>{{freight.address.country + freight.address.state + freight.address.city
+            + freight.address.street1 + freight.address.street2 + ' 邮编:' + freight.address.postalCode}}</td>
+            <td><label>手机号码: </label>{{freight.address.mobileNumber}}</td>
         </tr>
         <tr>
-            <td colspan="2" ng-bind="freight.comments"></td>
+            <td colspan="2"><label>留言: </label>{{freight.comments}}</td>
         </tr>
         <tr>
-            <td colspan="2" ng-bind="'清关时间: ' + freight.shipping.clear"></td>
+            <td colspan="2"><label>清关时间: </label> {{freight.shipping.clear}}</td>
         </tr>
         <tr>
             <!--<td ng-bind="'物流公司: ' + freight.chineseCourier"></td>-->
