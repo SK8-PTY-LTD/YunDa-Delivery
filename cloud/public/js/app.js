@@ -8829,12 +8829,19 @@ YundaApp.controller('AdminViewUserCtrl', function ($scope) {
                 },
                 error: function (a, error) {
                     alert("找不到地址");
+                    $scope.$apply(function () {
+                        $scope.isLoadingTrue = false;
+                        $scope.promote = "";
+                    });
                 }
             });
         } else {
             alert("找不到地址");
-            $scope.isLoadingTrue = false;
-            $scope.promote = "";
+            $scope.$apply(function () {
+                $scope.isLoadingTrue = false;
+                $scope.promote = "";
+            });
+
         }
     }
 });
@@ -9295,7 +9302,7 @@ YundaApp.controller('AdminReturnGoodsCtrl', function ($scope, $modal) {
                 $scope.freightCount = $scope.adminBadge.K = list.length;
                 for (var i = 0; i < list.length; i++) {
                     var f = list[i];
-                    if (f.status == YD.FreightReturn.STATUS_REFUSED || f.status == YD.FreightReturn.STATUS_FINISHED) {
+                    if (f.status == YD.FreightReturn.STATUS_REFUSED || f.status == YD.FreightReturn.STATUS_FINISHED || f.status == YD.FreightReturn.STATUS_FREIGHTIN) {
                         $scope.adminBadge.K--;
                     }
                 }
