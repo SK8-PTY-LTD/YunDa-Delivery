@@ -7683,16 +7683,17 @@ YundaApp.controller('AdminCreditYDCtrl', ["$scope", "$modal", function ($scope, 
                 $scope.$apply(function () {
                     $scope.users = users
                     for (var i = 0; i < $scope.users.length; i++) {
-                        var tmp = $scope.users[i].updatedAt
-                        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                        if (tmp.getMinutes() < 10)
-                            tmp_date += "0" + tmp.getMinutes()
-                        else
-                            tmp_date += tmp.getMinutes();
-                        _
-                        $scope.users[i].updatedAtToString = tmp_date
+                        var tmp = $scope.users[i].moneyUpdatedAt;
+                        if (tmp != undefined) {
+                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                            if (tmp.getMinutes() < 10)
+                                tmp_date += "0" + tmp.getMinutes()
+                            else
+                                tmp_date += tmp.getMinutes();
+                            $scope.users[i].moneyUpdatedAtToString = tmp_date
+                        }
                     }
-                })
+                });
             },
             error: function (error) {
             }

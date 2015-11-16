@@ -1402,59 +1402,59 @@
                         ng-bind="promote"></span></progressbar>
             <div class="form-group">
                 <label class="control-label">用户</label>
-                <span class="form-control">{{newUser ? newUser.stringId : ""}}</span>
+                <span class="form-control" style="height:100%">{{newUser ? newUser.stringId : ""}}</span>
             </div>
             <div class="form-group">
                 <label class="control-label">实际余额</label>
-                <span class="form-control">{{newUser ? '$' + (newUser.balance/100).toFixed(2) : ""}}</span>
+                <span class="form-control" style="height:100%">{{newUser ? '$' + (newUser.balance/100).toFixed(2) : ""}}</span>
             </div>
             <div class="form-group">
                 <label class="control-label">兑换余额</label>
-                <span class="form-control">{{newUser ? '$' + (newUser.rewardBalance/100).toFixed(2) : ""}}</span>
+                <span class="form-control" style="height:100%">{{newUser ? '$' + (newUser.rewardBalance/100).toFixed(2) : ""}}</span>
             </div>
             <div class="form-group">
                 <label class=" control-label">手机号</label>
 
                 <div ng-show="newUser.contactNumber && newUser.mobile">
-                    <span class="form-control" ng-bind="newUser.contactNumber"></span>
+                    <span class="form-control" style="height:100%" ng-bind="newUser.contactNumber"></span>
                 </div>
                 <div ng-show="newUser.contactNumber && !newUser.mobile">
-                    <span class="form-control" ng-bind="newUser.contactNumber"></span>
+                    <span class="form-control" style="height:100%" ng-bind="newUser.contactNumber"></span>
                 </div>
                 <div ng-show="!newUser.contactNumber && newUser.mobile">
-                    <span class="form-control" ng-bind="newUser.mobile"></span>
+                    <span class="form-control" style="height:100%" ng-bind="newUser.mobile"></span>
                 </div>
                 <div ng-show="!newUser.contactNumber && !newUser.mobile">
-                    <span class="form-control"></span>
+                    <span class="form-control" style="height:100%"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">真实姓名</label>
-                <span class="form-control" ng-bind="newUser.realName"></span>
+                <span class="form-control" style="height:100%" ng-bind="newUser.realName"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">YD币</label>
-                <span class="form-control" ng-bind="newUser.accumulatedReward"></span>
+                <span class="form-control" style="height:100%" ng-bind="newUser.accumulatedReward"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">国家/省</label>
-                <span class="form-control" ng-bind="newAddress.country + newAddress.city"></span>
+                <span class="form-control" style="height:100%" ng-bind="newAddress.country + newAddress.city"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">市/区</label>
-                <span class="form-control" ng-bind="newAddress.city + newAddress.state"></span>
+                <span class="form-control" style="height:100%" ng-bind="newAddress.city + newAddress.state"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">街道</label>
-                <span class="form-control" ng-bind="newAddress.street1"></span>
+                <span class="form-control" style="height:100%" ng-bind="newAddress.street1"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">公司</label>
-                <span class="form-control" ng-bind="newAddress.street2"></span>
+                <p class="form-control" style="height:100%" ng-bind="newAddress.street2"></p>
             </div>
             <div class="form-group">
                 <label class="control-label">邮编</label>
-                <span class="form-control" ng-bind="newAddress.postalCode"></span>
+                <span class="form-control" style="height:100%" ng-bind="newAddress.postalCode"></span>
             </div>
 
 
@@ -2412,7 +2412,7 @@
                 <td ng-bind="user.stringId"></td>
 
                 <td ng-bind="user.numberId"></td>
-                <td ng-bind="user.updatedAtToString"></td>
+                <td ng-bind="user.moneyUpdatedAtToString"></td>
                 <td>
                     <button class="btn btn-default btn-sm" ng-click="increaseBalance(user)">增加YD币</button>
                     <button class="btn btn-default btn-sm" ng-click="decreaseBalance(user)">减少YD币</button>
