@@ -5787,7 +5787,12 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
             query.matchesQuery("user", innerQuery);
         }
         if ($scope.searchTN) {
-            query.equalTo("trackingNumber", $scope.queryNumber);
+            if($scope.queryNumber.startsWith('RK')) {
+                query.equalTo("RKNumber", $scope.queryNumber);
+
+            } else {
+                query.equalTo("trackingNumber", $scope.queryNumber);
+            }
         }
         query.find({
             success: function (list) {
@@ -5795,28 +5800,23 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                 $scope.$apply(function () {
                     for (var i = 0; i < $scope.freightIn.length; i++) {
                         $scope.freightIn[i].selection = false;
-                        if ($scope.freightIn[i].status == 110) {
-                            var tmp = new Date(); //@todo add proper date
-                        } else {
-                            var tmp = $scope.freightIn[i].createdAt;
-                        }
+                        var tmp = $scope.freightIn[i].createdAt;
                         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                         if (tmp.getMinutes() < 10)
                             tmp_date += "0" + tmp.getMinutes();
                         else
                             tmp_date += tmp.getMinutes();
-                        _
                         $scope.freightIn[i].createdAtToString = tmp_date;
-                        if ($scope.freightIn[i].status == 110 || $scope.freightIn[i].status == 990) {
-                            var tmp = $scope.freightIn[i].createdAt;
-                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                            if (tmp.getMinutes() < 10)
-                                tmp_date += "0" + tmp.getMinutes();
-                            else
-                                tmp_date += tmp.getMinutes();
-                            $scope.freightIn[i].confirmDateToString = tmp_date;
-                        } else {
-                            if ($scope.freightIn[i].confirmDate) {
+                        //if ($scope.freightIn[i].status == 110 || $scope.freightIn[i].status == 990) {
+                        //    var tmp = $scope.freightIn[i].createdAt;
+                        //    var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                        //    if (tmp.getMinutes() < 10)
+                        //        tmp_date += "0" + tmp.getMinutes();
+                        //    else
+                        //        tmp_date += tmp.getMinutes();
+                        //    $scope.freightIn[i].confirmDateToString = tmp_date;
+                        //} else{
+                            if ($scope.freightIn[i].confirmDate != undefined) {
                                 var tmp = $scope.freightIn[i].confirmDate;
                                 var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                                 if (tmp.getMinutes() < 10)
@@ -5824,8 +5824,10 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
                                 else
                                     tmp_date += tmp.getMinutes();
                                 $scope.freightIn[i].confirmDateToString = tmp_date;
+                            } else {
+                                $scope.freightIn[i].confirmDateToString = '暂未确认';
                             }
-                        }
+
 
                     }
                 });
