@@ -1001,7 +1001,7 @@
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
             <td ng-bind="f.operateDateToString"></td>
             <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmDelivery(f)" ng-disabled="f.status == 400">
+                <button class="btn btn-sm btn-default" ng-click="confirmDelivery(f)" ng-disabled="isActing == true">
                     <div ng-show="f.status == 400">
                         拒绝发货
                     </div>
@@ -1087,7 +1087,7 @@
             <td ng-bind="f.address.country + f.address.state  + f.address.city  + f.address.street1  + f.address.street2"></td>
             <td ng-bind="f.shipping.delivering"></td>
             <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmClear(f)">确认清关</button>
+                <button class="btn btn-sm btn-default" ng-click="confirmClear(f)" ng-disabled="isActing == true">确认清关</button>
             </td>
         </tr>
     </table>
@@ -1181,7 +1181,7 @@
             <!--</button>-->
             <!--</td>-->
             <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认接收</button>
+                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)" ng-disabled="isActing == true">确认接收</button>
             </td>
         </tr>
     </table>

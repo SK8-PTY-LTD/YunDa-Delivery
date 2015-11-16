@@ -217,6 +217,7 @@
     <table class="table table-hover small-table">
         <thead>
         <tr>
+            <th>选择</th>
             <th>收件人</th>
             <th style="width: 30%">国家、省份/直辖市</th>
             <th>详细地址</th>
@@ -224,12 +225,14 @@
         </tr>
         </thead>
         <tr ng-repeat="address in recipientAddresses | orderBy: '-createdAt'">
+            <td><input type="checkbox" ng-model="address.isSelected"> </td>
             <td ng-bind="address.recipient"></td>
             <td><span ng-bind="address.country + address.state"></span></td>
             <td><a ng-click="showRecipientDetails(address)">详细地址</a></td>
             <td><a ng-click="editAddress(address)">编辑</a> <a ng-click="deleteAddress(address)">删除</a></td>
         </tr>
     </table>
+
 
     <!--pagination-->
     <div class="row">
@@ -252,6 +255,7 @@
             </div>
         </div>
     </div><!-- END PAGINATION-->
+    <button class="btn btn-default" ng-click="deleteAllSelectedAddress()">批量删除</button>
 </div>
 <div ng-show="view_tab=='ac'">
     <!--this is the content for 仓库地址-->
