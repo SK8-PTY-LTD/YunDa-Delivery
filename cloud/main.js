@@ -147,6 +147,7 @@ AV.Cloud.define("creditUser", function(request, response) {
                     console.log("got user, balanceInDollar: " + user.balanceInDollar);
                     user.balanceInDollar = parseFloat(user.balanceInDollar) + amount;
                     console.log("user now balance: " + user.balanceInDollar);
+                    user.set("moneyUpdatedAt", new Date());
                     user.save(null, {
                         success: function(u) {
                             response.success();
@@ -201,6 +202,7 @@ AV.Cloud.define("debitUser", function(request, response) {
                     console.log("got user, balanceInDollar: " + user.balanceInDollar);
                     user.balanceInDollar = parseFloat(user.balanceInDollar) - amount;
                     console.log("user now balance: " + user.balanceInDollar);
+                    user.set("moneyUpdatedAt", new Date());
                     user.save(null, {
                         success: function(u) {
                             response.success();
