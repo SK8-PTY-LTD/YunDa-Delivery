@@ -566,7 +566,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                 //user.set("moneyUpdatedAt", new Date());
                 user.save(null, {
                     success: function(u) {
-                        console.log("user saved");
+                        console.log("user saved, ", u);
 
                         var userPT = new User();
                         userPT.id = u.id;
