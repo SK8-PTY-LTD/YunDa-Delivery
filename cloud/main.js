@@ -547,14 +547,14 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
     query.get(id, {
         success: function(user) {
             var balance = parseInt(user.get("balance"));
-            console.log("user's total balance: " + balance);
+            console.log("before calc -- total balance: " + balance);
             if (balance < amount) {
                 response.error("用户金额不足$" + amount);
             } else {
                 balance -= amount;
-                console.log("user's total balance: " + balance);
-                user.set("balance", parseInt(balance));
+                console.log("after balance -= amount --current balance: " + balance);
                 var yd = user.get("accumulatedReward");
+                console.log("")
                 var ydRewardInDollar = parseFloat(parseFloat(amount/100.0).toFixed(2));
                 var finalReward = parseFloat((yd + ydRewardInDollar).toFixed(2));
                 if (id == MINKA) {
@@ -562,7 +562,7 @@ AV.Cloud.define("chargingUserWithoutReward", function(request, response) {
                 } else {
                     user.set("accumulatedReward", finalReward);
                 }
-                console.log("user's total balance: " + balance);
+                console.log("user's total balance: " + user.get("balance"));
                 //user.set("moneyUpdatedAt", new Date());
                 user.save(null, {
                     success: function(u) {
