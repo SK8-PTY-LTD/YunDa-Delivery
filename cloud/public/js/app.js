@@ -825,7 +825,6 @@ YundaApp.controller('TrackingCtrl', function ($scope, $modal, $modalInstance, re
     }
     $scope.freights = resultList;
     for (var i = 0; i < resultList.length; i++) {
-        var f = $scope.freights[i];
         var tmp = $scope.freights[i].createdAt;
         var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
         if (tmp.getMinutes() < 10)
@@ -1431,71 +1430,82 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                 $scope.freight.status = YD.Freight.STATUS_SPEED_MANUAL;
                 $scope.freight.isSpeedManual = true;
                 $scope.freight.trackingNumber = $scope.freightIn.trackingNumber;
-                $scope.freight.RKNumber = $scope.freightIn.RKNumber;
-                $scope.freight.exceedWeight = $scope.freightIn.exceedWeight;
-                $scope.freight.user = $scope.currentUser;
-                $scope.freight.weight = $scope.freightIn.weight;
-                if ($scope.checkBox.isAddPackage == true) {
-                    $scope.freight.isAddPackage = true;
-                    $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_EXTRA_PACKAGING);
-                }
-                if ($scope.checkBox.isReduceWeight == true) {
-                    $scope.freight.isReduceWeight = true;
-                    $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_REDUCE_WEIGHT);
-                }
-                if ($scope.checkBox.confirmInsurance == true) {
-                    $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_PAY_INSURANCE);
-                }
-                $scope.freight.descriptionList = [];
-                for (var i = 0; i < $scope.descriptionList.length; i++) {
-                    var d = $scope.descriptionList[i];
-                    var obj = {
-                        kind: d.kind.name, //cuz kind getting from select, kind it's an obj
-                        name: d.name,
-                        brand: d.brand,
-                        amount: d.amount,
-                        price: d.price,
-                        total: d.total
-                    }
-                    $scope.freight.add("descriptionList", obj);
-                }
-                $scope.freight.insurance = $scope.insurance.amount + "(所保价值: " + $scope.insurance.value + ")";
-                $scope.freight.channel = $scope.channelSelection;
-                $scope.freight.generateYDNumber(function (success, reply) {
-                    if (!success) {
-                        alert("错误!" + reply);
-                        $scope.isClicked = false;
-                        return;
-                    } else {
-                        $scope.freight.YDNumber = reply;
-                        $scope.freight.save(null, {
-                            success: function (f) {
-                                alert("原箱闪运运单提交成功!");
-                                $scope.reloadSpeedManual();
-                                $scope.isClicked = false;
-                                $scope.freightIn = new YD.FreightIn();
-                                $scope.freight = new YD.Freight();
-                                $scope.freight.packageComments = "";
-                                $scope.freight.descriptionList = [];
-                                $scope.descriptionList = [];
-                                $scope.checkBox.isAddPackage = false;
-                                $scope.checkBox.isReduceWeight = false;
-                                $scope.insurance.total = 0;
-                                $scope.insurance.value = 0;
-                                $scope.insurance.amount = 0;
-                                $scope.$apply();
-                            },
-                            error: function (f, error) {
-                                $scope.isClicked = false;
-                                if (error.code == 105) {
-                                    alert("生成运单失败,请刷新页面重试");
-                                } else {
-                                    alert("生成运单失败");
-                                }
+                var query = new AV.Query(YD.Freight);
+                query.equalTo("trackingNumber", $scope.freight.trackingNumber);
+                query.count({
+                    success: function(count) {
+                        if(count > 0) {
+                            alert("您已经生成过运单，或此转运号已被使用，请重试");
+                            return;
+                        } else {
+                            $scope.freight.RKNumber = $scope.freightIn.RKNumber;
+                            $scope.freight.exceedWeight = $scope.freightIn.exceedWeight;
+                            $scope.freight.user = $scope.currentUser;
+                            $scope.freight.weight = $scope.freightIn.weight;
+                            if ($scope.checkBox.isAddPackage == true) {
+                                $scope.freight.isAddPackage = true;
+                                $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_EXTRA_PACKAGING);
                             }
-                        });
+                            if ($scope.checkBox.isReduceWeight == true) {
+                                $scope.freight.isReduceWeight = true;
+                                $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_REDUCE_WEIGHT);
+                            }
+                            if ($scope.checkBox.confirmInsurance == true) {
+                                $scope.freight.add("statusGroup", YD.Freight.STATUS_PENDING_PAY_INSURANCE);
+                            }
+                            $scope.freight.descriptionList = [];
+                            for (var i = 0; i < $scope.descriptionList.length; i++) {
+                                var d = $scope.descriptionList[i];
+                                var obj = {
+                                    kind: d.kind.name, //cuz kind getting from select, kind it's an obj
+                                    name: d.name,
+                                    brand: d.brand,
+                                    amount: d.amount,
+                                    price: d.price,
+                                    total: d.total
+                                }
+                                $scope.freight.add("descriptionList", obj);
+                            }
+                            $scope.freight.insurance = $scope.insurance.amount + "(所保价值: " + $scope.insurance.value + ")";
+                            $scope.freight.channel = $scope.channelSelection;
+                            $scope.freight.generateYDNumber(function (success, reply) {
+                                if (!success) {
+                                    alert("错误!" + reply);
+                                    $scope.isClicked = false;
+                                    return;
+                                } else {
+                                    $scope.freight.YDNumber = reply;
+                                    $scope.freight.save(null, {
+                                        success: function (f) {
+                                            alert("原箱闪运运单提交成功!");
+                                            $scope.reloadSpeedManual();
+                                            $scope.isClicked = false;
+                                            $scope.freightIn = new YD.FreightIn();
+                                            $scope.freight = new YD.Freight();
+                                            $scope.freight.packageComments = "";
+                                            $scope.freight.descriptionList = [];
+                                            $scope.descriptionList = [];
+                                            $scope.checkBox.isAddPackage = false;
+                                            $scope.checkBox.isReduceWeight = false;
+                                            $scope.insurance.total = 0;
+                                            $scope.insurance.value = 0;
+                                            $scope.insurance.amount = 0;
+                                            $scope.$apply();
+                                        },
+                                        error: function (f, error) {
+                                            $scope.isClicked = false;
+                                            if (error.code == 105) {
+                                                alert("生成运单失败,请刷新页面重试");
+                                            } else {
+                                                alert("生成运单失败");
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
-                });
+                })
             }
         });
     }
@@ -2785,7 +2795,9 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
             query.find({
                 success: function (results) {
                     //$scope.freightIns = $filter('packageSearchFilter')(results, $scope.query.number);
-                    $scope.freightIns = results;
+                    $scope.$apply(function () {
+
+                        $scope.freightIns = results;
                     for (var i = 0; i < $scope.freightIns.length; i++) {
                         $scope.freightIns[i].checkboxModel = {
                             delivery: false,
@@ -2810,8 +2822,6 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
                             total: 0
                         };
                     }
-                    $scope.getRecipient();
-                    $scope.$apply(function () {
                     });
                     $scope.getRecipient();
                 },
@@ -3082,75 +3092,92 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
         freight.user = $scope.currentUser;
         freight.weight = freightIn.weight;
         freight.trackingNumber = freightIn.trackingNumber;
-        freight.RKNumber = freightIn.RKNumber;
-        freight.exceedWeight = freightIn.exceedWeight;
-        freight.status = YD.Freight.STATUS_INITIALIZED;
-        freight.comments = freightIn.comments;
-        freight.packageComments = freightIn.packageComments;
-        freight.descriptionList = [];
-        for (var i = 0; i < freightIn.descriptionList.length; i++) {
-            var d = freightIn.descriptionList[i];
-            var obj = {
-                kind: d.kind.name, //cuz kind getting from select, and it's an obj
-                name: d.name,
-                brand: d.brand,
-                amount: d.amount,
-                price: d.price,
-                total: d.total
-            }
-            freight.add("descriptionList", obj);
-        }
-        freight.insurance = freightIn.insurance.value * 0.02 + "(所保价值: " + freightIn.insurance.value + ")";
-        freight.channel = freightIn.channelSelection;
-        if (freightIn.isSplit) {
-            freight.isSplit = true
-            freight.splitReference = freightIn.splitReference
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE)
-        }
-        if (freightIn.isSplitPremium) {
-            freight.isSplitPremium = true
-            freight.splitReference = freightIn.splitReference
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_PREMIUM)
-        }
-        if (freightIn.isMerged) {
-            freight.isMerge = true
-            freight.mergeReference = freightIn.mergeReference
-            freight.add("statusGroup", YD.Freight.STATUS_PENDING_MERGE_PACKAGE)
-            freight.TNCombine = freightIn.TNCombine;
-            freight.RKCombine = freightIn.RKCombine;
-        }
-        freight.generateYDNumber(function (success, reply) {
-            if (!success) {
-                alert("错误!" + reply);
-                $scope.isClicked = false;
-                return;
-            } else {
-                freight.YDNumber = reply;
-                freight.save(null, {
-                    success: function (freight) {
-                        freightIn.status = YD.FreightIn.STATUS_FINISHED;
-                        freightIn.save(null, {
-                            success: function (freightIn) {
-                                alert("生成运单成功!");
-                                $scope.isClicked = false;
-                                $scope.reloadFreightInConfirmed();
-                            },
-                            error: function (freightIn, error) {
-                                $scope.isClicked = false;
-                            }
-                        })
-                    },
-                    error: function (freight, error) {
-                        $scope.isClicked = false;
-                        if (error.code == 105) {
-                            alert("生成运单失败,请刷新页面重试");
-                        } else {
-                            alert("生成运单失败");
+        var query = new AV.Query(YD.Freight);
+        query.equalTo("trackingNumber", freight.trackingNumber);
+        query.count({
+            success: function(count) {
+                if(count > 0) {
+                    alert("您已经生成过运单，或此转运号已被使用，请刷新网页重试");
+                    return;
+                } else {
+                    freight.RKNumber = freightIn.RKNumber;
+                    freight.exceedWeight = freightIn.exceedWeight;
+                    freight.status = YD.Freight.STATUS_INITIALIZED;
+                    freight.comments = freightIn.comments;
+                    freight.packageComments = freightIn.packageComments;
+                    freight.descriptionList = [];
+                    for (var i = 0; i < freightIn.descriptionList.length; i++) {
+                        var d = freightIn.descriptionList[i];
+                        var obj = {
+                            kind: d.kind.name, //cuz kind getting from select, and it's an obj
+                            name: d.name,
+                            brand: d.brand,
+                            amount: d.amount,
+                            price: d.price,
+                            total: d.total
                         }
+                        freight.add("descriptionList", obj);
                     }
-                });
+                    freight.insurance = freightIn.insurance.value * 0.02 + "(所保价值: " + freightIn.insurance.value + ")";
+                    freight.channel = freightIn.channelSelection;
+                    if (freightIn.isSplit) {
+                        freight.isSplit = true
+                        freight.splitReference = freightIn.splitReference
+                        freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE)
+                    }
+                    if (freightIn.isSplitPremium) {
+                        freight.isSplitPremium = true
+                        freight.splitReference = freightIn.splitReference
+                        freight.add("statusGroup", YD.Freight.STATUS_PENDING_SPLIT_PACKAGE_PREMIUM)
+                    }
+                    if (freightIn.isMerged) {
+                        freight.isMerge = true
+                        freight.mergeReference = freightIn.mergeReference
+                        freight.add("statusGroup", YD.Freight.STATUS_PENDING_MERGE_PACKAGE)
+                        freight.TNCombine = freightIn.TNCombine;
+                        freight.RKCombine = freightIn.RKCombine;
+                    }
+                    freight.generateYDNumber(function (success, reply) {
+                        if (!success) {
+                            alert("错误!" + reply);
+                            $scope.isClicked = false;
+                            return;
+                        } else {
+                            freight.YDNumber = reply;
+                            freight.save(null, {
+                                success: function (freight) {
+                                    freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                                    freightIn.save(null, {
+                                        success: function (freightIn) {
+                                            alert("生成运单成功!");
+                                            $scope.isClicked = false;
+                                            $scope.reloadFreightInConfirmed();
+                                        },
+                                        error: function (freightIn, error) {
+                                            $scope.isClicked = false;
+                                        }
+                                    })
+                                },
+                                error: function (freight, error) {
+                                    $scope.isClicked = false;
+                                    if (error.code == 105) {
+                                        alert("生成运单失败,请刷新页面重试");
+                                    } else {
+                                        alert("生成运单失败");
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            },
+            error: function(error) {
+                console.log("ERROR: " + error.essage);
+                alert("请重试");
+                $scope.isClicked = false;
+                $scope.reloadFreightInConfirmed();
             }
-        });
+        })
     }
     $scope.generateDeliveryFreight = function (freightIn) {
         if (freightIn.address == undefined) {
