@@ -26,7 +26,7 @@
                         <!--<td ng-bind="freight.updatedAtToString"></td>-->
                         <!--<td>当前状态: 等待发出</td>-->
                     <!--</tr>-->
-                    <tr ng-if="freight.status >= 400">
+                    <tr ng-if="freight.status > 400">
                         <td ng-bind="freight.operateDateToString"></td>
                         <td>等待美国仓库发出</td>
                     </tr>

@@ -1035,17 +1035,17 @@
             this.checkInfo = undefined;
             this.comments = "";
             this.exceedWeight = 0;
-            this.isChargeSplit = false;
-            this.isChecking = false;
-            this.isCheckingCharged = false;
-            this.isMerged = false;
-            this.isOperating = false;
-            this.isSplit = false;
-            this.isSplitPremium = false;
-            this.mergeReference = undefined;
+            //this.isChargeSplit = false;
+            //this.isChecking = false;
+            //this.isCheckingCharged = false;
+            //this.isMerged = false;
+            //this.isOperating = false;
+            //this.isSplit = false;
+            //this.isSplitPremium = false;
+            //this.mergeReference = undefined;
             this.notes = "";
             this.packageComments = "";
-            this.splitReference = undefined;
+            //this.splitReference = undefined;
             this.status = 200;
         }
     }, {

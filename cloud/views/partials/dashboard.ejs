@@ -1095,7 +1095,7 @@
 <div ng-show="view_tab=='bc'" ng-controller="DashboardSearchCtrl">
     <!--this is the content for 快件查询-->
     <form>
-        <div class="form-group">m
+        <div class="form-group">
             <!--<input type="text" name="trackingNumber"  id="trackingNumber" >-->
             <textarea id="trackNumber" class="form-control" cols="40" rows="5" ng-model="trackingNumber"
                       placeholder="每行一个运单"></textarea>
@@ -1305,7 +1305,7 @@
         </tr>
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
-            <td ng-bind="t.id"></td>
+            <td ng-bind="t.record || '无'"></td>
             <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$' + (t.amount).toFixed(2)}}</td>
             <td>{{t.status == 99 ? '支付宝充值' : t.notes}}</td>
             <td ng-bind="t.createdAtToString"></td>

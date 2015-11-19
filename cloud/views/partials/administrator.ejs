@@ -378,7 +378,7 @@
 
         </tr>
         <tr>
-            <td><input type="text" class="form-control" ng-model="newNews.title" placeholder="新的新闻标题"></td>
+            <td><textarea ng-trim="false" ng-keydown="$event.which === 13 && addEnter()" class="form-control" ng-model="newNews.title" rows="2" placeholder="新的新闻标题"></textarea></td>
             <td><input type="text"  class="form-control" ng-model="newNews.link" placeholder="新的新闻链接">
             </td>
             <td colspan="2">
@@ -993,7 +993,7 @@
         <!--<th>状态</th>-->
         <th>操作</th>
         </thead>
-        <tr ng-repeat="f in freight | orderBy:'-updatedAt'">
+        <tr ng-repeat="f in freight | orderBy:'-status'">
             <!--<td><input type="checkbox" ng-model="f.selection"></td>-->
             <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span></a></td>
             <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
@@ -1001,7 +1001,7 @@
             <td><a ng-click="showConsumeDetails(f)">查看</a></td>
             <td ng-bind="f.operateDateToString"></td>
             <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmDelivery(f)" ng-disabled="isActing == true">
+                <button class="btn btn-sm btn-default" ng-click="confirmDelivery(f)" ng-disabled="isActing == true || f.status == 400">
                     <div ng-show="f.status == 400">
                         拒绝发货
                     </div>
@@ -1181,7 +1181,7 @@
             <!--</button>-->
             <!--</td>-->
             <td>
-                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)" ng-disabled="isActing == true">确认接收</button>
+                <button class="btn btn-sm btn-default" ng-click="confirmOut(f)">确认接收</button>
             </td>
         </tr>
     </table>
@@ -1263,7 +1263,7 @@
 
             <td><span ng-bind="f.weight"></span>Lb</td>
             <td>
-                <div ng-if="f.status >= 300">
+                <div ng-if="f.status >= 300 && f.status < 990">
                     <button class="btn btn-sm btn-default" ng-disabled="true">用户已确认</button>
                 </div>
                 <div ng-if="f.status < 300">
@@ -1713,7 +1713,7 @@
                 <div ng-if="f.status ==900">
                     拒绝退货: {{f.notes}}
                 </div>
-                <div ng-if="f.status ==910">
+                <div ng-if="f.status == 910">
                     已重新退货
                 </div>
                 <div ng-if="f.status ==920">
@@ -1853,7 +1853,7 @@
         </thead>
         <tr ng-repeat="t in transactionList | orderBy:'-createdAt'">
             <td ng-bind="t.user.id"></td>
-            <td ng-bind="t.record"></td>
+            <td ng-bind="t.record || '无'"></td>
             <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$'
                 + (t.amount).toFixed(2)}}
             </td>
@@ -1949,7 +1949,7 @@
         <tr ng-repeat="t in transactionList | orderBy: '-createdAt'">
             <!--<td ng-bind="t.id"></td>-->
             <td ng-bind="t.user.stringId"></td>
-            <td ng-bind="t.record"></td>
+            <td ng-bind="t.record || '无'"></td>
             <td>{{t.status == 100 || t.status == 99 ? '$' + (t.amount).toFixed(2) + '(‎¥' + t.yuanInCent/100 +')' : '$'
                 + (t.amount).toFixed(2)}}
             </td>
