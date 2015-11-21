@@ -160,6 +160,15 @@ Object.defineProperty(YDFreight.prototype, "addressId", {
   }
 });
 
+Object.defineProperty(YDFreight.prototype, "isSpeedManual", {
+  get: function() {
+    return this.get("isSpeedManual");
+  },
+  set: function(value) {
+    this.set("isSpeedManual", value);
+  }
+});
+
 Object.defineProperty(YDFreight.prototype, "user", {
 	get: function() {
 		return this.get("user");
