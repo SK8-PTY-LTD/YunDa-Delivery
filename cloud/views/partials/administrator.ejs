@@ -1311,7 +1311,7 @@
         <th>重量</th>
         <th>通知</th>
         </thead>
-        <tr ng-repeat="f in freightIn | orderBy: 'status'">
+        <tr ng-repeat="f in freightIn | orderBy: '-createdAt'">
             <!--<td ng-bind="f.user.realName"></td>-->
             <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
             <td ng-bind="f.trackingNumber"></td>

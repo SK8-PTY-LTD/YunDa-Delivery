@@ -1665,10 +1665,13 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
         query.equalTo("RKNumber", RKNumber);
         query.find({
             success: function (list) {
+                console.log("return again found freightIn");
                 var freightIn = list[0];
                 freightIn.status = YD.FreightIn.STATUS_FINISHED;
                 freightIn.save(null, {
                     success: function () {
+                        console.log("apply return now");
+
                         $scope.applyReturn(f.id);
                     },
                     error: function (f, error) {
@@ -1806,6 +1809,7 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
                     $scope.return.RKNumber = freightReturn.RKNumber;
                     $scope.return.reason = freightReturn.reason;
                     $scope.return.user = freightReturn.user;
+                    $scope.isReapply = true;
                     $scope.isLoading = false;
                     $scope.promote = '';
                 });
@@ -1854,94 +1858,253 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
             alert("请提供退货备注");
             return;
         }
-        $scope.isActing = true;
-        var query = new AV.Query(YD.Freight);
-        query.equalTo("RKNumber", $scope.return.RKNumber);
-        query.equalTo("user", $scope.currentUser);
-        query.find({
-            success: function (list) {
-                if (list.length != 0) {
-                    if (list[0].isOperated) {
-                        alert("此包裹已被打包，无法退货");
-                        return;
-                    } else {
-                        if (list[0].isSplit || list[0].isSplitPremium) {
-                            var RKNumber = list[0].RKNumber.substr(0, 12);
-                            var query = new AV.Query(YD.FreightIn);
-                            query.startsWith("RKNumber", RKNumber);
-                            query.find({
-                                success: function (splitList) {
-                                    for (var i = 0; i < splitList.length; i++) {
-                                        splitList[i].isOperating = true;
+        if($scope.isReapply) {
+            $scope.isActing = true;
+            var query = new AV.Query(YD.Freight);
+            query.equalTo("RKNumber", $scope.return.RKNumber);
+            query.equalTo("user", $scope.currentUser);
+            query.find({
+                success: function (list) {
+                    if (list.length != 0) {
+                        if (list[0].isOperated) {
+                            alert("此包裹已被打包，无法退货");
+                            return;
+                        } else {
+                            if (list[0].isSplit || list[0].isSplitPremium) {
+                                var RKNumber = list[0].RKNumber.substr(0, 12);
+                                var query = new AV.Query(YD.FreightIn);
+                                query.startsWith("RKNumber", RKNumber);
+                                query.find({
+                                    success: function (splitList) {
+                                        for (var i = 0; i < splitList.length; i++) {
+                                            splitList[i].isOperating = true;
+                                        }
+                                        AV.Object.saveAll(splitList, {
+                                            success: function () {
+                                                freight.save(null, {
+                                                    success: function () {
+                                                        list[0].destroy({
+                                                            success: function () {
+                                                                var userPt = new YD.User();
+                                                                userPt.id = $scope.currentUser.id;
+                                                                $scope.return.user = userPt;
+                                                                $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                                $modalInstance.close($scope.return);
+                                                            }
+                                                        });
+                                                    },
+                                                    error: function (f, error) {
+                                                        alert("错误: " + error.message);
+                                                        $scope.$apply(function () {
+                                                            $scope.isActing = false;
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
-                                    AV.Object.saveAll(splitList, {
-                                        success: function () {
-                                            freight.save(null, {
-                                                success: function () {
-                                                    list[0].destroy({
+                                });
+                            } else {
+                                list[0].destroy({
+                                    success: function () {
+                                        var userPt = new YD.User();
+                                        userPt.id = $scope.currentUser.id;
+                                        $scope.return.user = userPt;
+                                        $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                        $modalInstance.close($scope.return);
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        var newQ = new AV.Query(YD.FreightIn);
+                        newQ.equalTo("RKNumber", $scope.return.RKNumber);
+                        newQ.equalTo("user", $scope.currentUser);
+                        newQ.first({
+                            success: function (f) {
+                                if (f) {
+                                    var freightIn = f;
+                                    if(freightIn.isMerged) {
+                                        alert("此包裹已经被合包，无法退货");
+                                        return;
+                                    } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED) {
+                                        alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                        return;
+                                    }  else {
+                                        if (freightIn.isSplit || freightIn.isSplitPremium) {
+                                            console.log("freightIn is a split");
+                                            var RKNumber = freightIn.RKNumber.substr(0, 12);
+                                            console.log("RKNumber: ", RKNumber);
+                                            var query = new AV.Query(YD.FreightIn);
+                                            query.startsWith("RKNumber", RKNumber);
+                                            query.find({
+                                                success: function (splitList) {
+                                                    console.log("found other siblings: ", splitList);
+                                                    for (var i = 0; i < splitList.length; i++) {
+                                                        splitList[i].isOperating = true;
+                                                    }
+                                                    AV.Object.saveAll(splitList, {
                                                         success: function () {
-                                                            var userPt = new YD.User();
-                                                            userPt.id = $scope.currentUser.id;
-                                                            $scope.return.user = userPt;
-                                                            $scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                                            $modalInstance.close($scope.return);
+                                                            freightIn.isOperating = true;
+                                                            freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                                                            freightIn.save(null, {
+                                                                success: function () {
+                                                                    var userPt = new YD.User();
+                                                                    userPt.id = $scope.currentUser.id;
+                                                                    $scope.return.user = userPt;
+                                                                    $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                                    $modalInstance.close($scope.return);
+                                                                }
+                                                            });
                                                         }
-                                                    });
-                                                },
-                                                error: function (f, error) {
-                                                    alert("错误: " + error.message);
-                                                    $scope.$apply(function () {
-                                                        $scope.isActing = false;
                                                     });
                                                 }
                                             });
+                                        } else {
+                                            freightIn.isOperating = true;
+                                            freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                                            freightIn.save(null, {
+                                                success: function () {
+                                                    var userPt = new YD.User();
+                                                    userPt.id = $scope.currentUser.id;
+                                                    $scope.return.user = userPt;
+                                                    $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                    $modalInstance.close($scope.return);
+                                                }
+                                            });
+                                            //var userPt = new YD.User();
+                                            //userPt.id = $scope.currentUser.id;
+                                            //$scope.return.user = userPt;
+                                            //$scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                            //$modalInstance.close($scope.return);
                                         }
+                                    }
+
+                                } else {
+                                    alert("找不到包裹！操作失败");
+                                    $scope.$apply(function () {
+                                        $scope.isActing = false;
                                     });
                                 }
-                            });
-                        } else {
-                            list[0].destroy({
-                                success: function () {
-                                    var userPt = new YD.User();
-                                    userPt.id = $scope.currentUser.id;
-                                    $scope.return.user = userPt;
-                                    $scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                    $modalInstance.close($scope.return);
-                                }
-                            });
-                        }
-
-
+                            }
+                        })
                     }
-                } else {
-                    var newQ = new AV.Query(YD.FreightIn);
-                    newQ.equalTo("RKNumber", $scope.return.RKNumber);
-                    newQ.equalTo("user", $scope.currentUser);
-                    newQ.first({
-                        success: function (f) {
-                            if (f) {
-                                var freightIn = f;
-                                if(freightIn.isMerged) {
-                                    alert("此包裹已经被合包，无法退货");
-                                    return;
-                                } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED) {
-                                    alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
-                                    return;
-                                }  else {
-                                    if (freightIn.isSplit || freightIn.isSplitPremium) {
-                                        console.log("freightIn is a split");
-                                        var RKNumber = freightIn.RKNumber.substr(0, 12);
-                                        console.log("RKNumber: ", RKNumber);
-                                        var query = new AV.Query(YD.FreightIn);
-                                        query.startsWith("RKNumber", RKNumber);
-                                        query.find({
-                                            success: function (splitList) {
-                                                console.log("found other siblings: ", splitList);
-                                                for (var i = 0; i < splitList.length; i++) {
-                                                    splitList[i].isOperating = true;
+                },
+                error: function (error) {
+                    alert("找不到包裹！操作失败");
+                }
+            });
+        } else {
+            var query = new AV.Query(YD.FreightReturn);
+            query.equalTo("RKNumber", $scope.return.RKNumber);
+            query.count({
+                success: function(count) {
+                    if(count > 0) {
+                        alert("此包裹已退货，无法重新退货");
+                        return;
+                    } else {
+                        $scope.isActing = true;
+                        var query = new AV.Query(YD.Freight);
+                        query.equalTo("RKNumber", $scope.return.RKNumber);
+                        query.equalTo("user", $scope.currentUser);
+                        query.find({
+                            success: function (list) {
+                                if (list.length != 0) {
+                                    if (list[0].isOperated) {
+                                        alert("此包裹已被打包，无法退货");
+                                        return;
+                                    } else {
+                                        if (list[0].isSplit || list[0].isSplitPremium) {
+                                            var RKNumber = list[0].RKNumber.substr(0, 12);
+                                            var query = new AV.Query(YD.FreightIn);
+                                            query.startsWith("RKNumber", RKNumber);
+                                            query.find({
+                                                success: function (splitList) {
+                                                    for (var i = 0; i < splitList.length; i++) {
+                                                        splitList[i].isOperating = true;
+                                                    }
+                                                    AV.Object.saveAll(splitList, {
+                                                        success: function () {
+                                                            freight.save(null, {
+                                                                success: function () {
+                                                                    list[0].destroy({
+                                                                        success: function () {
+                                                                            var userPt = new YD.User();
+                                                                            userPt.id = $scope.currentUser.id;
+                                                                            $scope.return.user = userPt;
+                                                                            $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                                            $modalInstance.close($scope.return);
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (f, error) {
+                                                                    alert("错误: " + error.message);
+                                                                    $scope.$apply(function () {
+                                                                        $scope.isActing = false;
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
                                                 }
-                                                AV.Object.saveAll(splitList, {
-                                                    success: function () {
+                                            });
+                                        } else {
+                                            list[0].destroy({
+                                                success: function () {
+                                                    var userPt = new YD.User();
+                                                    userPt.id = $scope.currentUser.id;
+                                                    $scope.return.user = userPt;
+                                                    $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                    $modalInstance.close($scope.return);
+                                                }
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    var newQ = new AV.Query(YD.FreightIn);
+                                    newQ.equalTo("RKNumber", $scope.return.RKNumber);
+                                    newQ.equalTo("user", $scope.currentUser);
+                                    newQ.first({
+                                        success: function (f) {
+                                            if (f) {
+                                                var freightIn = f;
+                                                if(freightIn.isMerged) {
+                                                    alert("此包裹已经被合包，无法退货");
+                                                    return;
+                                                } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED) {
+                                                    alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                                    return;
+                                                }  else {
+                                                    if (freightIn.isSplit || freightIn.isSplitPremium) {
+                                                        console.log("freightIn is a split");
+                                                        var RKNumber = freightIn.RKNumber.substr(0, 12);
+                                                        console.log("RKNumber: ", RKNumber);
+                                                        var query = new AV.Query(YD.FreightIn);
+                                                        query.startsWith("RKNumber", RKNumber);
+                                                        query.find({
+                                                            success: function (splitList) {
+                                                                console.log("found other siblings: ", splitList);
+                                                                for (var i = 0; i < splitList.length; i++) {
+                                                                    splitList[i].isOperating = true;
+                                                                }
+                                                                AV.Object.saveAll(splitList, {
+                                                                    success: function () {
+                                                                        freightIn.isOperating = true;
+                                                                        freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                                                                        freightIn.save(null, {
+                                                                            success: function () {
+                                                                                var userPt = new YD.User();
+                                                                                userPt.id = $scope.currentUser.id;
+                                                                                $scope.return.user = userPt;
+                                                                                $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                                                $modalInstance.close($scope.return);
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    } else {
                                                         freightIn.isOperating = true;
                                                         freightIn.status = YD.FreightIn.STATUS_FINISHED;
                                                         freightIn.save(null, {
@@ -1953,44 +2116,34 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
                                                                 $modalInstance.close($scope.return);
                                                             }
                                                         });
+                                                        //var userPt = new YD.User();
+                                                        //userPt.id = $scope.currentUser.id;
+                                                        //$scope.return.user = userPt;
+                                                        //$scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                        //$modalInstance.close($scope.return);
                                                     }
+                                                }
+
+                                            } else {
+                                                alert("找不到包裹！操作失败");
+                                                $scope.$apply(function () {
+                                                    $scope.isActing = false;
                                                 });
                                             }
-                                        });
-                                    } else {
-                                        freightIn.isOperating = true;
-                                        freightIn.status = YD.FreightIn.STATUS_FINISHED;
-                                        freightIn.save(null, {
-                                            success: function () {
-                                                var userPt = new YD.User();
-                                                userPt.id = $scope.currentUser.id;
-                                                $scope.return.user = userPt;
-                                                $scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                                $modalInstance.close($scope.return);
-                                            }
-                                        });
-                                        //var userPt = new YD.User();
-                                        //userPt.id = $scope.currentUser.id;
-                                        //$scope.return.user = userPt;
-                                        //$scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                        //$modalInstance.close($scope.return);
-                                    }
+                                        }
+                                    })
                                 }
-
-                            } else {
+                            },
+                            error: function (error) {
                                 alert("找不到包裹！操作失败");
-                                $scope.$apply(function () {
-                                    $scope.isActing = false;
-                                });
                             }
-                        }
-                    })
+                        });
+                    }
                 }
-            },
-            error: function (error) {
-                alert("找不到包裹！操作失败");
-            }
-        });
+            })
+        }
+
+
     };
     $scope.close = function () {
         $modalInstance.dismiss();

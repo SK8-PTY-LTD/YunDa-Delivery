@@ -750,8 +750,8 @@
                     </div>
                 </accordion-heading>
                 <div class="row">
-                    <small class="pull-right" style="color:#013086; margin-top: -10px;" ng-bind="'入库单号: ' + freightIn.RKNumber"></small><br>
-                    <small class="pull-right" style="color:#013086; margin-top: -10px;" ng-bind="'转运号: ' +freightIn.trackingNumber"></small>
+                    <small class="pull-right" style="color:#013086; margin-top: -10px; margin-right: 15px;" ng-bind="'入库单号: ' + freightIn.RKNumber"></small><br>
+                    <small class="pull-right" style="color:#013086; margin-top: -10px; margin-right: 15px;" ng-bind="'转运号: ' +freightIn.trackingNumber"></small>
                 </div>
 
                 <form>
@@ -1016,12 +1016,12 @@
                 </div>
             </td>
             <td>
-                <div ng-show="freight.isOperated === false">
+                <div ng-show="freight.isOperated === false && !freight.isSpeedManual ">
                     <button class="btn btn-default btn-xs" ng-click="editDetails(freight)">修改</button>
                 </div>
             </td>
             <td>
-                <div ng-show="freight.isOperated === false">
+                <div ng-show="freight.isOperated === false && !freight.isSpeedManual">
                     <button class="btn btn-default btn-xs" ng-click="deleteFreight(freight)">删除</button>
                 </div>
             </td>
