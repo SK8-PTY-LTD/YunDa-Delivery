@@ -1958,11 +1958,22 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
                                             }
                                         });
                                     } else {
-                                        var userPt = new YD.User();
-                                        userPt.id = $scope.currentUser.id;
-                                        $scope.return.user = userPt;
-                                        $scope.return.status = YD.FreightReturn.STATUS_PENDING;
-                                        $modalInstance.close($scope.return);
+                                        freightIn.isOperating = true;
+                                        freightIn.status = YD.FreightIn.STATUS_FINISHED;
+                                        freightIn.save(null, {
+                                            success: function () {
+                                                var userPt = new YD.User();
+                                                userPt.id = $scope.currentUser.id;
+                                                $scope.return.user = userPt;
+                                                $scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                                $modalInstance.close($scope.return);
+                                            }
+                                        });
+                                        //var userPt = new YD.User();
+                                        //userPt.id = $scope.currentUser.id;
+                                        //$scope.return.user = userPt;
+                                        //$scope.return.status = YD.FreightReturn.STATUS_PENDING;
+                                        //$modalInstance.close($scope.return);
                                     }
                                 }
 
