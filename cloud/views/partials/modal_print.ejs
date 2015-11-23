@@ -23,6 +23,7 @@
                 <span>普通分包</span> <input type="checkbox" ng-model="freight.isSplit" disabled>
                 <span>精确分包</span><input type="checkbox" ng-model="freight.isSplitPremium" disabled>
                 <span>合包</span><input type="checkbox" ng-model="freight.isMerged" disabled>
+                <span>原闪</span><input type="checkbox" ng-model="freight.isSpeedManual" disabled>
             </td>
         </tr>
         <tr>
@@ -35,7 +36,7 @@
         </tr>
         <tr>
             <td ng-bind="'收件人:'+freight.address.recipient"></td>
-            <td ng-bind="'手机号码:'+freight.address.mobileNumber"></td>
+            <td>手机：<span ng-bind="freight.address.mobileNumber"></span>  座机：<span ng-bind="freight.address.contactNumber"></span></td>
         </tr>
         <tr>
             <td colspan="2" ng-bind="'地址:'+freight.address.country + freight.address.state + freight.address.city + freight.address.street1 + ' ' +
