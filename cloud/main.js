@@ -1059,7 +1059,7 @@ AV.Cloud.define('hideExpiredFreight', function(req, res) {
                 var timeDiff = Math.abs(today.getTime() - update.getTime());
                 var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 console.log(diffDays + ' days');
-                if (diffDays > 180 || true) {
+                if (diffDays > 180) {
                     f.set("isHidden", true);
                 }
             }

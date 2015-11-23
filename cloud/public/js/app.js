@@ -6216,23 +6216,7 @@ YundaApp.controller('AdminFreightInConfirmRecordCtrl', function ($scope, $rootSc
         $scope.reloadFreightCount();
         $scope.reloadFreightIn(0);
     };
-    $scope.deleteFreightIn = function (f) {
-        var r = confirm("是否确认删除运单? (物品入库已超过60天)");
-        if (!r) {
-        } else {
-            f.status = YD.FreightIn.STATUS_CANCELED;
-            f.deleteDate = new Date();
-            f.save(null, {
-                success: function () {
-                    $scope.reloadFreightIn();
-                    alert("删除成功");
-                },
-                error: function (f, error) {
-                    alert(error.message);
-                }
-            });
-        }
-    }
+
 });
 
 YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $window, $modal, $filter) {
@@ -10052,29 +10036,31 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
         }
         query.find({
             success: function (list) {
-                $scope.freights = list;
-                for (var i = 0; i < $scope.freights.length; i++) {
-                    if ($scope.freights[i].deleteDate) {
-                        var tmp = $scope.freights[i].deleteDate;
-                        var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
-                        if (tmp.getMinutes() < 10) {
-                            tmp_date += "0" + tmp.getMinutes();
-                        } else {
-                            tmp_date += tmp1.getMinutes();
+                $scope.$apply(function () {
+                    $scope.freights = list;
+                    for (var i = 0; i < $scope.freights.length; i++) {
+                        if ($scope.freights[i].deleteDate) {
+                            var tmp = $scope.freights[i].deleteDate;
+                            var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
+                            if (tmp.getMinutes() < 10) {
+                                tmp_date += "0" + tmp.getMinutes();
+                            } else {
+                                tmp_date += tmp1.getMinutes();
+                            }
+                            $scope.freights[i].deleteDateToString = tmp_date;
                         }
-                        $scope.freights[i].deleteDateToString = tmp_date;
-                    }
-                    var tmp1 = $scope.freights[i].createdAt;
+                        var tmp1 = $scope.freights[i].createdAt;
 
-                    var tmp_date1 = tmp1.getFullYear() + "/" + (parseInt(tmp1.getMonth()) + 1) + "/" + tmp1.getDate() + " " + tmp1.getHours() + ":";
-                    if (tmp1.getMinutes() < 10) {
-                        tmp_date1 += "0" + tmp1.getMinutes();
-                    } else {
-                        tmp_date1 += tmp1.getMinutes();
+                        var tmp_date1 = tmp1.getFullYear() + "/" + (parseInt(tmp1.getMonth()) + 1) + "/" + tmp1.getDate() + " " + tmp1.getHours() + ":";
+                        if (tmp1.getMinutes() < 10) {
+                            tmp_date1 += "0" + tmp1.getMinutes();
+                        } else {
+                            tmp_date1 += tmp1.getMinutes();
+                        }
+                        _
+                        $scope.freights[i].createdAtToString = tmp_date1;
                     }
-                    _
-                    $scope.freights[i].createdAtToString = tmp_date1;
-                }
+                });
             },
             error: function (error) {
                 alert("错误!" + error.message);
@@ -10121,8 +10107,9 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
         }
         $scope.searchTN = true;
         $scope.searchName = false;
-        $scope.reloadDelete(0);
+
         $scope.reloadCount();
+        $scope.reloadDelete(0);
     };
     $scope.$on('admindf', function () {
         $scope.searchName = false;
@@ -10130,9 +10117,9 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
         $scope.searchTN = false;
         $scope.queryNumber = '';
         $scope.currentPage = 1;
+        $scope.reloadCount();
 
         $scope.reloadDelete(0);
-        $scope.reloadCount();
     });
 }]);
 YundaApp.controller("PayReturnCtrl", ["$scope", "$timeout", "$location", function ($scope, $timeout, $location) {

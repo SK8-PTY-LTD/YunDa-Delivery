@@ -2486,7 +2486,7 @@
         <th>入库时间</th>
         <th>删除时间</th>
         </thead>
-        <tr ng-repeat="f in freights | orderBy: '-updatedAt'">
+        <tr ng-repeat="f in freights | orderBy: '-createdAt'">
             <td ng-bind="f.user.stringId"></td>
             <td ng-bind="f.trackingNumber"></td>
             <td ng-bind="f.RKNumber"></td>
