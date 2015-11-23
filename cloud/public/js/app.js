@@ -5390,6 +5390,20 @@ YundaApp.controller('AdminFreightInArriveCtrl', function ($scope, $rootScope, $m
             }
         })
     };
+    $scope.showFreightInDetail = function (f) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_freightInDetail',
+            controller: 'FreightInDetailCtrl',
+            scope: $scope,
+            size: 'md',
+            windowClass: 'center-modal',
+            resolve: {
+                freight: function () {
+                    return f;
+                }
+            }
+        });
+    }
     $scope.$on('adminbz', function () {
         $scope.searchName = false;
         $scope.queryString = '';
@@ -5913,9 +5927,7 @@ YundaApp.controller('AdminFreightInConfirmCtrl', function ($scope, $rootScope, $
                 console.log("List length: " + list.length);
                 $scope.freightCount = list.length;
                 $scope.adminBadge.B = list.length;
-                for (var i = 0; i < list.length; i++) {
-                    console.log("i: " + i + " | status: " + list[i].status + " | createdAt: " + list[i].createdAt);
-                }
+
                 if (list.length >= 1000) {
                     isSkipK = true;
                     $scope.reloadFreightCount();
@@ -6223,7 +6235,8 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
     $scope.currentPage = {
         Normal: 0,
         Merge: 0,
-        Split: 0
+        Split: 0,
+        SpeedManual: 0
 
     };
     $scope.showDetails = function (freight) {
@@ -6349,9 +6362,14 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
                     $scope.mergeFreights = $filter('filter')($scope.freight, {
                         isMerge: true
                     }, true);
+                    $scope.speedManualFreights = $filter('filter')($scope.freight, {
+                        isSpeedManual: true
+                    }, true);
                     $scope.reloadNormal(0);
                     $scope.reloadSplit(0);
                     $scope.reloadMerge(0);
+                    $scope.reloadSpeedManual(0);
+
                 });
             },
             error: function (error) {
@@ -6369,6 +6387,10 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
     $scope.setPageMerge = function () {
         $scope.currentPage.Merge = $scope.inputPage;
         $scope.reloadMerge($scope.currentPage.Merge - 1);
+    };
+    $scope.setPageSpeedManual = function () {
+        $scope.currentPage.SpeedManual = $scope.inputPage;
+        $scope.reloadSpeedManual($scope.currentPage.SpeedManual - 1);
     };
     $scope.reloadNormal = function (index) {
         $scope.showNormal = [];
@@ -6394,6 +6416,15 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
             if ($scope.mergeFreights[i]) {
                 var f = $scope.mergeFreights[i];
                 $scope.showMerge.push(f);
+            }
+        }
+    };
+    $scope.reloadSpeedManual = function (index) {
+        $scope.showSpeedManual = [];
+        for (var i = index * $scope.LIMIT_NUMBER; i < $scope.LIMIT_NUMBER * (index + 1); i++) {
+            if ($scope.speedManualFreights[i]) {
+                var f = $scope.speedManualFreights[i];
+                $scope.showSpeedManual.push(f);
             }
         }
     };
@@ -6826,8 +6857,8 @@ YundaApp.controller('AdminSpeedManualCtrl', ["$scope", "$modal", function ($scop
 
         },
         reloadSpeedFreight: function (index) {
-            var query = new AV.Query(YD.FreightIn);
-            query.equalTo("status", YD.FreightIn.STATUS_SPEED_MANUAL);
+            var query = new AV.Query(YD.Freight);
+            query.equalTo("status", YD.Freight.STATUS_SPEED_MANUAL);
             query.include("user");
             query.limit($scope.LIMIT_NUMBER);
             query.skip($scope.LIMIT_NUMBER * index);
@@ -6860,8 +6891,8 @@ YundaApp.controller('AdminSpeedManualCtrl', ["$scope", "$modal", function ($scop
             });
         },
         reloadFreightCount: function () {
-            var query = new AV.Query(YD.FreightIn);
-            query.equalTo("status", YD.FreightIn.STATUS_SPEED_MANUAL);
+            var query = new AV.Query(YD.Freight);
+            query.equalTo("status", YD.Freight.STATUS_SPEED_MANUAL);
             if ($scope.searchName) {
                 var innerQuery = new AV.Query(YD.User);
                 innerQuery.equalTo("stringId", $scope.queryString);
@@ -6914,23 +6945,42 @@ YundaApp.controller('AdminSpeedManualCtrl', ["$scope", "$modal", function ($scop
                 windowClass: 'center-modal'
             });
         },
-        deleteFreight: function (freight) {
+        deleteFreight: function (f) {
             var r = confirm("确认彻底删除?");
             if (!r) {
                 return;
             } else {
-                var RKNumber = freight.RKNumber;
-                freight.destroy({
-                    success: function (f) {
-                        $scope.reloadSpeedFreight();
-                        alert("删除运单成功");
+                var RKNumber = f.RKNumber;
+                var query = new AV.Query(YD.FreightIn);
+                query.equalTo("RKNumber", RKNumber);
+                console.log("RKNUmber: " + RKNumber);
+                query.first({
+                    success: function (freight) {
+                        console.log("found freightIn, " + freight.RKNumber);
+                        freight.destroy({
+                            success: function () {
+                                f.destroy({
+                                    success: function () {
+                                        $scope.reloadFreightCount();
+                                        $scope.reloadSpeedFreight(0);
+                                        alert("删除运单成功");
+                                    }
+                                });
+                            },
+                            error: function (f, error) {
+                                $scope.reloadFreightCount();
+                                $scope.reloadSpeedFreight(0);
+                                alert("错误!" + error.message);
+                            }
+                        });
                     },
-                    error: function (f, error) {
-                        $scope.reloadFreightCount();
-                        $scope.reloadSpeedFreight(0);
-                        alert("错误!" + error.message);
+                    error: function(error) {
+                        console.log("ERROR: " + error.message);
+                        alert("找不到包裹，请重试");
+
                     }
                 });
+
             }
         }
     });
@@ -10040,12 +10090,13 @@ YundaApp.controller('AdminDeletePackageCtrl', ["$scope", function ($scope) {
                     $scope.freights = list;
                     for (var i = 0; i < $scope.freights.length; i++) {
                         if ($scope.freights[i].deleteDate) {
+                            console.log("has delete date: " + $scope.freights[i].RKNumber);
                             var tmp = $scope.freights[i].deleteDate;
                             var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                             if (tmp.getMinutes() < 10) {
                                 tmp_date += "0" + tmp.getMinutes();
                             } else {
-                                tmp_date += tmp1.getMinutes();
+                                tmp_date += tmp.getMinutes();
                             }
                             $scope.freights[i].deleteDateToString = tmp_date;
                         }
@@ -10231,7 +10282,7 @@ YundaApp.filter('normalPackageFilter', function () {
         } else {
             for (var i = 0; i < freights.length; i++) {
                 var f = freights[i];
-                if (!f.isSplit && !f.isSplitPremium && !f.isMerge) {
+                if (!f.isSplit && !f.isSplitPremium && !f.isMerge && !f.isSpeedManual) {
                     filtered.push(f);
                 }
             }

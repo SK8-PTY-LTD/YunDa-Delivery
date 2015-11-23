@@ -583,13 +583,15 @@
         <th>入库号</th>
         <th>Email</th>
         <th>是否拍照</th>
-        <th width="15%">验货要求</th>
+        <th width="35%">验货要求</th>
         <th>申请时间</th>
         <!--<th>重量</th>-->
         <th>操作</th>
         </thead>
         <tr ng-repeat="f in freightIn">
-            <td><a ng-click="showDetails(f)"><span ng-bind="f.RKNumber"></span></a></td>
+            <td><a ng-click="showFreightInDetail(f)"><span ng-bind="f.user.stringId"></span></a></td>
+
+            <!--<td><a ng-click="showDetails(f)"><span ng-bind="f.RKNumber"></span></a></td>-->
             <td ng-bind="f.checkInfo.email"></td>
             <td>
                 <div ng-show="f.checkInfo.isTakingPhoto">
@@ -932,6 +934,62 @@
                                        placeholder="页数..">
                           <span class="input-group-btn">
                             <button class="btn btn-default btn-sm" ng-click="setPageSplit()">跳转</button>
+                          </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END PAGINATION-->
+            <div class="row">
+                <button class="btn btn-default" ng-click="confirmAllFreightOpt()">批量确认操作</button>
+            </div>
+        </tab>
+        <tab heading="原箱闪运">
+
+            <table class="table small-table">
+                <thead>
+                <th>选择</th>
+                <th>用户名</th>
+                <th>收件人身份证</th>
+                <th>YD运单号</th>
+                <th>生成时间</th>
+                <th>操作</th>
+                </thead>
+                <tr ng-repeat="f in showSpeedManual | orderBy:'-createdAt'">
+                    <td><input type="checkbox" ng-model="f.selection"></td>
+
+                    <td><a ng-click="showDetails(f)"><span ng-bind="f.user.stringId"></span></a></td>
+                    <td><a ng-click="showIdentityDetails(f)">查看</a></td>
+
+                    <td><a ng-click="showOperationDetails(f)"><span ng-bind="f.YDNumber"></span> </a></td>
+                    <td ng-bind="f.createdAtToString"></td>
+                    <td>
+                        <button class="btn btn-default btn-xs" ng-click="confirmFreightOpt(f)"
+                                ng-disabled="f.isOperated">确认操作
+                        </button>
+                        <button class="btn btn-default btn-xs" ng-disabled="f.printDisabled"><a
+                                    ng-click="printFreight(f)" ng-href="/print">打印运单</a></button>
+                    </td>
+                </tr>
+            </table>
+            <!--pagination-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <pagination ng-model="currentPage.Split" max-size="8" total-items="speedManualFreights.length"
+                                        ng-change="reloadSpeedMaunual(currentPage.SpeedManual-1)"
+                                        class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"
+                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                        last-text="&raquo;"></pagination>
+                        </div>
+                        <div class="col-md-3" style="padding-top:20px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" ng-model="inputPage"
+                                       placeholder="页数..">
+                          <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" ng-click="setPageSpeedManual()">跳转</button>
                           </span>
                             </div>
                         </div>
