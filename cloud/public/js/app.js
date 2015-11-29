@@ -3487,13 +3487,33 @@ YundaApp.controller('freightInConfirmedCtrl', function ($scope, $rootScope, $mod
                         } else {
                             freight.YDNumber = reply;
                             freight.save(null, {
-                                success: function (freight) {
+                                success: function () {
                                     freightIn.status = YD.FreightIn.STATUS_FINISHED;
                                     freightIn.save(null, {
-                                        success: function (freightIn) {
-                                            alert("生成运单成功!");
-                                            $scope.isClicked = false;
-                                            $scope.reloadFreightInConfirmed();
+                                        success: function () {
+                                            if (freight.isSplit || freight.isSplitPremium) {
+                                                var RKNumber = freight.RKNumber.substr(0, 12);
+                                                var query = new AV.Query(YD.FreightIn);
+                                                query.startsWith("RKNumber", RKNumber);
+                                                query.find({
+                                                    success: function (list) {
+                                                        for (var i = 0; i < list.length; i++) {
+                                                            list[i].isOperating = true;
+                                                        }
+                                                        AV.Object.saveAll(list, {
+                                                            success: function (list) {
+                                                                alert("生成运单成功!");
+                                                                $scope.isClicked = false;
+                                                                $scope.reloadFreightInConfirmed(0);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            } else {
+                                                alert("生成运单成功!");
+                                                $scope.isClicked = false;
+                                                $scope.reloadFreightInConfirmed();
+                                            }
                                         },
                                         error: function (freightIn, error) {
                                             $scope.isClicked = false;
@@ -6704,39 +6724,49 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
         freight.isOperated = true;
         freight.printDisabled = false;
         freight.confirmDate = new Date();
-        if (freight.isSplit || freight.isSplitPremium) {
-            var RKNumber = freight.RKNumber.substr(0, 12);
-            var query = new AV.Query(YD.FreightIn);
-            query.startsWith("RKNumber", RKNumber);
-            query.find({
-                success: function (list) {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i].isOperating = true;
-                    }
-                    AV.Object.saveAll(list, {
-                        success: function (list) {
-                            freight.save(null, {
-                                success: function (f) {
-                                    alert("已确认操作");
-                                },
-                                error: function (f, error) {
-                                    alert("错误: " + error.message);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        } else {
-            freight.save(null, {
-                success: function (f) {
-                    alert("已确认操作");
-                },
-                error: function (f, error) {
-                    alert("错误: " + error.message);
-                }
-            });
-        }
+        // Now this functioning happens when freight is generated
+        // But don't remove yet.
+        /* if (freight.isSplit || freight.isSplitPremium) {
+             var RKNumber = freight.RKNumber.substr(0, 12);
+             var query = new AV.Query(YD.FreightIn);
+             query.startsWith("RKNumber", RKNumber);
+             query.find({
+                 success: function (list) {
+                     for (var i = 0; i < list.length; i++) {
+                         list[i].isOperating = true;
+                     }
+                     AV.Object.saveAll(list, {
+                         success: function (list) {
+                             freight.save(null, {
+                                 success: function (f) {
+                                     alert("已确认操作");
+                                 },
+                                 error: function (f, error) {
+                                     alert("错误: " + error.message);
+                                 }
+                             });
+                         }
+                     });
+                 }
+             });
+         } else {
+             freight.save(null, {
+                 success: function (f) {
+                     alert("已确认操作");
+                 },
+                 error: function (f, error) {
+                     alert("错误: " + error.message);
+                 }
+             });
+         }*/
+        freight.save(null, {
+            success: function (f) {
+                alert("已确认操作");
+            },
+            error: function (f, error) {
+                alert("错误: " + error.message);
+            }
+        });
     };
     $scope.confirmAllFreightOpt = function () {
         var list = [];
