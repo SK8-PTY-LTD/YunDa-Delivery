@@ -1481,7 +1481,6 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                                     $scope.freight.save(null, {
                                         success: function (f) {
                                             alert("原箱闪运运单提交成功!");
-                                            $scope.reloadSpeedManual();
                                             $scope.isClicked = false;
                                             $scope.freightIn = new YD.FreightIn();
                                             $scope.freight = new YD.Freight();
@@ -1494,6 +1493,8 @@ YundaApp.controller('SpeedManualCtrl', ["$scope", "$modal", function ($scope, $m
                                             $scope.insurance.value = 0;
                                             $scope.insurance.amount = 0;
                                             $scope.$apply();
+                                            $scope.reloadCount();
+                                            $scope.reloadSpeedManual(0);
                                         },
                                         error: function (f, error) {
                                             $scope.isClicked = false;
