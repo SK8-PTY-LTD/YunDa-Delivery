@@ -1652,7 +1652,8 @@
         <th>操作</th>
         </thead>
         <tr ng-repeat="freight in returnList | orderBy: '-createdAt'">
-            <td ng-bind="freight.RKNumber"></td>
+            <td><a ng-click="showFreightInDetail(freight)"><span ng-bind="freight.RKNumber"></span></a></td>
+
             <td ng-bind="freight.createdAtToString"></td>
             <td ng-bind="freight.statusToString"></td>
             <!--<td><a target="_blank" ng-href="{{freight.adminEvidence}}">点此下载</a></td>-->

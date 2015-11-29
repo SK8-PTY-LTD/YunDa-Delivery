@@ -1552,6 +1552,20 @@ YundaApp.controller('ReturnGoodsCtrl', function ($scope, $modal) {
             });
         }
     };
+    $scope.showFreightInDetail = function (f) {
+        var modalInstance = $modal.open({
+            templateUrl: 'partials/modal_freightInDetail',
+            controller: 'FreightInDetailCtrl',
+            scope: $scope,
+            size: 'md',
+            windowClass: 'center-modal',
+            resolve: {
+                freight: function () {
+                    return f;
+                }
+            }
+        });
+    }
     $scope.reloadFreightCount = function () {
         var query = new AV.Query("FreightReturn");
         query.equalTo("user", $scope.currentUser);
@@ -9985,7 +9999,7 @@ YundaApp.controller('FreightInDetailCtrl', ["$scope", "$modalInstance", "freight
         success: function (list) {
             if (list.length == 1) {
                 $scope.freightIn = list[0];
-                var tmp = $scope.freightIn.createdAt
+                var tmp = $scope.freightIn.createdAt;
                 var tmp_date = tmp.getFullYear() + "/" + (parseInt(tmp.getMonth()) + 1) + "/" + tmp.getDate() + " " + tmp.getHours() + ":";
                 if (tmp.getMinutes() < 10)
                     tmp_date += "0" + tmp.getMinutes()
