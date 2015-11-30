@@ -1941,10 +1941,13 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
                                     console.log("f status: " + f.status);
                                     var freightIn = f;
                                     if(freightIn.isMerged) {
-                                        alert("此包裹已经被合包，无法退货");
+                                        //alert("此包裹已经被合包，无法退货");
+                                        alert("该包裹无法退货，可能原因：已退货或已申请、此包裹已进行了分包操作、合包包裹不可以退货。请检查核实后，重新申请，谢谢！");
                                         return;
                                     } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED || freightIn.status == YD.FreightIn.STATUS_FINISHED) {
-                                        alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                        //alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                        alert("该包裹无法退货，可能原因：已退货或已申请、此包裹已进行了分包操作、合包包裹不可以退货。请检查核实后，重新申请，谢谢！");
+
                                         return;
                                     }  else {
                                         if (freightIn.isSplit || freightIn.isSplitPremium) {
@@ -2087,14 +2090,18 @@ YundaApp.controller('ReturnGoodsModalCtrl', ["$scope", "$modalInstance", 'id', f
                                                 var freightIn = f;
 
                                                 if(freightIn.isMerged) {
-                                                    alert("此包裹已经被合包，无法退货");
+                                                    //alert("此包裹已经被合包，无法退货");
+                                                    alert("该包裹无法退货，可能原因：已退货或已申请、此包裹已进行了分包操作、合包包裹不可以退货。请检查核实后，重新申请，谢谢！");
+
                                                     return;
                                                 } else if (freightIn.status == YD.FreightIn.STATUS_CANCELED || freightIn.status == YD.FreightIn.STATUS_FINISHED) {
                                                     console.log("f status: " + freightIn.status);
                                                     console.log("f status finish: ", freightIn.status == YD.FreightIn.STATUS_FINISHED);
                                                     console.log("f status cancel: ", freightIn.status == YD.FreightIn.STATUS_CANCELED);
 
-                                                    alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                                    //alert("此包裹已进行过分/合包操作，或已申请退货，无法退货");
+                                                    alert("该包裹无法退货，可能原因：已退货或已申请、此包裹已进行了分包操作、合包包裹不可以退货。请检查核实后，重新申请，谢谢！");
+
                                                     return;
                                                 }  else {
                                                     if (freightIn.isSplit || freightIn.isSplitPremium) {
