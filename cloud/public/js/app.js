@@ -6567,6 +6567,7 @@ YundaApp.controller("AdminFreightConfirmCtrl", function ($scope, $rootScope, $wi
                     $scope.speedManualFreights = $filter('filter')($scope.freight, {
                         isSpeedManual: true
                     }, true);
+                    console.log("speed manual freights: ", $scope.speedManualFreights);
                     $scope.reloadNormal(0);
                     $scope.reloadSplit(0);
                     $scope.reloadMerge(0);
