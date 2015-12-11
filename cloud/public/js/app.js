@@ -505,7 +505,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                 });
             }
         });
-    }
+    };
 
     $scope.updatePassword = function () {
         var r = confirm('是否确认修改密码？');
@@ -529,7 +529,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
             });
         }
 
-    }
+    };
     $scope.isSearching = false;
     $scope.trackingInfo = function () {
         $scope.isSearching = true;
@@ -691,7 +691,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                 });
             }
         });
-    }
+    };
 
     $scope.login = function () {
         $scope.isLoading = true;
@@ -791,7 +791,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                 }
             })
         })
-    }
+    };
     $scope.resetPassword = function () {
         $scope.isLoading = true;
         $scope.promote = "Requesting password";
@@ -807,7 +807,7 @@ YundaApp.controller('HomeCtrl', function ($rootScope, $scope, $modal, $window) {
                 });
             }
         });
-    }
+    };
 });
 YundaApp.controller('TrackingCtrl', function ($scope, $modal, $modalInstance, resultList) {
     $scope.showOperationDetails = function (f) {
@@ -6014,7 +6014,7 @@ YundaApp.controller("AdminNewsCtrl", ["$scope", "$rootScope", "$modal", function
     }
 }])
 YundaApp.controller('EditNewsCtrl', ["$scope", "$modalInstance", "news", function ($scope, $modalInstance, news) {
-    $scope.news = news
+    $scope.news = news;
     $scope.save = function () {
         $scope.news.save(null, {
             success: function (n) {
@@ -6024,6 +6024,9 @@ YundaApp.controller('EditNewsCtrl', ["$scope", "$modalInstance", "news", functio
                 alert("错误！" + error.message)
             }
         })
+    }
+    $scope.addEnter = function() {
+        $scope.news.title += '\n';
     }
     $scope.cancel = function () {
         $modalInstance.dismiss()

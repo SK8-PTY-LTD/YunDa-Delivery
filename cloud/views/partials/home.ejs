@@ -156,7 +156,7 @@
     <div class="col-lg-5">
         <h4><i class="fa fa-newspaper-o fa-lg home-icon"></i>最新公告
         </h4>
-            <ul ng-repeat="news in newsList | orderBy: -createdAt">
+            <ul ng-repeat="news in newsList | orderBy: '-createdAt'">
                 <li><a target="_blank" ng-href="{{news.link}}"><strong><span class="pull-right" style="color:#bbbbbb" ng-bind="news.dateToString"></span><pre style=" color:#337ab7;padding:0; background-color:transparent; border:0px; " ng-bind="news.title"></pre></strong></a></li>
             </ul>
     </div>

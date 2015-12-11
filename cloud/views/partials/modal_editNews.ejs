@@ -5,7 +5,7 @@
                     <label>标题: </label>
                 </div>
                 <div class="col-md-9">
-                    <input class="form-control" type="text" ng-model="news.title">
+                    <textarea rows="2" ng-trim="false" ng-keydown="$event.which === 13 && addEnter()" class="form-control" type="text" ng-model="news.title"></textarea>
                 </div>
             </div>
         </div>
