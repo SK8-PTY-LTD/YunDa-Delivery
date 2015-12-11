@@ -20,7 +20,7 @@
              By JavaScript Kit (http://javascriptkit.com)
              Over 400+ free scripts here!
              */
-
+            var isCountDownFinished = false;
             //change below target URL to your own
             var targetURL = "http://www.yundawl.com"
             //change the second to start counting down from
@@ -35,6 +35,7 @@
                 }
                 else {
                     window.location = targetURL
+                    isCountDownFinished = true;
                     return
                 }
                 setTimeout("countredirect()", 1000)
@@ -42,7 +43,12 @@
 
             countredirect();
             window.addEventListener("beforeunload", function (event) {
-                event.returnValue = "跳转过程中，请耐心等待。强行离开可能会导致充值失败。请确认倒计时是否已经结束？";
+                if(isCountDownFinished) {
+                    //count down finished redirecting, don't prompt
+                } else {
+                    event.returnValue = "跳转过程中，请耐心等待。强行离开可能会导致充值失败。请确认倒计时是否已经结束？";
+
+                }
             });
             //-->
         </script>
