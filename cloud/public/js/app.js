@@ -364,7 +364,7 @@ YundaApp.controller('LoginCtrl', function ($scope, $rootScope, $modalInstance, $
             $scope.currentUser.balance = 0
             $scope.currentUser.pendingBalance = 0
             $scope.currentUser.rewardBalance = 0
-            $scope.currentUser.accumulatedReward = 500;
+            $scope.currentUser.accumulatedReward = 450;
             $scope.currentUser.signUp(null, {
                 success: function (user) {
                     $scope.$apply(function () {
