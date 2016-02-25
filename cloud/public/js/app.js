@@ -8403,6 +8403,7 @@ YundaApp.controller('IncreaseUserBalance', ["$scope", "$modalInstance", "user", 
                     $modalInstance.close();
                 },
                 error: function (error) {
+                    alert("操作失败："， error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8434,6 +8435,7 @@ YundaApp.controller('DecreaseUserBalance', ["$scope", "$modalInstance", "user", 
                     $modalInstance.close();
                 },
                 error: function (error) {
+                    alert("操作失败："， error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8465,6 +8467,7 @@ YundaApp.controller('IncreaseUserYD', ["$scope", "$modalInstance", "user", funct
                     $modalInstance.close();
                 },
                 error: function (error) {
+                    alert("操作失败："， error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8495,6 +8498,7 @@ YundaApp.controller('DecreaseUserYD', ["$scope", "$modalInstance", "user", funct
                     $modalInstance.close();
                 },
                 error: function (error) {
+                    alert("操作失败："， error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
