@@ -7413,7 +7413,7 @@ YundaApp.controller('AdminFreightPaidCtrl', function ($scope, $rootScope, $modal
                     success: function (f) {
                         alert("发货成功");
                         $scope.reloadFreightCount();
-                        $scope.reloadPaidFreight(0);
+                        $scope.reloadPaidFreight($scope.currentPage - 1);
                         $scope.$apply(function () {
                             $scope.isActing = false;
                         });
@@ -8403,7 +8403,7 @@ YundaApp.controller('IncreaseUserBalance', ["$scope", "$modalInstance", "user", 
                     $modalInstance.close();
                 },
                 error: function (error) {
-                    alert("操作失败："， error);
+                    alert("操作失败：", error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8435,7 +8435,7 @@ YundaApp.controller('DecreaseUserBalance', ["$scope", "$modalInstance", "user", 
                     $modalInstance.close();
                 },
                 error: function (error) {
-                    alert("操作失败："， error);
+                    alert("操作失败：", error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8467,7 +8467,7 @@ YundaApp.controller('IncreaseUserYD', ["$scope", "$modalInstance", "user", funct
                     $modalInstance.close();
                 },
                 error: function (error) {
-                    alert("操作失败："， error);
+                    alert("操作失败：", error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
@@ -8498,7 +8498,7 @@ YundaApp.controller('DecreaseUserYD', ["$scope", "$modalInstance", "user", funct
                     $modalInstance.close();
                 },
                 error: function (error) {
-                    alert("操作失败："， error);
+                    alert("操作失败：", error);
                     $scope.isLoading = false;
                     $scope.promote = "";
                     $modalInstance.dismiss();
